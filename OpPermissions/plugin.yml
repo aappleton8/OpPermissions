@@ -1,0 +1,36 @@
+name: OpPermissions 
+main: me.OpPermissions.OpPermissionsMainClass 
+version: development_0.1.0.0  
+description: A plugin helping with op permissions  
+author: aappleton3 
+database: false 
+commands: 
+  opset:
+    description: Add or remove someone to the list of permenant ops 
+    usage: /opset <add|remove> <player username> 
+    permission-message: You do not have the required permissions to perform this command 
+permissions: 
+  oppermissions.*:
+    description: Add or remove players to the permenant ops list 
+    default: false
+    children:
+      oppermissions.list: true
+      oppermissions.add: true
+      oppermissions.remove: true
+      oppermissions.save: true
+      oppermissions.reload: true
+  oppermissions.list:
+    description: List the permenant ops 
+    default: op
+  oppermissions.add:
+    description: Add a permenant op to the list 
+    default: false
+  oppermissions.remove:
+    description: Remove a permenant op from the list
+    default: false 
+  oppermissions.save:
+    description: Save the configuration 
+    default: false
+  oppermissions.reload:
+    description: Reload the configuration 
+    default: false
