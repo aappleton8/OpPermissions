@@ -7,7 +7,7 @@ database: false
 commands: 
   opset:
     description: Add or remove someone to the list of permenant ops 
-    usage: /opset <add|remove> <player username> 
+    usage: /opset <add|remove|list [player]|config> <player username|data> 
     permission-message: You do not have the required permissions to perform this command 
 permissions: 
   oppermissions.*:
