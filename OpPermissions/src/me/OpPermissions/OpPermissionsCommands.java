@@ -15,7 +15,6 @@ public class OpPermissionsCommands implements CommandExecutor{
 	public OpPermissionsCommands(OpPermissionsMainClass instance) {
 		plugin = instance; 
 	}
-	@Override
 	public boolean onCommand(CommandSender s, Command c, String l, String[] args) {
 		if (args.length != 2) {
 			return false; 
