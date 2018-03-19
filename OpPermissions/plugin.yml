@@ -14,13 +14,24 @@ permissions:
     description: Add or remove players to the permenant ops list 
     default: false
     children:
-      oppermissions.list: true
+      oppermissions.read.*: true
       oppermissions.add: true
       oppermissions.remove: true
       oppermissions.save: true
       oppermissions.reload: true
-  oppermissions.list:
+      oppermissions.setcanop: true
+      oppermissions.op: true
+  oppermissions.read.*:
+    description: List and check the permenant ops 
+    default: op
+    children:
+      oppermissions.read.list: true
+      oppermissions.read.check: true
+  oppermissions.read.list:
     description: List the permenant ops 
+    default: op
+  oppermissions.read.check:
+    description: Check if a player is a permenant op 
     default: op
   oppermissions.add:
     description: Add a permenant op to the list 
@@ -34,3 +45,9 @@ permissions:
   oppermissions.reload:
     description: Reload the configuration 
     default: false
+  oppermissions.setcanop:
+    description: Set the value of the opscanop field of the config file 
+    default: false
+  oppermissions.op:
+    description: Can op a player, depending on the config file 
+    default: op

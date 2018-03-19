@@ -17,18 +17,48 @@ public class OpPermissionsCommands implements CommandExecutor{
 	}
 	@Override
 	public boolean onCommand(CommandSender s, Command c, String l, String[] args) {
-		if (args.length == 2) {
+		if (args.length == 3) {
+			if (args[0].equalsIgnoreCase("config") && args[1].equalsIgnoreCase("set")) {
+				if (s.hasPermission("oppermissions.setcanop")) {
+					if (args[2].equalsIgnoreCase("op") || args[2].equalsIgnoreCase("permission") || args[2].equalsIgnoreCase("no")) {
+						plugin.getConfig().set("opscanop", args[2]); 
+					}
+					else {
+						s.sendMessage(ChatColor.RED + "The value of the 'opscanop' field must be either 'op', 'permission' or 'no'"); 
+					}
+				}
+				else {
+					plugin.noPermission(s); 
+				}
+			}
+			else {
+				return false; 
+			}
+		}
+		else if (args.length == 2) {
 			if (args[0].equalsIgnoreCase("add")) {
 				if (s.hasPermission("oppermissions.add") || (s instanceof ConsoleCommandSender)) {
 					@SuppressWarnings("deprecation")
 					Player p = Bukkit.getPlayer(args[1]); 
 					if (p != null) {
 						List<String> ops = plugin.getConfig().getStringList("ops"); 
-						plugin.getConfig().set("ops", null); 
-						ops.add(args[1]); 
-						plugin.getConfig().set("ops", ops); 
-						Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "op " + args[1]); 
-						s.sendMessage(args[1] + " added to the permenant ops list "); 
+						Boolean alreadyOnList = false; 
+						for (String i : ops) {
+							if (i.equalsIgnoreCase(args[1])) {
+								alreadyOnList = true; 
+								break; 
+							}
+						}
+						if (alreadyOnList == false) {
+							plugin.getConfig().set("ops", null); 
+							ops.add(args[1]); 
+							plugin.getConfig().set("ops", ops); 
+							Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "op " + args[1]); 
+							s.sendMessage(args[1] + " added to the permenant ops list "); 
+						}
+						else {
+							s.sendMessage(ChatColor.RED + args[1] + " was already on the list "); 
+						}
 					}
 					else {
 						s.sendMessage(ChatColor.RED + "Could not obtain player "); 
@@ -50,13 +80,21 @@ public class OpPermissionsCommands implements CommandExecutor{
 					plugin.noPermission(s); 
 				}
 			}
-			else if (args[0].equalsIgnoreCase("list")) {
-				if (s.hasPermission("oppermissions.list") || (s instanceof ConsoleCommandSender)) {
-					if (args[1].equalsIgnoreCase("all")) {
-						s.sendMessage(plugin.getConfig().getString("ops")); 
+			else if (args[0].equalsIgnoreCase("check")) {
+				if (s.hasPermission("oppermissions.check") || (s instanceof ConsoleCommandSender)) {
+					String playerName = args[1]; 
+					Boolean isThere = false; 
+					for (String i : plugin.getConfig().getStringList("ops")) {
+						if (i.equalsIgnoreCase(playerName)) {
+							isThere = true; 
+							break; 
+						}
+					}
+					if (isThere == true) {
+						s.sendMessage(args[1] + " is a permenant op "); 
 					}
 					else {
-						return false; 
+						s.sendMessage(args[1] + " is not a permenant op "); 
 					}
 				}
 				else {
@@ -90,35 +128,12 @@ public class OpPermissionsCommands implements CommandExecutor{
 				return false; 
 			}
 		}
-		else if (args.length == 3) {
-			if (args[0].equalsIgnoreCase("list")) {
-				if (s.hasPermission("oppermissions.list") || (s instanceof ConsoleCommandSender)) {
-					if (args[1].equalsIgnoreCase("player")) {
-						String playerName = args[2]; 
-						Boolean isThere = false; 
-						for (String i : plugin.getConfig().getStringList("ops")) {
-							if (i.equalsIgnoreCase(playerName)) {
-								isThere = true; 
-								break; 
-							}
-						}
-						if (isThere == true) {
-							s.sendMessage(args[1] + " is a permenant op "); 
-						}
-						else {
-							s.sendMessage(args[1] + " is not a permenant op "); 
-						}
-					}
-					else {
-						return false; 
-					}
-				}
-				else {
-					plugin.noPermission(s); 
-				}
+		else if (args.length == 1) {
+			if (s.hasPermission("oppermissions.list") || (s instanceof ConsoleCommandSender)) {
+				s.sendMessage(plugin.getConfig().getString("ops")); 
 			}
 			else {
-				return false; 
+				plugin.noPermission(s); 
 			}
 		}
 		else {

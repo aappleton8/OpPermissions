@@ -41,7 +41,31 @@ public class MyPlayerListener implements Listener {
 				}
 			}
 		}
+		else if (event.getMessage().startsWith("/op")) {
+			String[] rawArgs = event.getMessage().replace("/", "").split(" "); 
+			String opSetting = plugin.getConfig().getString("opscanop"); 
+			if (rawArgs.length == 2) {
+				if (opSetting == "op") {
+					// No action required
+				}
+				else if (opSetting == "permission") {
+					// Only allow the action if the player has the permission 
+					if (event.getPlayer().hasPermission("oppermissions.op")) {
+						// No further action is required 
+					}
+					else {
+						event.getPlayer().sendMessage(ChatColor.RED + "You do not have permission to op this player "); 
+					}
+				}
+				else if (opSetting == "no") {
+					// The command is only allowed from the console 
+					event.setCancelled(true); 
+					event.getPlayer().sendMessage(ChatColor.RED + "This command is only allowed from the console "); 
+				}
+			}
+		}
 	}
+	
 	@EventHandler (ignoreCancelled = true, priority = EventPriority.HIGHEST) 
 	public void onServerCommand(ServerCommandEvent event) {
 		if (event.getCommand().startsWith("/deop")) {
