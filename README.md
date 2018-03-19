@@ -15,10 +15,11 @@ The general command synta is: */opset <add|remove|list [player]|config> <player 
   
 Permission: 
 - oppermissions.* : All below permissions 
-- oppermissions.list : The /opset list command 
-- oppermissions.check : The /opset check command 
-- oppermissions.add : The /opset add command 
-- oppermissions.remove : The /opset remove command 
-- oppermissions.reload : The /opset config reload command 
-- oppermissions.save : The opset config save command 
+- oppermissions.list : The */opset list* command 
+- oppermissions.check : The */opset check* command 
+- oppermissions.add : The */opset add* command 
+- oppermissions.remove : The */opset remove* command 
+- oppermissions.reload : The */opset config reload* command 
+- oppermissions.save : The */opset config save* command 
+- oppermissions.op : Enable the use of the */op* command, depending on the config file 
 
