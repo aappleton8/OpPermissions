@@ -10,16 +10,23 @@ The general command synta is: */opset <add|remove|list [player]|config> <player 
  - /opset remove <playername> - Removes a player from the list 
  - /opset config reload - Reload the config file 
  - /opset config save - Save the config file 
+ - /opset config set <op|permission|no> - Set whether ops can use the */op* command (op - yes; permissions - with the oppermissions.op permission; no - no) 
  - /opset list - List the list 
  - /opset check <playername> - Check if someone is on the list 
   
 Permission: 
 - oppermissions.* : All below permissions 
+- oppermissions.read.* : The */opset list* and */opset check* commands 
 - oppermissions.list : The */opset list* command 
 - oppermissions.check : The */opset check* command 
 - oppermissions.add : The */opset add* command 
 - oppermissions.remove : The */opset remove* command 
 - oppermissions.reload : The */opset config reload* command 
 - oppermissions.save : The */opset config save* command 
+- oppermissions.setcanop : The */opset config set* command 
 - oppermissions.op : Enable the use of the */op* command, depending on the config file 
+
+Config: 
+ - opscanop - Whether ops can use the */op* command or not 
+ - ops - The list of permenant ops 
 
