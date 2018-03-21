@@ -25,7 +25,7 @@ public class MyPlayerListener implements Listener {
 			String[] rawArgs = event.getMessage().replace("/", "").split(" "); 
 			List<String> args = Arrays.asList(rawArgs); 
 			List<String> permenantOps = plugin.getConfig().getStringList("ops"); 
-			if (args.size() == 2) { 
+			if (args.size() == 2 && rawArgs[0].equalsIgnoreCase("deop")) { 
 				for (String i : permenantOps) {
 					if ((i.equalsIgnoreCase(args.get(1))) && (!(event.getPlayer().hasPermission("oppermissions.remove")))) {
 						event.setCancelled(true); 
@@ -44,7 +44,7 @@ public class MyPlayerListener implements Listener {
 		else if (event.getMessage().startsWith("/op")) {
 			String[] rawArgs = event.getMessage().replace("/", "").split(" "); 
 			String opSetting = plugin.getConfig().getString("opscanop"); 
-			if (rawArgs.length == 2) {
+			if (rawArgs.length == 2 && rawArgs[0].equalsIgnoreCase("op")) {
 				if (opSetting == "op") {
 					// No action required
 				}
@@ -72,7 +72,7 @@ public class MyPlayerListener implements Listener {
 			String[] rawArgs = event.getCommand().replace("/", "").split(" "); 
 			List<String> args = Arrays.asList(rawArgs); 
 			List<String> permenantOps = plugin.getConfig().getStringList("ops"); 
-			if (args.size() == 2) {
+			if (args.size() == 2 && rawArgs[0].equalsIgnoreCase("deop")) {
 				for (String i : permenantOps) {
 					if (i.equalsIgnoreCase(args.get(1))) {
 						List<String> ops = plugin.getConfig().getStringList("ops"); 

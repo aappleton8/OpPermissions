@@ -28,7 +28,10 @@ public class OpPermissionsMainClass extends JavaPlugin{
 		descriptionFile = getDescription(); 
 		logger.info("[" + descriptionFile.getName() + "] " + descriptionFile.getName() + " " + descriptionFile.getVersion() + " has been enabled "); 
 		saveDefaultConfig(); 
-		getCommand("opset").setExecutor(new OpPermissionsCommands(this)); 
+		OpPermissionsCommands opc = new OpPermissionsCommands(this); 
+		getCommand("opset").setExecutor(opc); 
+		getCommand("oppermissions").setExecutor(opc); 
+		
 	}
 	
 	public void noPermission(CommandSender sender) {
