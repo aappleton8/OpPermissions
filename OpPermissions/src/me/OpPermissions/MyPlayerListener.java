@@ -45,22 +45,27 @@ public class MyPlayerListener implements Listener {
 			String[] rawArgs = event.getMessage().replace("/", "").split(" "); 
 			String opSetting = plugin.getConfig().getString("opscanop"); 
 			if (rawArgs.length == 2 && rawArgs[0].equalsIgnoreCase("op")) {
-				if (opSetting == "op") {
+				if (opSetting.equalsIgnoreCase("op")) {
 					// No action required
 				}
-				else if (opSetting == "permission") {
+				else if (opSetting.equalsIgnoreCase("permission")) {
 					// Only allow the action if the player has the permission 
 					if (event.getPlayer().hasPermission("oppermissions.op")) {
 						// No further action is required 
 					}
 					else {
+						event.setCancelled(true); 
 						event.getPlayer().sendMessage(ChatColor.RED + "You do not have permission to op this player "); 
 					}
 				}
-				else if (opSetting == "no") {
+				else if (opSetting.equalsIgnoreCase("no")) {
 					// The command is only allowed from the console 
 					event.setCancelled(true); 
 					event.getPlayer().sendMessage(ChatColor.RED + "This command is only allowed from the console "); 
+				}
+				else {
+					event.getPlayer().sendMessage(ChatColor.RED + "The OpPermissions plugin config has an invalid value "); 
+					plugin.logger.warning("[OpPermissions] The config has an invalid value in the opscanop field (it should be 'op', 'permission' or 'no'"); 
 				}
 			}
 		}
@@ -68,8 +73,8 @@ public class MyPlayerListener implements Listener {
 	
 	@EventHandler (ignoreCancelled = true, priority = EventPriority.HIGHEST) 
 	public void onServerCommand(ServerCommandEvent event) {
-		if (event.getCommand().startsWith("/deop")) {
-			String[] rawArgs = event.getCommand().replace("/", "").split(" "); 
+		if (event.getCommand().startsWith("deop")) {
+			String[] rawArgs = event.getCommand().split(" "); 
 			List<String> args = Arrays.asList(rawArgs); 
 			List<String> permenantOps = plugin.getConfig().getStringList("ops"); 
 			if (args.size() == 2 && rawArgs[0].equalsIgnoreCase("deop")) {

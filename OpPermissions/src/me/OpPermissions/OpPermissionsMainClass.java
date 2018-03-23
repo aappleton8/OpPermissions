@@ -31,7 +31,7 @@ public class OpPermissionsMainClass extends JavaPlugin{
 		OpPermissionsCommands opc = new OpPermissionsCommands(this); 
 		getCommand("opset").setExecutor(opc); 
 		getCommand("oppermissions").setExecutor(opc); 
-		
+		getCommand("oplist").setExecutor(opc); 
 	}
 	
 	public void noPermission(CommandSender sender) {

@@ -1,9 +1,11 @@
 package me.OpPermissions;
 
 import java.util.List;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -20,6 +22,7 @@ public class OpPermissionsCommands implements CommandExecutor{
 		s.sendMessage(ChatColor.DARK_RED + "The commands the the OpPermissions plugin are: "); 
 		s.sendMessage(ChatColor.RED + "/oppermissions - Show this message "); 
 		s.sendMessage(ChatColor.RED + "/opset help - Show this message "); 
+		s.sendMessage(ChatColor.RED + "/opset version - Show the plugin version "); 
 		s.sendMessage(ChatColor.RED + "/opset list - List the permanent ops "); 
 		s.sendMessage(ChatColor.RED + "/opset check <username> - Check if someone is a permanent op "); 
 		s.sendMessage(ChatColor.RED + "/opset add <username> - Add a permanent op "); 
@@ -27,6 +30,7 @@ public class OpPermissionsCommands implements CommandExecutor{
 		s.sendMessage(ChatColor.RED + "/opset config save - Save the config file "); 
 		s.sendMessage(ChatColor.RED + "/opset config reload - Reload the config file "); 
 		s.sendMessage(ChatColor.RED + "/opset config set <value> - Set the value of the 'opscanop' field of the config file (requires a config reload) "); 
+		s.sendMessage(ChatColor.RED + "/oplist - List all the ops on the server "); 
 	}
 	
 	@Override
@@ -155,6 +159,9 @@ public class OpPermissionsCommands implements CommandExecutor{
 				else if (args[0].equalsIgnoreCase("help")) {
 					helpCommand(s); 
 				}
+				else if (args[0].equalsIgnoreCase("version")) {
+					s.sendMessage(plugin.getDescription().getName() + " is version " + plugin.getDescription().getVersion()); 
+				}
 				else {
 					return false; 
 				}
@@ -166,6 +173,33 @@ public class OpPermissionsCommands implements CommandExecutor{
 		else if (l.equalsIgnoreCase("oppermissions")) {
 			if (args.length == 0) {
 				helpCommand(s); 
+			}
+			else {
+				return false; 
+			}
+		}
+		else if (l.equalsIgnoreCase("oplist")) {
+			if (args.length == 0) {
+				if (s.hasPermission("oppermissions.ops") || (s instanceof ConsoleCommandSender)) {
+					Set<OfflinePlayer> ops = Bukkit.getOperators(); 
+					String opList = "OPs: "; 
+					if (ops.isEmpty() == true) {
+						opList = "There are no ops "; 
+					}
+					else {
+						for (OfflinePlayer i : ops) {
+							opList += i.getName() + ", "; 
+						}
+						opList = opList.substring(0, opList.length() - 2); 
+					}
+					s.sendMessage(opList); 
+				}
+				else {
+					plugin.noPermission(s); 
+				}
+			}
+			else {
+				return false; 
 			}
 		}
 		else {

@@ -7,11 +7,16 @@ database: false
 commands: 
   opset:
     description: Add or remove someone to the list of permenant ops 
-    usage: /opset <add|remove|list|help|check|config <action>> [playername|data] 
+    usage: /opset <add|remove|list|version|help|check|config <action>> [playername|data] 
     permission-message: You do not have the required permissions to perform this command 
   oppermissions:
     description: The command to show help for this plugin 
     usage: /oppermissions 
+    permission-message: You do not have the required permissions to perform this command 
+  oplist:
+    description: The command to list all the ops on the server
+    usage: /oplist
+    permission-message: You do not have the required permissions to perform this command 
 permissions: 
   oppermissions.*:
     description: Add or remove players to the permenant ops list 
@@ -24,6 +29,7 @@ permissions:
       oppermissions.reload: true
       oppermissions.setcanop: true
       oppermissions.op: true
+      oppermissions.ops: true
   oppermissions.read.*:
     description: List and check the permenant ops 
     default: op
@@ -53,4 +59,7 @@ permissions:
     default: false
   oppermissions.op:
     description: Can op a player, depending on the config file 
+    default: false
+  oppermissions.ops:
+    description: Get a list of all server ops 
     default: op
