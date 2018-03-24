@@ -45,8 +45,18 @@ public class MyPlayerListener implements Listener {
 			String[] rawArgs = event.getMessage().replace("/", "").split(" "); 
 			String opSetting = plugin.getConfig().getString("opscanop"); 
 			if (rawArgs.length == 2 && rawArgs[0].equalsIgnoreCase("op")) {
-				if (opSetting.equalsIgnoreCase("op")) {
+				if (opSetting.equalsIgnoreCase("default")) {
 					// No action required
+				}
+				else if (opSetting.equalsIgnoreCase("op")) {
+					// Only allow the action if the player is an op 
+					if (event.getPlayer().isOp() == true) {
+						// No action required 
+					}
+					else {
+						event.setCancelled(true); 
+						event.getPlayer().sendMessage(ChatColor.RED + "You must be an op to op this player "); 
+					}
 				}
 				else if (opSetting.equalsIgnoreCase("permission")) {
 					// Only allow the action if the player has the permission 

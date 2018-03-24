@@ -29,7 +29,7 @@ public class OpPermissionsCommands implements CommandExecutor{
 		s.sendMessage(ChatColor.RED + "/opset remove <username> - Remove a permanent op "); 
 		s.sendMessage(ChatColor.RED + "/opset config save - Save the config file "); 
 		s.sendMessage(ChatColor.RED + "/opset config reload - Reload the config file "); 
-		s.sendMessage(ChatColor.RED + "/opset config set <value> - Set the value of the 'opscanop' field of the config file (requires a config reload) "); 
+		s.sendMessage(ChatColor.RED + "/opset config set <value> - Set the value of the 'opscanop' field of the config file "); 
 		s.sendMessage(ChatColor.RED + "/oplist - List all the ops on the server "); 
 	}
 	
@@ -39,7 +39,7 @@ public class OpPermissionsCommands implements CommandExecutor{
 			if (args.length == 3) {
 				if (args[0].equalsIgnoreCase("config") && args[1].equalsIgnoreCase("set")) {
 					if (s.hasPermission("oppermissions.setcanop")) {
-						if (args[2].equalsIgnoreCase("op") || args[2].equalsIgnoreCase("permission") || args[2].equalsIgnoreCase("no")) {
+						if (args[2].equalsIgnoreCase("op") || args[2].equalsIgnoreCase("permission") || args[2].equalsIgnoreCase("no") || args[2].equalsIgnoreCase("default")) {
 							plugin.getConfig().set("opscanop", args[2]); 
 						}
 						else {
