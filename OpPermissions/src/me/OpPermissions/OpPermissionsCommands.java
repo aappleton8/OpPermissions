@@ -1,5 +1,7 @@
 package me.OpPermissions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -19,35 +21,88 @@ public class OpPermissionsCommands implements CommandExecutor{
 	}
 	
 	private void helpCommand(CommandSender s) {
+		helpCommand(s, false); 
+	}
+	
+	private void helpCommand(CommandSender s, Boolean showAll) {
+		if (s instanceof ConsoleCommandSender) {
+			showAll = true; 
+		}
 		s.sendMessage(ChatColor.DARK_RED + "The commands the the OpPermissions plugin are: "); 
 		s.sendMessage(ChatColor.RED + "/oppermissions - Show this message "); 
 		s.sendMessage(ChatColor.RED + "/opset help - Show this message "); 
+		if (s.hasPermission("oppermissions.showallhelp") || showAll) {
+			s.sendMessage(ChatColor.RED + "/opset help all - Show help for all OpPermissions commands "); 
+		}
 		s.sendMessage(ChatColor.RED + "/opset version - Show the plugin version "); 
-		s.sendMessage(ChatColor.RED + "/opset list - List the permanent ops "); 
-		s.sendMessage(ChatColor.RED + "/opset check <username> - Check if someone is a permanent op "); 
-		s.sendMessage(ChatColor.RED + "/opset add <username> - Add a permanent op "); 
-		s.sendMessage(ChatColor.RED + "/opset remove <username> - Remove a permanent op "); 
-		s.sendMessage(ChatColor.RED + "/opset config save - Save the config file "); 
-		s.sendMessage(ChatColor.RED + "/opset config reload - Reload the config file "); 
-		s.sendMessage(ChatColor.RED + "/opset config set <value> - Set the value of the 'opscanop' field of the config file "); 
-		s.sendMessage(ChatColor.RED + "/oplist - List all the ops on the server "); 
+		if (s.hasPermission("oppermissions.read.list") || showAll) {
+			s.sendMessage(ChatColor.RED + "/opset list - List the permanent ops "); 
+		}
+		if (s.hasPermission("oppermissions.read.check") || showAll) {
+			s.sendMessage(ChatColor.RED + "/opset check <username> - Check if someone is a permanent op "); 
+		}
+		if (s.hasPermission("oppermissions.add") || showAll) {
+			s.sendMessage(ChatColor.RED + "/opset add <username> - Add a permanent op "); 
+		}
+		if (s.hasPermission("oppermissions.remove") || showAll) {
+			s.sendMessage(ChatColor.RED + "/opset remove <username> - Remove a permanent op "); 
+		}
+		if (s.hasPermission("oppermissions.config.save") || showAll) {
+			s.sendMessage(ChatColor.RED + "/opset config save - Save the config file "); 
+		}
+		if (s.hasPermission("oppermissions.config.reload") || showAll) { 
+			s.sendMessage(ChatColor.RED + "/opset config reload - Reload the config file "); 
+		}
+		if (s.hasPermission("oppermissions.config.set.opscanop") || s.hasPermission("oppermissions.config.set.allowrequests") || showAll) {
+			s.sendMessage(ChatColor.RED + "/opset config set <field> <value> - Set the value of the 'opscanop' and 'allowrequests' fields of the config file "); 
+		}
+		if (s.hasPermission("oppermissions.oplist.online") || s.hasPermission("oppermissions.oplist.offline") || showAll) {
+			s.sendMessage(ChatColor.RED + "/oplist - List all the ops (variable output depending on permissions) "); 
+		}
+		if (s.hasPermission("oppermissions.oplist.online") && s.hasPermission("oppermissions.oplist.offline") || showAll) {
+			s.sendMessage(ChatColor.RED + "/oplist both - List all the ops (both online and offline) "); 
+		}
+		if (s.hasPermission("oppermissions.oplist.online") || showAll) {
+			s.sendMessage(ChatColor.RED + "/oplist online - List all the online ops "); 
+		}
+		if (s.hasPermission("oppermissions.oplist.offline") || showAll) {
+			s.sendMessage(ChatColor.RED + "/oplist offline - List all the offline ops "); 
+		}
+		if (plugin.getConfig().getString("allowrequests") != "no" && (s.hasPermission("oppermissions.oprequest.send") || showAll)) {
+			s.sendMessage(ChatColor.RED + "/oprequest - send a message request to the ops "); 
+		}
 	}
 	
 	@Override
 	public boolean onCommand(CommandSender s, Command c, String l, String[] args) {
 		if (l.equalsIgnoreCase("opset")) {
-			if (args.length == 3) {
+			if (args.length == 4) {
 				if (args[0].equalsIgnoreCase("config") && args[1].equalsIgnoreCase("set")) {
-					if (s.hasPermission("oppermissions.setcanop")) {
-						if (args[2].equalsIgnoreCase("op") || args[2].equalsIgnoreCase("permission") || args[2].equalsIgnoreCase("no") || args[2].equalsIgnoreCase("default")) {
-							plugin.getConfig().set("opscanop", args[2]); 
+					if (args[2].equalsIgnoreCase("opscanop")) {
+						if (s.hasPermission("oppermissions.config.set.opscanop") || (s instanceof ConsoleCommandSender)) {
+							if (args[3].equalsIgnoreCase("op") || args[3].equalsIgnoreCase("permission") || args[3].equalsIgnoreCase("no") || args[3].equalsIgnoreCase("default")) {
+								plugin.getConfig().set("opscanop", args[3]); 
+							}
+							else {
+								s.sendMessage(ChatColor.RED + "The value of the 'opscanop' field must be either 'op', 'permission', 'default' or 'no'"); 
+							}
 						}
 						else {
-							s.sendMessage(ChatColor.RED + "The value of the 'opscanop' field must be either 'op', 'permission' or 'no'"); 
+							plugin.noPermission(s); 
 						}
 					}
-					else {
-						plugin.noPermission(s); 
+					else if (args[2].equalsIgnoreCase("allowrequests")) {
+						if (s.hasPermission("oppermissions.config.set.allowrequests") || (s instanceof ConsoleCommandSender)) {
+							if (args[3].equalsIgnoreCase("op") || args[3].equalsIgnoreCase("permission") || args[3].equalsIgnoreCase("no")) {
+								plugin.getConfig().set("allowrequests", args[3]); 
+							}
+							else {
+								s.sendMessage(ChatColor.RED + "The value of the 'allowrequests' field must be either 'op', 'permission' or 'no'"); 
+							}
+						}
+						else {
+							plugin.noPermission(s); 
+						}
 					}
 				}
 				else {
@@ -122,7 +177,7 @@ public class OpPermissionsCommands implements CommandExecutor{
 				}
 				else if (args[0].equalsIgnoreCase("config")) {
 					if (args[1].equalsIgnoreCase("save")) {
-						if (s.hasPermission("oppermissions.save") || (s instanceof ConsoleCommandSender)) {
+						if (s.hasPermission("oppermissions.config.save") || (s instanceof ConsoleCommandSender)) {
 							plugin.saveConfig(); 
 							Bukkit.broadcastMessage("OpPermissions configuration saved "); 
 						}
@@ -131,7 +186,7 @@ public class OpPermissionsCommands implements CommandExecutor{
 						}
 					}
 					else if (args[1].equalsIgnoreCase("reload")) {
-						if (s.hasPermission("oppermissions.reload") || (s instanceof ConsoleCommandSender)) {
+						if (s.hasPermission("oppermissions.config.reload") || (s instanceof ConsoleCommandSender)) {
 							plugin.reloadConfig(); 
 							Bukkit.broadcastMessage("OpPermissions configuration reloaded "); 
 						}
@@ -141,6 +196,14 @@ public class OpPermissionsCommands implements CommandExecutor{
 					}
 					else {
 						return false; 
+					}
+				}
+				else if (args[0].equalsIgnoreCase("help") && args[1].equalsIgnoreCase("all")) {
+					if (s.hasPermission("oppermissions.showallhelp") || (s instanceof ConsoleCommandSender)) {
+						helpCommand(s, true); 
+					}
+					else {
+						plugin.noPermission(s); 
 					}
 				}
 				else {
@@ -179,27 +242,96 @@ public class OpPermissionsCommands implements CommandExecutor{
 			}
 		}
 		else if (l.equalsIgnoreCase("oplist")) {
-			if (args.length == 0) {
-				if (s.hasPermission("oppermissions.ops") || (s instanceof ConsoleCommandSender)) {
-					Set<OfflinePlayer> ops = Bukkit.getOperators(); 
-					String opList = "OPs: "; 
-					if (ops.isEmpty() == true) {
-						opList = "There are no ops "; 
-					}
-					else {
-						for (OfflinePlayer i : ops) {
-							opList += i.getName() + ", "; 
-						}
-						opList = opList.substring(0, opList.length() - 2); 
-					}
-					s.sendMessage(opList); 
+			if (args.length < 2) {
+				if ((s.hasPermission("oppermissions.oplist.online") == false) && (s.hasPermission("oppermissions.oplist.offline") == false) && (!(s instanceof ConsoleCommandSender))) {
+					plugin.noPermission(s); 
 				}
 				else {
-					plugin.noPermission(s); 
+					List<String> argsList = new ArrayList<>(Arrays.asList(args)); 
+					if (argsList.size() == 0) {
+						argsList.add("online"); 
+						argsList.add("offline"); 
+					}
+					else if (!(args[0].equalsIgnoreCase("online") || args[0].equalsIgnoreCase("offline") || args[0].equalsIgnoreCase("both"))) {
+						return false; 
+					}
+					Set<OfflinePlayer> ops = Bukkit.getOperators(); 
+					String onlineOps = null; 
+					String offlineOps = null; 
+					int onlineOpCount = 0; 
+					int offlineOpCount = 0; 
+					if (ops.isEmpty() == false) {
+						onlineOps = ": "; 
+						offlineOps = ": "; 
+						for (OfflinePlayer i : ops) {
+							if (i.isOnline() == true) {
+								onlineOpCount += 1; 
+								onlineOps += i.getName() + ", "; 
+							}
+							else {
+								offlineOpCount += 1; 
+								offlineOps += i.getName() + ", "; 
+							}
+						}
+						onlineOps = onlineOps.substring(0, onlineOps.length() - 2); 
+						offlineOps = offlineOps.substring(0, offlineOps.length() - 2); 
+					}
+					if ((!(s instanceof ConsoleCommandSender)) && (argsList.contains("both")) && (!(s.hasPermission("oppermissions.oplist.online") && s.hasPermission("oppermissions.oplist.offline")))) {
+						plugin.noPermission(s); 
+					}
+					else if ((!(s instanceof ConsoleCommandSender)) && (args.length == 1) && (!(s.hasPermission("oppermissions.oplist." + args[0])))) {
+						plugin.noPermission(s); 
+					}
+					else {
+						if (argsList.contains("online") || argsList.contains("both")) {
+							if (onlineOpCount == 0) {
+								s.sendMessage("There are no ops online "); 
+							}
+							else {
+								s.sendMessage("The " + Integer.toString(onlineOpCount) + " ops online are" + onlineOps); 
+							}
+						}
+						if (argsList.contains("offline") || argsList.contains("both")) {
+							if (offlineOpCount == 0) {
+								s.sendMessage("There are no ops offline "); 
+							}
+							else {
+								s.sendMessage("The " + Integer.toString(offlineOpCount) + " ops offline are" + offlineOps); 
+							}
+						}
+					}
 				}
 			}
 			else {
 				return false; 
+			}
+		}
+		else if (l.equalsIgnoreCase("oprequest")) {
+			if (args.length == 0) {
+				return false; 
+			}
+			else {
+				if (s.hasPermission("oppermissions.oprequest.send") || (s instanceof ConsoleCommandSender)) {
+					if (plugin.getConfig().getString("allowrequests") != "no") {
+						String message = String.join(" ", args); 
+						if (plugin.getConfig().getString("allowrequests") == "permission") {
+							Bukkit.broadcast(s.getName() + " asks: " + message, "oppermissions.oprequest.receive"); 
+						}
+						else if (plugin.getConfig().getString("allowrequests") == "op") {
+							Command.broadcastCommandMessage(s, message); 
+						}
+						else {
+							s.sendMessage(ChatColor.RED + "The OpPermissions plugin config has an invalid value "); 
+							plugin.logger.warning("[OpPermissions] The config has an invalid value in the allowrequests field (it should be 'op', 'permission' or 'no'"); 
+						}
+					}
+					else {
+						s.sendMessage("This feature has been disabled "); 
+					}
+				}
+				else {
+					plugin.noPermission(s); 
+				}
 			}
 		}
 		else {

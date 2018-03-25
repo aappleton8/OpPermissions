@@ -1,3 +1,4 @@
+allowrequests: no
 opscanop: default
 ops: 
   - aappleton3 

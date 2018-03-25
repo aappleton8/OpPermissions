@@ -1,13 +1,13 @@
 name: OpPermissions 
 main: me.OpPermissions.OpPermissionsMainClass 
-version: alpha_0.0.0.0  
+version: alpha_0.0.1.0  
 description: A plugin helping with op permissions  
 author: aappleton3 
 database: false 
 commands: 
   opset:
     description: Add or remove someone to the list of permenant ops 
-    usage: /opset <add|remove|list|version|help|check|config <action>> [playername|data] 
+    usage: /opset <add|remove|list|version|help [all]|check|config <action> [field]> [playername|data] 
     permission-message: You do not have the required permissions to perform this command 
   oppermissions:
     description: The command to show help for this plugin 
@@ -15,7 +15,11 @@ commands:
     permission-message: You do not have the required permissions to perform this command 
   oplist:
     description: The command to list all the ops on the server
-    usage: /oplist
+    usage: /oplist [online|offline|both] 
+    permission-message: You do not have the required permissions to perform this command 
+  oprequest:
+    description: The command to send a request to the ops 
+    usage: /oprequest <message>
     permission-message: You do not have the required permissions to perform this command 
 permissions: 
   oppermissions.*:
@@ -25,11 +29,11 @@ permissions:
       oppermissions.read.*: true
       oppermissions.add: true
       oppermissions.remove: true
-      oppermissions.save: true
-      oppermissions.reload: true
-      oppermissions.setcanop: true
+      oppermissions.config.*: true
       oppermissions.op: true
-      oppermissions.ops: true
+      oppermissions.oplist.*: true
+      oppermissions.showallhelp: true
+      oppermissions.oprequest.*: true
   oppermissions.read.*:
     description: List and check the permenant ops 
     default: op
@@ -48,18 +52,58 @@ permissions:
   oppermissions.remove:
     description: Remove a permenant op from the list
     default: false 
-  oppermissions.save:
+  oppermissions.config.*: 
+    description: Change the config file 
+    default: false
+    children:
+      oppermissions.config.save: true
+      oppermissions.config.reload: true
+      oppermissions.config.set.*: true
+  oppermissions.config.save:
     description: Save the configuration 
     default: false
-  oppermissions.reload:
+  oppermissions.config.reload:
     description: Reload the configuration 
     default: false
-  oppermissions.setcanop:
+  oppermissions.config.set.*:
+    description: Set config values 
+    default: false 
+    children:
+      oppermissions.config.set.opscanop: true
+      oppermissions.config.set.allowrequests: true
+  oppermissions.config.set.opscanop:
     description: Set the value of the opscanop field of the config file 
+    default: false
+  oppermissions.config.set.allowrequests:
+    description: Set the value of the allowrequests field on the config file 
     default: false
   oppermissions.op:
     description: Can op a player, depending on the config file 
     default: false
-  oppermissions.ops:
-    description: Get a list of all server ops 
+  oppermissions.oplist.*:
+    description: Get a list of all online and offline server ops 
+    default: op
+    children:
+      oppermissions.oplist.online: true
+      oppermissions.oplist.offline: true
+  oppermissions.oplist.online:
+    description: Can get a list of all online server ops 
+    default: op
+  oppermissions.oplist.offline:
+    description: Can get a list of all offline ops 
+    default: op
+  oppermissions.showallhelp:
+    description: Can see help for commands the player does not have permission to use 
+    default: op
+  oppermissions.oprequest.*:
+    description: Can send and receive op request messages 
+    default: op
+    children:
+      oppermissions.oprequest.send: true
+      oppermissions.oprequest.receive: true
+  oppermissions.oprequest.send:
+    description: Can send op request messages 
+    default: op
+  oppermissions.oprequest.receive:
+    description: Can see op request messages 
     default: op
