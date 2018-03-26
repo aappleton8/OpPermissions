@@ -8,6 +8,7 @@ import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -28,11 +29,11 @@ public class OpPermissionsCommands implements CommandExecutor{
 		if (s instanceof ConsoleCommandSender) {
 			showAll = true; 
 		}
-		s.sendMessage(ChatColor.DARK_RED + "The commands the the OpPermissions plugin are: "); 
+		s.sendMessage(ChatColor.DARK_RED + "The commands the the " + plugin.getName() + " plugin are: "); 
 		s.sendMessage(ChatColor.RED + "/oppermissions - Show this message "); 
 		s.sendMessage(ChatColor.RED + "/opset help - Show this message "); 
 		if (s.hasPermission("oppermissions.showallhelp") || showAll) {
-			s.sendMessage(ChatColor.RED + "/opset help all - Show help for all OpPermissions commands "); 
+			s.sendMessage(ChatColor.RED + "/opset help all - Show help for all " + plugin.getName() + " commands "); 
 		}
 		s.sendMessage(ChatColor.RED + "/opset version - Show the plugin version "); 
 		if (s.hasPermission("oppermissions.read.list") || showAll) {
@@ -82,6 +83,7 @@ public class OpPermissionsCommands implements CommandExecutor{
 						if (s.hasPermission("oppermissions.config.set.opscanop") || (s instanceof ConsoleCommandSender)) {
 							if (args[3].equalsIgnoreCase("op") || args[3].equalsIgnoreCase("permission") || args[3].equalsIgnoreCase("no") || args[3].equalsIgnoreCase("default")) {
 								plugin.getConfig().set("opscanop", args[3]); 
+								Bukkit.broadcast(ChatColor.GREEN + "The " + plugin.getName() + " config has been updated ", "oppermissions.seepluginmessages"); 
 							}
 							else {
 								s.sendMessage(ChatColor.RED + "The value of the 'opscanop' field must be either 'op', 'permission', 'default' or 'no'"); 
@@ -95,6 +97,7 @@ public class OpPermissionsCommands implements CommandExecutor{
 						if (s.hasPermission("oppermissions.config.set.allowrequests") || (s instanceof ConsoleCommandSender)) {
 							if (args[3].equalsIgnoreCase("op") || args[3].equalsIgnoreCase("permission") || args[3].equalsIgnoreCase("no")) {
 								plugin.getConfig().set("allowrequests", args[3]); 
+								Bukkit.broadcast(ChatColor.GREEN + "The " + plugin.getName() + " config has been updated ", "oppermissions.seepluginmessages"); 
 							}
 							else {
 								s.sendMessage(ChatColor.RED + "The value of the 'allowrequests' field must be either 'op', 'permission' or 'no'"); 
@@ -179,7 +182,7 @@ public class OpPermissionsCommands implements CommandExecutor{
 					if (args[1].equalsIgnoreCase("save")) {
 						if (s.hasPermission("oppermissions.config.save") || (s instanceof ConsoleCommandSender)) {
 							plugin.saveConfig(); 
-							Bukkit.broadcastMessage("OpPermissions configuration saved "); 
+							Bukkit.broadcast(plugin.getName() + " configuration saved ", "oppermissions.seepluginmessages"); 
 						}
 						else {
 							plugin.noPermission(s); 
@@ -188,7 +191,7 @@ public class OpPermissionsCommands implements CommandExecutor{
 					else if (args[1].equalsIgnoreCase("reload")) {
 						if (s.hasPermission("oppermissions.config.reload") || (s instanceof ConsoleCommandSender)) {
 							plugin.reloadConfig(); 
-							Bukkit.broadcastMessage("OpPermissions configuration reloaded "); 
+							Bukkit.broadcast(plugin.getName() + " configuration reloaded ", "oppermissions.seepluginmessages"); 
 						}
 						else {
 							plugin.noPermission(s); 
@@ -314,15 +317,18 @@ public class OpPermissionsCommands implements CommandExecutor{
 				if (s.hasPermission("oppermissions.oprequest.send") || (s instanceof ConsoleCommandSender)) {
 					if (plugin.getConfig().getString("allowrequests") != "no") {
 						String message = String.join(" ", args); 
-						if (plugin.getConfig().getString("allowrequests") == "permission") {
-							Bukkit.broadcast(s.getName() + " asks: " + message, "oppermissions.oprequest.receive"); 
+						message = s.getName() + " asks: " + message; 
+						if (plugin.getConfig().getString("allowrequests").equalsIgnoreCase("permission")) {
+							Bukkit.broadcast(message, "oppermissions.oprequest.receive"); 
+							s.sendMessage(message); 
 						}
-						else if (plugin.getConfig().getString("allowrequests") == "op") {
-							Command.broadcastCommandMessage(s, message); 
+						else if (plugin.getConfig().getString("allowrequests").equalsIgnoreCase("op")) {
+							Bukkit.broadcast(message, Server.BROADCAST_CHANNEL_ADMINISTRATIVE); 
+							s.sendMessage(message); 
 						}
 						else {
-							s.sendMessage(ChatColor.RED + "The OpPermissions plugin config has an invalid value "); 
-							plugin.logger.warning("[OpPermissions] The config has an invalid value in the allowrequests field (it should be 'op', 'permission' or 'no'"); 
+							s.sendMessage(ChatColor.RED + "The " + plugin.getName() + " plugin config has an invalid value "); 
+							plugin.logger.warning(plugin.formattedPluginName + "The config has an invalid value in the allowrequests field (it should be 'op', 'permission' or 'no'"); 
 						}
 					}
 					else {

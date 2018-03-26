@@ -14,6 +14,7 @@ public class OpPermissionsMainClass extends JavaPlugin{
 	public final Logger logger = Logger.getLogger("Minecraft"); 
 	public final MyPlayerListener pl = new MyPlayerListener(this, logger); 
 	private PluginDescriptionFile descriptionFile; 
+	protected String formattedPluginName; 
 	
 	@Override
 	public void onDisable() {
@@ -26,12 +27,14 @@ public class OpPermissionsMainClass extends JavaPlugin{
 		PluginManager pm = getServer().getPluginManager(); 
 		pm.registerEvents(pl, this); 
 		descriptionFile = getDescription(); 
-		logger.info("[" + descriptionFile.getName() + "] " + descriptionFile.getName() + " " + descriptionFile.getVersion() + " has been enabled "); 
+		formattedPluginName = "[" + descriptionFile.getName() + "] "; 
+		logger.info(formattedPluginName + descriptionFile.getName() + " " + descriptionFile.getVersion() + " has been enabled "); 
 		saveDefaultConfig(); 
 		OpPermissionsCommands opc = new OpPermissionsCommands(this); 
 		getCommand("opset").setExecutor(opc); 
 		getCommand("oppermissions").setExecutor(opc); 
 		getCommand("oplist").setExecutor(opc); 
+		getCommand("oprequest").setExecutor(opc); 
 	}
 	
 	public void noPermission(CommandSender sender) {

@@ -3,6 +3,8 @@ A simple Minecraft Spigot 1.8/1.12 plugin for managing which ops can use the deo
 
 This plugin maintains a list of 'permanent ops' and prevents people on this list from being deopped until someone with the correct permissions removes them from the list. It can also be configured so that players need to have a permission before they can op another player. 
 
+This plugin and its source code are released under the MIT license. 
+
 Commands: 
 The general command syntaxes are: 
  - */opset <add|remove|list|version|help [all]|check|config <action> [field]> [playername|data]*. 
@@ -47,12 +49,13 @@ Permission:
  - oppermissions.oplist.online : Enable the use of the the */oplist online* command | Default: op 
  - oppermissions.oplist.offline : Enable the use of the */oplist offline* command | Default: op 
  - oppermissions.showallhelp : Enable the use of the */opset help all* command | Default: op 
- - oppermissions.oprequest.* : Enable the player to send a receive op requests | Default: op 
- - oppermissions.oprequest.send : Enable the use of the */oprequest <message>* command | Default: op 
- - oppermissions.oprequest.see : Enable the use player to see op requests | Default: op 
+ - oppermissions.oprequest.* : Enable the player to send a receive op requests, depending on the config file | Default: op 
+ - oppermissions.oprequest.send : Enable the use of the */oprequest <message>* command, depending on the config file | Default: op 
+ - oppermissions.oprequest.see : Enable the player to see op requests, depending on the config file | Default: op 
+ - oppermissions.seepluginmessages : Enable the player to see plugin messages (such as config save messages) | Default: op 
 
 Config: 
- - allowrequests - Sets whether players can use the */oprequest* command or not 
+ - allowrequests - Sets whether players can use the */oprequest* command or not (op: the requests are sent to ops; permission: the requests are sent to players with the permission *oppermissions.oprequest.see*; no: requests cannot be made)  
  - opscanop - Whether ops can use the */op* command or not (default: the default happens; op: the player must be an op; permission: the player must have the *oppermissions.op* permission; no: the command can only be issued from the console)
  - ops - The list of permanent ops 
 

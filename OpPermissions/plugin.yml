@@ -1,6 +1,6 @@
 name: OpPermissions 
 main: me.OpPermissions.OpPermissionsMainClass 
-version: alpha_0.0.1.0  
+version: alpha_0.1.1.0  
 description: A plugin helping with op permissions  
 author: aappleton3 
 database: false 
@@ -34,6 +34,7 @@ permissions:
       oppermissions.oplist.*: true
       oppermissions.showallhelp: true
       oppermissions.oprequest.*: true
+      oppermissions.seepluginmessages: true
   oppermissions.read.*:
     description: List and check the permenant ops 
     default: op
@@ -106,4 +107,7 @@ permissions:
     default: op
   oppermissions.oprequest.receive:
     description: Can see op request messages 
+    default: op
+  oppermissions.seepluginmessages:
+    description: Can see plugin messages (such as config saved messages) 
     default: op

@@ -74,8 +74,8 @@ public class MyPlayerListener implements Listener {
 					event.getPlayer().sendMessage(ChatColor.RED + "This command is only allowed from the console "); 
 				}
 				else {
-					event.getPlayer().sendMessage(ChatColor.RED + "The OpPermissions plugin config has an invalid value "); 
-					plugin.logger.warning("[OpPermissions] The config has an invalid value in the opscanop field (it should be 'op', 'permission', 'default' or 'no'"); 
+					event.getPlayer().sendMessage(ChatColor.RED + "The " + plugin.getName() + " plugin config has an invalid value "); 
+					plugin.logger.warning(plugin.formattedPluginName + "The config has an invalid value in the opscanop field (it should be 'op', 'permission', 'default' or 'no'"); 
 				}
 			}
 		}
