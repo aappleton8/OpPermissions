@@ -18,7 +18,7 @@ public class OpPermissionsMainClass extends JavaPlugin{
 	
 	@Override
 	public void onDisable() {
-		logger.info("[" + descriptionFile.getName() + "] " + descriptionFile.getName() + " " + descriptionFile.getVersion() + " has been disabled "); 
+		logger.info(formattedPluginName + descriptionFile.getName() + " " + descriptionFile.getVersion() + " has been disabled "); 
 		saveConfig(); 
 	}
 	
