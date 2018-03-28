@@ -8,7 +8,7 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class OpPermissionsMainClass extends JavaPlugin{
+public class OpPermissionsMainClass extends JavaPlugin {
 	public static OpPermissionsMainClass plugin; 
 	
 	public final Logger logger = Logger.getLogger("Minecraft"); 
