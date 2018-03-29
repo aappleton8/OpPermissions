@@ -72,11 +72,19 @@ permissions:
     children:
       oppermissions.config.set.opscanop: true
       oppermissions.config.set.allowrequests: true
+      oppermissions.config.set.useuuids: true
+      oppermissions.config.set.updateonplayerjoins: true
   oppermissions.config.set.opscanop:
     description: Set the value of the opscanop field of the config file 
     default: false
   oppermissions.config.set.allowrequests:
     description: Set the value of the allowrequests field on the config file 
+    default: false
+  oppermissions.config.set.useuuids:
+    description: Set whether the plugin should store usernames or UUIDs 
+    default: false
+  oppermissions.config.set.updateonplayerjoins:
+    description: Set whether the plugin should check the information of players when they join 
     default: false
   oppermissions.op:
     description: Can op a player, depending on the config file 

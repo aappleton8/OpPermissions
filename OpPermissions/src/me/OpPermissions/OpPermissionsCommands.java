@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -13,7 +14,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.entity.Player;
 
 public class OpPermissionsCommands implements CommandExecutor {
 	public static OpPermissionsMainClass plugin; 
@@ -74,6 +74,11 @@ public class OpPermissionsCommands implements CommandExecutor {
 		}
 	}
 	
+	private void configUpdateMessage() {
+		Bukkit.broadcast(ChatColor.GREEN + plugin.formattedPluginName + " The config has been updated ", "oppermissions.seepluginmessages"); 
+	}
+	
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onCommand(CommandSender s, Command c, String l, String[] args) {
 		if (l.equalsIgnoreCase("opset")) {
@@ -83,7 +88,7 @@ public class OpPermissionsCommands implements CommandExecutor {
 						if (s.hasPermission("oppermissions.config.set.opscanop") || (s instanceof ConsoleCommandSender)) {
 							if (args[3].equalsIgnoreCase("op") || args[3].equalsIgnoreCase("permission") || args[3].equalsIgnoreCase("no") || args[3].equalsIgnoreCase("default")) {
 								plugin.getConfig().set("opscanop", args[3]); 
-								Bukkit.broadcast(ChatColor.GREEN + "The " + plugin.getName() + " config has been updated ", "oppermissions.seepluginmessages"); 
+								configUpdateMessage(); 
 							}
 							else {
 								s.sendMessage(ChatColor.RED + "The value of the 'opscanop' field must be either 'op', 'permission', 'default' or 'no'"); 
@@ -97,7 +102,7 @@ public class OpPermissionsCommands implements CommandExecutor {
 						if (s.hasPermission("oppermissions.config.set.allowrequests") || (s instanceof ConsoleCommandSender)) {
 							if (args[3].equalsIgnoreCase("op") || args[3].equalsIgnoreCase("permission") || args[3].equalsIgnoreCase("no")) {
 								plugin.getConfig().set("allowrequests", args[3]); 
-								Bukkit.broadcast(ChatColor.GREEN + "The " + plugin.getName() + " config has been updated ", "oppermissions.seepluginmessages"); 
+								configUpdateMessage(); 
 							}
 							else {
 								s.sendMessage(ChatColor.RED + "The value of the 'allowrequests' field must be either 'op', 'permission' or 'no'"); 
@@ -107,6 +112,64 @@ public class OpPermissionsCommands implements CommandExecutor {
 							plugin.noPermission(s); 
 						}
 					}
+					else if (args[2].equalsIgnoreCase("useuuids")) {
+						if (s.hasPermission("oppermissions.config.set.useuuids") || (s instanceof ConsoleCommandSender)) {
+							if (plugin.getConfig().getString("useuuids").equalsIgnoreCase(args[3])) {
+								s.sendMessage(ChatColor.RED + "This config value is already " + args[3]); 
+							}
+							else if (args[3].equalsIgnoreCase("true")) {
+								plugin.getConfig().set(args[2], true); 
+								List<String> opNames = plugin.getConfig().getStringList("ops"); 
+								List<String> opUUIDs = new ArrayList<>(); 
+								for (String i : opNames) {
+									if (opUUIDs.contains(Bukkit.getOfflinePlayer(i).getUniqueId().toString()) == false) {
+										opUUIDs.add(Bukkit.getOfflinePlayer(i).getUniqueId().toString()); 
+									}
+								}
+								plugin.getConfig().set("ops", opUUIDs); 
+								configUpdateMessage(); 
+							}
+							else if (args[3].equalsIgnoreCase("false")) {
+								plugin.getConfig().set(args[2], false); 
+								List<String> opUUIDs = plugin.getConfig().getStringList("ops"); 
+								List<String> opNames = new ArrayList<>(); 
+								for (String i : opUUIDs) {
+									if (opNames.contains(Bukkit.getOfflinePlayer(UUID.fromString(i)).getName()) == false) {
+										opNames.add(Bukkit.getOfflinePlayer(UUID.fromString(i)).getName()); 
+									}
+								}
+								plugin.getConfig().set("ops", opNames); 
+								configUpdateMessage(); 
+							}
+							else {
+								s.sendMessage(ChatColor.RED + "The value of the 'useuuids' field must be either 'true' or 'false'"); 
+							}
+						}
+						else {
+							plugin.noPermission(s); 
+						}
+					}
+					else if (args[2].equalsIgnoreCase("updateonplayerjoins")) {
+						if (s.hasPermission("oppermissions.config.set.updateonplayerjoins") || (s instanceof ConsoleCommandSender)) {
+							if (args[3].equalsIgnoreCase("true")) {
+								plugin.getConfig().set("updateonplayerjoins", true); 
+								configUpdateMessage(); 
+							}
+							else if (args[3].equalsIgnoreCase("false")) {
+								plugin.getConfig().set("updateonplayerjoins", false); 
+								configUpdateMessage(); 
+							}
+							else {
+								s.sendMessage(ChatColor.RED + "The value of the 'updateonplayerjoins' field must be either 'true' or 'false'"); 
+							}
+						}
+						else {
+							plugin.noPermission(s); 
+						}
+					}
+					else {
+						return false; 
+					}
 				}
 				else {
 					return false; 
@@ -115,26 +178,25 @@ public class OpPermissionsCommands implements CommandExecutor {
 			else if (args.length == 2) {
 				if (args[0].equalsIgnoreCase("add")) {
 					if (s.hasPermission("oppermissions.add") || (s instanceof ConsoleCommandSender)) {
-						@SuppressWarnings("deprecation")
-						Player p = Bukkit.getPlayer(args[1]); 
+						OfflinePlayer p = Bukkit.getOfflinePlayer(args[1]); 
 						if (p != null) {
 							List<String> ops = plugin.getConfig().getStringList("ops"); 
-							Boolean alreadyOnList = false; 
-							for (String i : ops) {
-								if (i.equalsIgnoreCase(args[1])) {
-									alreadyOnList = true; 
-									break; 
-								}
+							String playerId = null; 
+							if (plugin.getConfig().getBoolean("useuuids") == true) {
+								playerId = p.getUniqueId().toString(); 
 							}
-							if (alreadyOnList == false) {
-								plugin.getConfig().set("ops", null); 
+							else {
+								playerId = p.getName(); 
+							}
+							if (ops.contains(playerId)) {
+								 s.sendMessage(ChatColor.RED + args[1] + " was already on the list "); 
+							}
+							else {
 								ops.add(args[1]); 
 								plugin.getConfig().set("ops", ops); 
 								Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "op " + args[1]); 
 								s.sendMessage(args[1] + " added to the permenant ops list "); 
-							}
-							else {
-								s.sendMessage(ChatColor.RED + args[1] + " was already on the list "); 
+								Bukkit.broadcast(ChatColor.GREEN + plugin.formattedPluginName + args[1] + " was added to the permenant ops list", "oppermissions.seepluginmessages"); 
 							}
 						}
 						else {
@@ -147,11 +209,15 @@ public class OpPermissionsCommands implements CommandExecutor {
 				}
 				else if (args[0].equalsIgnoreCase("remove")) {
 					if (s.hasPermission("oppermissions.remove") || (s instanceof ConsoleCommandSender)) {
+						String playerId = args[1]; 
+						if (plugin.getConfig().getBoolean("useuuids") == true) {
+							playerId = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString(); 
+						}
 						List<String> ops = plugin.getConfig().getStringList("ops"); 
-						plugin.getConfig().set("ops", null); 
-						ops.remove(args[1]); 
+						ops.remove(playerId); 
 						plugin.getConfig().set("ops", ops); 
 						s.sendMessage(args[1] + " removed from the permenant ops list "); 
+						Bukkit.broadcast(ChatColor.GREEN + plugin.formattedPluginName + args[1] + " was removed from the permenant ops list", "oppermissions.seepluginmessages"); 
 					}
 					else {
 						plugin.noPermission(s); 
@@ -159,15 +225,11 @@ public class OpPermissionsCommands implements CommandExecutor {
 				}
 				else if (args[0].equalsIgnoreCase("check")) {
 					if (s.hasPermission("oppermissions.check") || (s instanceof ConsoleCommandSender)) {
-						String playerName = args[1]; 
-						Boolean isThere = false; 
-						for (String i : plugin.getConfig().getStringList("ops")) {
-							if (i.equalsIgnoreCase(playerName)) {
-								isThere = true; 
-								break; 
-							}
+						String playerId = args[1]; 
+						if (plugin.getConfig().getBoolean("useuuids") == true) {
+							playerId = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString(); 
 						}
-						if (isThere == true) {
+						if (plugin.getConfig().getStringList("ops").contains(playerId)) {
 							s.sendMessage(args[1] + " is a permenant op "); 
 						}
 						else {
@@ -216,7 +278,17 @@ public class OpPermissionsCommands implements CommandExecutor {
 			else if (args.length == 1) {
 				if (args[0].equalsIgnoreCase("list")) {
 					if (s.hasPermission("oppermissions.list") || (s instanceof ConsoleCommandSender)) {
-						s.sendMessage(plugin.getConfig().getString("ops")); 
+						if (plugin.getConfig().getBoolean("useuuids") == false) {
+							s.sendMessage(plugin.getConfig().getString("ops")); 
+						}
+						else {
+							List<String> opUUIDs = plugin.getConfig().getStringList("ops"); 
+							List<String> opNames = new ArrayList<>(); 
+							for (String i : opUUIDs) {
+								opNames.add(Bukkit.getOfflinePlayer(UUID.fromString(i)).getName()); 
+							}
+							s.sendMessage(opNames.toString()); 
+						}
 					}
 					else {
 						plugin.noPermission(s); 

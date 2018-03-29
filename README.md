@@ -5,6 +5,8 @@ This plugin maintains a list of 'permanent ops' and prevents people on this list
 
 This plugin and its source code are released under the MIT license. 
 
+The terms 'username' and 'playername' are used interchangeably in this plugin and its descriptions. 
+
 Commands: 
 The general command syntaxes are: 
  - */opset <add|remove|list|version|help [all]|check|config <action> [field]> [playername|data]*. 
@@ -22,7 +24,9 @@ Below, the individual commands are listed:
  - /opset config reload - Reload the config file 
  - /opset config save - Save the config file 
  - /opset config set opscanop <default|op|permission|no> - Set whether ops can use the */op* command 
- - /opset config set allowrequests <true|false> - Set whether players can use the */oprequest* command 
+ - /opset config set allowrequests <op|permission|no> - Set whether players can use the */oprequest* command 
+ - /opset config set useuuids <true|false> - Set whether the plugin should use usernames or UUIDs 
+ - /opset config set updateonplayerjoins <true|false> - Specify if the plugin should check user information each time the user joins 
  - /opset list - List the list 
  - /opset check <playername> - Check if someone is on the list 
  - /oplist - List all the ops on the server, depending on the given permissions 
@@ -44,6 +48,8 @@ Permission:
  - oppermissions.config.set.* : All */opset config set* commands | Default: false 
  - oppermissions.config.set.opscanop : The */opset config set opscanop <value>* command | Default: false 
  - oppermissions.config.set.allowrequests : The */opset config set allowrequests <value>* command | Default: false 
+ - oppermissions.config.set.useuuids : The */opset config set useuuids <value>* command | Defaut: false 
+ - oppermissions.config.set.updateonplayerjoins : The */opset config set updateonplayerjoins <value>* command | Default: false 
  - oppermissions.op : Enable the use of the */op* command, depending on the config file | Default: false 
  - oppermissions.oplist.* : Enable the use of all the */oplist* commands | Default: op 
  - oppermissions.oplist.online : Enable the use of the the */oplist online* command | Default: op 
@@ -56,7 +62,19 @@ Permission:
 
 Config: 
 All configurable options for this plugin are in the file 'config.yml'. 
+ - useuuids - Sets whether the plugin should use usernames or UUIDs (true: use UUIDs; false: use usernames) 
+ - updateonplayerjoins - Sets whether the plugin should check the information of a player each time it joins or not (true: check player information; false: don't check player information) 
  - allowrequests - Sets whether players can use the */oprequest* command or not (op: the requests are sent to ops; permission: the requests are sent to players with the permission *oppermissions.oprequest.see*; no: requests cannot be made)  
  - opscanop - Whether ops can use the */op* command or not (default: the default happens; op: the player must be an op; permission: the player must have the *oppermissions.op* permission; no: the command can only be issued from the console)
  - ops - The list of permanent ops 
+
+The default config file (config.yml) is given below: 
+useuuids: false
+updateonplayerjoins: true
+allowrequests: no
+opscanop: default
+ops: 
+  \- aappleton3 
+
+
 

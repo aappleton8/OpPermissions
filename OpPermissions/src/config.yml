@@ -1,3 +1,5 @@
+useuuids: false
+updateonplayerjoins: true
 allowrequests: no
 opscanop: default
 ops: 
