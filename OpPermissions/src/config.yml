@@ -1,5 +1,6 @@
 useuuids: false
 updateonplayerjoins: true
+onlyautoupdateonline: false
 allowrequests: no
 opscanop: default
 ops: 

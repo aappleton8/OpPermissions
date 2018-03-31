@@ -1,4 +1,5 @@
 # OpPermissions
+## Description
 A simple Minecraft Spigot 1.8/1.12 plugin for managing which ops can use the deop command to deop other ops. 
 
 This plugin maintains a list of 'permanent ops' and prevents people on this list from being deopped until someone with the correct permissions removes them from the list. It can also be configured so that players need to have a permission before they can op another player. 
@@ -7,7 +8,7 @@ This plugin and its source code are released under the MIT license.
 
 The terms 'username' and 'playername' are used interchangeably in this plugin and its descriptions. 
 
-Commands: 
+##Commands
 The general command syntaxes are: 
  - */opset <add|remove|list|version|help [all]|check|config <action> [field]> [playername|data]*. 
  - */oplist [online|offline|both]*. 
@@ -35,7 +36,7 @@ Below, the individual commands are listed:
  - /oplist offline - List the offline ops 
  - /oprequest <message> - Send a message to the ops 
   
-Permission: 
+##Permissions 
  - oppermissions.* : All below permissions | Default: false 
  - oppermissions.read.* : The */opset list* and */opset check* commands | Default: op 
  - oppermissions.read.list : The */opset list* command | Default: op 
@@ -50,6 +51,7 @@ Permission:
  - oppermissions.config.set.allowrequests : The */opset config set allowrequests <value>* command | Default: false 
  - oppermissions.config.set.useuuids : The */opset config set useuuids <value>* command | Defaut: false 
  - oppermissions.config.set.updateonplayerjoins : The */opset config set updateonplayerjoins <value>* command | Default: false 
+ - oppermissions.config.set.onlyautoupdateonline : The */opset config set onlyautoupdateonline <value>* command | Default: false
  - oppermissions.op : Enable the use of the */op* command, depending on the config file | Default: false 
  - oppermissions.oplist.* : Enable the use of all the */oplist* commands | Default: op 
  - oppermissions.oplist.online : Enable the use of the the */oplist online* command | Default: op 
@@ -60,21 +62,23 @@ Permission:
  - oppermissions.oprequest.see : Enable the player to see op requests, depending on the config file | Default: op 
  - oppermissions.seepluginmessages : Enable the player to see plugin messages (such as config save messages) | Default: op 
 
-Config: 
+##Config 
 All configurable options for this plugin are in the file 'config.yml'. 
  - useuuids - Sets whether the plugin should use usernames or UUIDs (true: use UUIDs; false: use usernames) 
  - updateonplayerjoins - Sets whether the plugin should check the information of a player each time it joins or not (true: check player information; false: don't check player information) 
+ - onlyautoupdateonline - Sets whether the plugin should only allow opping, deopping and updating information of online players or online and offline players (there is no guarentee that the information changed for offline players will be correct) (true: online players only; false: online and offline players) 
  - allowrequests - Sets whether players can use the */oprequest* command or not (op: the requests are sent to ops; permission: the requests are sent to players with the permission *oppermissions.oprequest.see*; no: requests cannot be made)  
- - opscanop - Whether ops can use the */op* command or not (default: the default happens; op: the player must be an op; permission: the player must have the *oppermissions.op* permission; no: the command can only be issued from the console)
+ - opscanop - Sets whether ops can use the */op* command or not (default: the default happens; op: the player must be an op; permission: the player must have the *oppermissions.op* permission; no: the command can only be issued from the console)
  - ops - The list of permanent ops 
 
-The default config file (config.yml) is given below: 
-useuuids: false
-updateonplayerjoins: true
-allowrequests: no
-opscanop: default
-ops: 
-  \- aappleton3 
+The default config file (config.yml) is given below: \
+useuuids: false\
+updateonplayerjoins: true\
+onlyautoupdateonline: false\
+allowrequests: no\
+opscanop: default\
+ops: \
+  \- aappleton3 \
 
 
 

@@ -123,7 +123,9 @@ public class OpPermissionsCommands implements CommandExecutor {
 								List<String> opUUIDs = new ArrayList<>(); 
 								for (String i : opNames) {
 									if (opUUIDs.contains(Bukkit.getOfflinePlayer(i).getUniqueId().toString()) == false) {
-										opUUIDs.add(Bukkit.getOfflinePlayer(i).getUniqueId().toString()); 
+										if (!(plugin.getConfig().getBoolean("onlyautoupdateonline") == true && Bukkit.getOfflinePlayer(i).isOnline() == false)) {
+											opUUIDs.add(Bukkit.getOfflinePlayer(i).getUniqueId().toString()); 
+										}
 									}
 								}
 								plugin.getConfig().set("ops", opUUIDs); 
@@ -135,7 +137,9 @@ public class OpPermissionsCommands implements CommandExecutor {
 								List<String> opNames = new ArrayList<>(); 
 								for (String i : opUUIDs) {
 									if (opNames.contains(Bukkit.getOfflinePlayer(UUID.fromString(i)).getName()) == false) {
-										opNames.add(Bukkit.getOfflinePlayer(UUID.fromString(i)).getName()); 
+										if (!(plugin.getConfig().getBoolean("onlyautoupdateonline") == true && Bukkit.getOfflinePlayer(UUID.fromString(i)).isOnline() == false)) {
+											opNames.add(Bukkit.getOfflinePlayer(UUID.fromString(i)).getName()); 
+										}
 									}
 								}
 								plugin.getConfig().set("ops", opNames); 
@@ -149,18 +153,18 @@ public class OpPermissionsCommands implements CommandExecutor {
 							plugin.noPermission(s); 
 						}
 					}
-					else if (args[2].equalsIgnoreCase("updateonplayerjoins")) {
-						if (s.hasPermission("oppermissions.config.set.updateonplayerjoins") || (s instanceof ConsoleCommandSender)) {
+					else if (args[2].equalsIgnoreCase("updateonplayerjoins") || args[2].equalsIgnoreCase("onlyautoupdateonline")) {
+						if (s.hasPermission("oppermissions.config.set." + args[2]) || (s instanceof ConsoleCommandSender)) {
 							if (args[3].equalsIgnoreCase("true")) {
-								plugin.getConfig().set("updateonplayerjoins", true); 
+								plugin.getConfig().set(args[2], true); 
 								configUpdateMessage(); 
 							}
 							else if (args[3].equalsIgnoreCase("false")) {
-								plugin.getConfig().set("updateonplayerjoins", false); 
+								plugin.getConfig().set(args[2], false); 
 								configUpdateMessage(); 
 							}
 							else {
-								s.sendMessage(ChatColor.RED + "The value of the 'updateonplayerjoins' field must be either 'true' or 'false'"); 
+								s.sendMessage(ChatColor.RED + "The value of the " + args[2] + " field must be either 'true' or 'false'"); 
 							}
 						}
 						else {
@@ -179,7 +183,10 @@ public class OpPermissionsCommands implements CommandExecutor {
 				if (args[0].equalsIgnoreCase("add")) {
 					if (s.hasPermission("oppermissions.add") || (s instanceof ConsoleCommandSender)) {
 						OfflinePlayer p = Bukkit.getOfflinePlayer(args[1]); 
-						if (p != null) {
+						if (plugin.getConfig().getBoolean("onlyautoupdateonline") == true && p.isOnline() == false) {
+							s.sendMessage(ChatColor.RED + "The player is not online "); 
+						}
+						else {
 							List<String> ops = plugin.getConfig().getStringList("ops"); 
 							String playerId = null; 
 							if (plugin.getConfig().getBoolean("useuuids") == true) {
@@ -199,9 +206,6 @@ public class OpPermissionsCommands implements CommandExecutor {
 								Bukkit.broadcast(ChatColor.GREEN + plugin.formattedPluginName + args[1] + " was added to the permenant ops list", "oppermissions.seepluginmessages"); 
 							}
 						}
-						else {
-							s.sendMessage(ChatColor.RED + "Could not obtain player "); 
-						}
 					}
 					else {
 						plugin.noPermission(s); 
@@ -210,14 +214,19 @@ public class OpPermissionsCommands implements CommandExecutor {
 				else if (args[0].equalsIgnoreCase("remove")) {
 					if (s.hasPermission("oppermissions.remove") || (s instanceof ConsoleCommandSender)) {
 						String playerId = args[1]; 
-						if (plugin.getConfig().getBoolean("useuuids") == true) {
-							playerId = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString(); 
+						if (plugin.getConfig().getBoolean("onlyautoupdateonline") == true && Bukkit.getOfflinePlayer(playerId).isOnline() == false) {
+							s.sendMessage(ChatColor.RED + "The player is not online "); 
 						}
-						List<String> ops = plugin.getConfig().getStringList("ops"); 
-						ops.remove(playerId); 
-						plugin.getConfig().set("ops", ops); 
-						s.sendMessage(args[1] + " removed from the permenant ops list "); 
-						Bukkit.broadcast(ChatColor.GREEN + plugin.formattedPluginName + args[1] + " was removed from the permenant ops list", "oppermissions.seepluginmessages"); 
+						else {
+							if (plugin.getConfig().getBoolean("useuuids") == true) {
+								playerId = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString(); 
+							}
+							List<String> ops = plugin.getConfig().getStringList("ops"); 
+							ops.remove(playerId); 
+							plugin.getConfig().set("ops", ops); 
+							s.sendMessage(args[1] + " removed from the permenant ops list "); 
+							Bukkit.broadcast(ChatColor.GREEN + plugin.formattedPluginName + args[1] + " was removed from the permenant ops list", "oppermissions.seepluginmessages"); 
+						}
 					}
 					else {
 						plugin.noPermission(s); 
@@ -226,14 +235,19 @@ public class OpPermissionsCommands implements CommandExecutor {
 				else if (args[0].equalsIgnoreCase("check")) {
 					if (s.hasPermission("oppermissions.check") || (s instanceof ConsoleCommandSender)) {
 						String playerId = args[1]; 
-						if (plugin.getConfig().getBoolean("useuuids") == true) {
-							playerId = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString(); 
-						}
-						if (plugin.getConfig().getStringList("ops").contains(playerId)) {
-							s.sendMessage(args[1] + " is a permenant op "); 
+						if (plugin.getConfig().getBoolean("onlyautoupdateonline") == true && Bukkit.getOfflinePlayer(playerId).isOnline() == false) {
+							s.sendMessage(ChatColor.RED + "The player is not online "); 
 						}
 						else {
-							s.sendMessage(args[1] + " is not a permenant op "); 
+							if (plugin.getConfig().getBoolean("useuuids") == true) {
+								playerId = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString(); 
+							}
+							if (plugin.getConfig().getStringList("ops").contains(playerId)) {
+								s.sendMessage(args[1] + " is a permenant op "); 
+							}
+							else {
+								s.sendMessage(args[1] + " is not a permenant op "); 
+							}
 						}
 					}
 					else {

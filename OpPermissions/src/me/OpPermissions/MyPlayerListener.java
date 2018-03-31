@@ -53,26 +53,32 @@ public class MyPlayerListener implements Listener {
 	}
 	
 	@SuppressWarnings("deprecation")
-	@EventHandler (ignoreCancelled = false, priority = EventPriority.HIGHEST) 
+	@EventHandler (ignoreCancelled = true, priority = EventPriority.HIGHEST) 
 	public void onPlayerCommand(PlayerCommandPreprocessEvent event) {
 		if (event.getMessage().startsWith("/deop")) {
 			String[] rawArgs = event.getMessage().replace("/", "").split(" "); 
 			if (rawArgs.length == 2 && rawArgs[0].equalsIgnoreCase("deop")) { 
 				List<String> permenantOps = plugin.getConfig().getStringList("ops"); 
 				String playerId = rawArgs[1]; 
-				if (plugin.getConfig().getBoolean("useuuids") == true) {
-					playerId = Bukkit.getOfflinePlayer(playerId).getUniqueId().toString(); 
+				if (plugin.getConfig().getBoolean("onlyautoupdateonline") == true && Bukkit.getOfflinePlayer(playerId).isOnline() == false) {
+					event.getPlayer().sendMessage(ChatColor.RED + "This player is not online "); 
+					event.setCancelled(true); 
 				}
-				for (String i : permenantOps) {
-					if ((i.equalsIgnoreCase(playerId)) && (!(event.getPlayer().hasPermission("oppermissions.remove")))) {
-						event.setCancelled(true); 
-						event.getPlayer().sendMessage(ChatColor.RED + "You do not have permission to deop this player "); 
+				else {
+					if (plugin.getConfig().getBoolean("useuuids") == true) {
+						playerId = Bukkit.getOfflinePlayer(playerId).getUniqueId().toString(); 
 					}
-					else if ((i.equalsIgnoreCase(playerId)) && (event.getPlayer().hasPermission("oppermissions.remove")) && (event.isCancelled() == false)) {
-						List<String> ops = plugin.getConfig().getStringList("ops"); 
-						ops.remove(playerId); 
-						plugin.getConfig().set("ops", ops); 
-						plugin.saveConfig(); 
+					for (String i : permenantOps) {
+						if ((i.equalsIgnoreCase(playerId)) && (!(event.getPlayer().hasPermission("oppermissions.remove")))) {
+							event.setCancelled(true); 
+							event.getPlayer().sendMessage(ChatColor.RED + "You do not have permission to deop this player "); 
+						}
+						else if ((i.equalsIgnoreCase(playerId)) && (event.getPlayer().hasPermission("oppermissions.remove"))) {
+							List<String> ops = plugin.getConfig().getStringList("ops"); 
+							ops.remove(playerId); 
+							plugin.getConfig().set("ops", ops); 
+							plugin.saveConfig(); 
+						}
 					}
 				}
 			}
@@ -80,38 +86,44 @@ public class MyPlayerListener implements Listener {
 		else if (event.getMessage().startsWith("/op")) {
 			String[] rawArgs = event.getMessage().replace("/", "").split(" "); 
 			if (rawArgs.length == 2 && rawArgs[0].equalsIgnoreCase("op")) {
-				String opSetting = plugin.getConfig().getString("opscanop"); 
-				if (opSetting.equalsIgnoreCase("default")) {
-					// No action required
-				}
-				else if (opSetting.equalsIgnoreCase("op")) {
-					// Only allow the action if the player is an op 
-					if (event.getPlayer().isOp() == true) {
-						// No action required 
-					}
-					else {
-						event.setCancelled(true); 
-						event.getPlayer().sendMessage(ChatColor.RED + "You must be an op to op this player "); 
-					}
-				}
-				else if (opSetting.equalsIgnoreCase("permission")) {
-					// Only allow the action if the player has the permission 
-					if (event.getPlayer().hasPermission("oppermissions.op")) {
-						// No further action is required 
-					}
-					else {
-						event.setCancelled(true); 
-						event.getPlayer().sendMessage(ChatColor.RED + "You do not have permission to op this player "); 
-					}
-				}
-				else if (opSetting.equalsIgnoreCase("no")) {
-					// The command is only allowed from the console 
+				if (plugin.getConfig().getBoolean("onlyautoupdateonline") == true && Bukkit.getOfflinePlayer(rawArgs[1]).isOnline() == false) {
+					event.getPlayer().sendMessage(ChatColor.RED + "This player is not online "); 
 					event.setCancelled(true); 
-					event.getPlayer().sendMessage(ChatColor.RED + "This command is only allowed from the console "); 
 				}
 				else {
-					event.getPlayer().sendMessage(ChatColor.RED + "The " + plugin.getName() + " plugin config has an invalid value "); 
-					plugin.logger.warning(plugin.formattedPluginName + "The config has an invalid value in the opscanop field (it should be 'op', 'permission', 'default' or 'no'"); 
+					String opSetting = plugin.getConfig().getString("opscanop"); 
+					if (opSetting.equalsIgnoreCase("default")) {
+						// No action required
+					}
+					else if (opSetting.equalsIgnoreCase("op")) {
+						// Only allow the action if the player is an op 
+						if (event.getPlayer().isOp() == true) {
+							// No action required 
+						}
+						else {
+							event.setCancelled(true); 
+							event.getPlayer().sendMessage(ChatColor.RED + "You must be an op to op this player "); 
+						}
+					}
+					else if (opSetting.equalsIgnoreCase("permission")) {
+						// Only allow the action if the player has the permission 
+						if (event.getPlayer().hasPermission("oppermissions.op")) {
+							// No further action is required 
+						}
+						else {
+							event.setCancelled(true); 
+							event.getPlayer().sendMessage(ChatColor.RED + "You do not have permission to op this player "); 
+						}
+					}
+					else if (opSetting.equalsIgnoreCase("no")) {
+						// The command is only allowed from the console 
+						event.setCancelled(true); 
+						event.getPlayer().sendMessage(ChatColor.RED + "This command is only allowed from the console "); 
+					}
+					else {
+						event.getPlayer().sendMessage(ChatColor.RED + "The " + plugin.getName() + " plugin config has an invalid value "); 
+						plugin.logger.warning(plugin.formattedPluginName + "The config has an invalid value in the opscanop field (it should be 'op', 'permission', 'default' or 'no'"); 
+					}
 				}
 			}
 		}
@@ -123,17 +135,23 @@ public class MyPlayerListener implements Listener {
 		if (event.getCommand().startsWith("deop")) {
 			String[] rawArgs = event.getCommand().split(" "); 
 			if (rawArgs.length == 2 && rawArgs[0].equalsIgnoreCase("deop")) {
-				List<String> permenantOps = plugin.getConfig().getStringList("ops"); 
-				String playerId = rawArgs[1]; 
-				if (plugin.getConfig().getBoolean("useuuids") == true) {
-					playerId = Bukkit.getOfflinePlayer(playerId).getUniqueId().toString(); 
+				if (plugin.getConfig().getBoolean("onlyautoupdateonline") == true && Bukkit.getOfflinePlayer(rawArgs[1]).isOnline() == false) {
+					event.getSender().sendMessage(ChatColor.RED + "This player is not online "); 
+					event.setCancelled(true); 
 				}
-				for (String i : permenantOps) {
-					if (i.equalsIgnoreCase(playerId)) {
-						List<String> ops = plugin.getConfig().getStringList("ops"); 
-						ops.remove(playerId); 
-						plugin.getConfig().set("ops", ops); 
-						plugin.saveConfig(); 
+				else {
+					List<String> permenantOps = plugin.getConfig().getStringList("ops"); 
+					String playerId = rawArgs[1]; 
+					if (plugin.getConfig().getBoolean("useuuids") == true) {
+						playerId = Bukkit.getOfflinePlayer(playerId).getUniqueId().toString(); 
+					}
+					for (String i : permenantOps) {
+						if (i.equalsIgnoreCase(playerId)) {
+							List<String> ops = plugin.getConfig().getStringList("ops"); 
+							ops.remove(playerId); 
+							plugin.getConfig().set("ops", ops); 
+							plugin.saveConfig(); 
+						}
 					}
 				}
 			}
