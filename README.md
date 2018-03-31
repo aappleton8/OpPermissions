@@ -73,14 +73,14 @@ All configurable options for this plugin are in the file 'config.yml'.
 
 The default config file (config.yml) is given below: \
 ```YAML
-useuuids: false\
-updateonplayerjoins: true\
-onlyautoupdateonline: false\
-allowrequests: no\
-opscanop: default\
-ops: \
-  \- aappleton3 \
-  \- Codefined
+useuuids: false
+updateonplayerjoins: true
+onlyautoupdateonline: false
+allowrequests: no
+opscanop: default
+ops: 
+  - aappleton3 
+  - Codefined
 ```
 
 
