@@ -1,5 +1,5 @@
 # OpPermissions
-## Description
+## Description: 
 A simple Minecraft Spigot 1.8/1.12 plugin for managing which ops can use the deop command to deop other ops. 
 
 This plugin maintains a list of 'permanent ops' and prevents people on this list from being deopped until someone with the correct permissions removes them from the list. It can also be configured so that players need to have a permission before they can op another player. 
@@ -8,7 +8,7 @@ This plugin and its source code are released under the MIT license.
 
 The terms 'username' and 'playername' are used interchangeably in this plugin and its descriptions. 
 
-##Commands
+## Commands: 
 The general command syntaxes are: 
  - */opset <add|remove|list|version|help [all]|check|config <action> [field]> [playername|data]*. 
  - */oplist [online|offline|both]*. 
@@ -36,7 +36,7 @@ Below, the individual commands are listed:
  - /oplist offline - List the offline ops 
  - /oprequest <message> - Send a message to the ops 
   
-##Permissions 
+## Permissions: 
  - oppermissions.* : All below permissions | Default: false 
  - oppermissions.read.* : The */opset list* and */opset check* commands | Default: op 
  - oppermissions.read.list : The */opset list* command | Default: op 
@@ -62,7 +62,7 @@ Below, the individual commands are listed:
  - oppermissions.oprequest.see : Enable the player to see op requests, depending on the config file | Default: op 
  - oppermissions.seepluginmessages : Enable the player to see plugin messages (such as config save messages) | Default: op 
 
-##Config 
+## Config: 
 All configurable options for this plugin are in the file 'config.yml'. 
  - useuuids - Sets whether the plugin should use usernames or UUIDs (true: use UUIDs; false: use usernames) 
  - updateonplayerjoins - Sets whether the plugin should check the information of a player each time it joins or not (true: check player information; false: don't check player information) 
