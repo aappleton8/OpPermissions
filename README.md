@@ -10,31 +10,31 @@ The terms 'username' and 'playername' are used interchangeably in this plugin an
 
 ## Commands: 
 The general command syntaxes are: 
- - */opset &ltadd|remove|list|version|help [all]|check|config &ltaction&gt [field]&gt [playername|data]*. 
+ - */opset &lt;add|remove|list|version|help [all]|check|config &lt;action&gt; [field]&gt; [playername|data]*. 
  - */oplist [online|offline|both]*. 
  - */oppermissions*. 
- - */oprequest &ltmessage&gt*. 
+ - */oprequest &lt;message&gt;*. 
  
 Below, the individual commands are listed: 
  - /oppermissions - Show the help screen 
  - /opset help - Show the help screen 
  - /opset help all - Show help for all commands, even ones the player does not have permission to use 
  - /opset version - Show the plugin version 
- - /opset add &ltplayername&gt - Adds a player to the list 
- - /opset remove &ltplayername&gt - Removes a player from the list 
+ - /opset add &lt;playername&gt; - Adds a player to the list 
+ - /opset remove &lt;playername&gt; - Removes a player from the list 
  - /opset config reload - Reload the config file 
  - /opset config save - Save the config file 
- - /opset config set opscanop &ltdefault|op|permission|no&gt - Set whether ops can use the */op* command 
- - /opset config set allowrequests &ltop|permission|no&gt - Set whether players can use the */oprequest* command 
- - /opset config set useuuids &lttrue|false&gt - Set whether the plugin should use usernames or UUIDs 
- - /opset config set updateonplayerjoins &lttrue|false&gt - Specify if the plugin should check user information each time the user joins 
+ - /opset config set opscanop &lt;default|op|permission|no&gt; - Set whether ops can use the */op* command 
+ - /opset config set allowrequests &lt;op|permission|no&gt; - Set whether players can use the */oprequest* command 
+ - /opset config set useuuids &lt;true|false&gt; - Set whether the plugin should use usernames or UUIDs 
+ - /opset config set updateonplayerjoins &lt;true|false&gt; - Specify if the plugin should check user information each time the user joins 
  - /opset list - List the list 
- - /opset check &ltplayername&gt - Check if someone is on the list 
+ - /opset check &lt;playername&gt; - Check if someone is on the list 
  - /oplist - List all the ops on the server, depending on the given permissions 
  - /oplist both - List both the online and offline ops 
  - /oplist online - List the online ops 
  - /oplist offline - List the offline ops 
- - /oprequest &ltmessage&gt - Send a message to the ops 
+ - /oprequest &lt;message&gt; - Send a message to the ops 
   
 ## Permissions: 
  - oppermissions.* : All below permissions | Default: false 
@@ -47,18 +47,18 @@ Below, the individual commands are listed:
  - oppermissions.config.reload : The */opset config reload* command | Default: false 
  - oppermissions.config.save : The */opset config save* command | Default: false 
  - oppermissions.config.set.* : All */opset config set* commands | Default: false 
- - oppermissions.config.set.opscanop : The */opset config set opscanop &ltvalue&gt* command | Default: false 
- - oppermissions.config.set.allowrequests : The */opset config set allowrequests &ltvalue&gt* command | Default: false 
- - oppermissions.config.set.useuuids : The */opset config set useuuids &ltvalue&gt* command | Defaut: false 
- - oppermissions.config.set.updateonplayerjoins : The */opset config set updateonplayerjoins &ltvalue&gt* command | Default: false 
- - oppermissions.config.set.onlyautoupdateonline : The */opset config set onlyautoupdateonline &ltvalue&gt* command | Default: false
+ - oppermissions.config.set.opscanop : The */opset config set opscanop &lt;value&gt;* command | Default: false 
+ - oppermissions.config.set.allowrequests : The */opset config set allowrequests &lt;value&gt;* command | Default: false 
+ - oppermissions.config.set.useuuids : The */opset config set useuuids &lt;value&gt;* command | Defaut: false 
+ - oppermissions.config.set.updateonplayerjoins : The */opset config set updateonplayerjoins &lt;value&gt;* command | Default: false 
+ - oppermissions.config.set.onlyautoupdateonline : The */opset config set onlyautoupdateonline &lt;value&gt;* command | Default: false
  - oppermissions.op : Enable the use of the */op* command, depending on the config file | Default: false 
  - oppermissions.oplist.* : Enable the use of all the */oplist* commands | Default: op 
  - oppermissions.oplist.online : Enable the use of the the */oplist online* command | Default: op 
  - oppermissions.oplist.offline : Enable the use of the */oplist offline* command | Default: op 
  - oppermissions.showallhelp : Enable the use of the */opset help all* command | Default: op 
  - oppermissions.oprequest.* : Enable the player to send a receive op requests, depending on the config file | Default: op 
- - oppermissions.oprequest.send : Enable the use of the */oprequest &ltmessage&gt* command, depending on the config file | Default: op 
+ - oppermissions.oprequest.send : Enable the use of the */oprequest &lt;message&gt;* command, depending on the config file | Default: op 
  - oppermissions.oprequest.see : Enable the player to see op requests, depending on the config file | Default: op 
  - oppermissions.seepluginmessages : Enable the player to see plugin messages (such as config save messages) | Default: op 
 
