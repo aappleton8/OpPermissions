@@ -1,6 +1,6 @@
 name: OpPermissions 
 main: me.OpPermissions.OpPermissionsMainClass 
-version: Alpha_0.1.1.1  
+version: Alpha_0.1.2.2  
 description: A plugin helping with op permissions  
 author: aappleton3 
 database: false 
@@ -75,6 +75,7 @@ permissions:
       oppermissions.config.set.useuuids: true
       oppermissions.config.set.updateonplayerjoins: true
       oppermissions.config.set.onlyautoupdateonline: true
+      oppermissions.config.set.allowunsafechanges: true
   oppermissions.config.set.opscanop:
     description: Set the value of the opscanop field of the config file 
     default: false
@@ -89,6 +90,9 @@ permissions:
     default: false
   oppermissions.config.set.onlyautoupdateonline:
     description: Set whether the plugin should only allow updates to online players or not 
+    default: false
+  oppermissions.config.set.allowunsafechanges:
+    description: Set whether the plugin can update the ops list in a manner that may remove players from it or not 
     default: false
   oppermissions.op:
     description: Can op a player, depending on the config file 

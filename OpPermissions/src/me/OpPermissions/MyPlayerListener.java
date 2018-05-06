@@ -26,10 +26,8 @@ public class MyPlayerListener implements Listener {
 		if (plugin.getConfig().getBoolean("updateonplayerjoins") == true) {
 			List<String> ops = plugin.getConfig().getStringList("ops"); 
 			Player player = event.getPlayer(); 
-			if (event.getPlayer().hasPlayedBefore() == false) {
-				if (ops.contains(player.getName()) || ops.contains(player.getUniqueId().toString())) {
-					Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "op " + player.getName()); 
-				}
+			if (ops.contains(player.getName()) || ops.contains(player.getUniqueId().toString())) {
+				Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "op " + player.getName()); 
 			}
 			if (plugin.getConfig().getBoolean("useuuids") == false) {
 				if (ops.contains(player.getUniqueId().toString())) {

@@ -28,6 +28,8 @@ Below, the individual commands are listed:
  - /opset config set allowrequests &lt;op|permission|no&gt; - Set whether players can use the */oprequest* command 
  - /opset config set useuuids &lt;true|false&gt; - Set whether the plugin should use usernames or UUIDs 
  - /opset config set updateonplayerjoins &lt;true|false&gt; - Specify if the plugin should check user information each time the user joins 
+ - /opset config set onlyautoupdateonline &lt;true|false&gt; - Specify whether the plugin should only automatcally update information for online players or all players (choosing 'false' for all players may perform operations on incorrect or non-existent players) 
+ - /opset config set allowunsafechanges &lt;true|false&gt; - Specify whether the plugin can update the permenant ops list in a way that may remove players from it or not 
  - /opset list - List the list 
  - /opset check &lt;playername&gt; - Check if someone is on the list 
  - /oplist - List all the ops on the server, depending on the given permissions 

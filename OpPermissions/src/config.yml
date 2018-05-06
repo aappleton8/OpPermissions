@@ -2,6 +2,7 @@ useuuids: false
 updateonplayerjoins: true
 onlyautoupdateonline: false
 allowrequests: no
+allowunsafechanges: true
 opscanop: default
 ops: 
   - aappleton3 
