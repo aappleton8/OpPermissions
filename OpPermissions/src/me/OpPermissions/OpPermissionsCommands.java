@@ -22,60 +22,127 @@ public class OpPermissionsCommands implements CommandExecutor {
 	}
 	
 	private void helpCommand(CommandSender s) {
-		helpCommand(s, false); 
+		helpCommand(s, false, 1); 
 	}
 	
-	private void helpCommand(CommandSender s, Boolean showAll) {
+	private void helpCommand(CommandSender s, Boolean showAll, int page) {
 		if (s instanceof ConsoleCommandSender) {
 			showAll = true; 
 		}
-		s.sendMessage(ChatColor.DARK_AQUA + "The commands for the " + ChatColor.AQUA + plugin.getName() + ChatColor.DARK_AQUA + " plugin are: "); 
-		s.sendMessage(ChatColor.DARK_PURPLE + "/oppermissions " + ChatColor.AQUA + "- Show this message "); 
-		s.sendMessage(ChatColor.DARK_PURPLE + "/opset help " + ChatColor.AQUA + "- Show this message "); 
-		if (s.hasPermission("oppermissions.showallhelp") || showAll) {
-			s.sendMessage(ChatColor.DARK_PURPLE + "/opset help all " + ChatColor.AQUA + "- Show help for all " + plugin.getName() + " commands "); 
+		if (page == 1) {
+			s.sendMessage(ChatColor.DARK_AQUA + "The commands for the " + ChatColor.AQUA + plugin.getName() + ChatColor.DARK_AQUA + " plugin are: "); 
+			s.sendMessage(ChatColor.DARK_PURPLE + "/oppermissions " + ChatColor.AQUA + "- Show this message "); 
+			s.sendMessage(ChatColor.DARK_PURPLE + "/opset help " + ChatColor.AQUA + "- Show this message "); 
+			if (s.hasPermission("oppermissions.showallhelp") || showAll) {
+				s.sendMessage(ChatColor.DARK_PURPLE + "/opset help all " + ChatColor.AQUA + "- Show help for all " + plugin.getName() + " commands "); 
+				s.sendMessage(ChatColor.DARK_PURPLE + "/opset help config " + ChatColor.AQUA + "- Show help for config fields " + plugin.getName() + " commands "); 
+			}
+			else if (s.hasPermission("oppermissions.config.seedetailedsethelp") || showAll) {
+				s.sendMessage(ChatColor.DARK_PURPLE + "/opset help config " + ChatColor.AQUA + "- Show help for config fields " + plugin.getName() + " commands ");
+			}
+			s.sendMessage(ChatColor.DARK_PURPLE + "/opset version " + ChatColor.AQUA + "- Show the plugin version "); 
+			if (s.hasPermission("oppermissions.read.list") || showAll) {
+				s.sendMessage(ChatColor.DARK_PURPLE + "/opset list " + ChatColor.AQUA + "- List the permanent ops "); 
+			}
+			if (s.hasPermission("oppermissions.read.check") || showAll) {
+				s.sendMessage(ChatColor.DARK_PURPLE + "/opset check <username> " + ChatColor.AQUA + "- Check a permanent op status "); 
+			}
+			if (s.hasPermission("oppermissions.add") || showAll) {
+				s.sendMessage(ChatColor.DARK_PURPLE + "/opset add <username> " + ChatColor.AQUA + "- Add a permanent op "); 
+			}
+			if (s.hasPermission("oppermissions.remove") || showAll) {
+				s.sendMessage(ChatColor.DARK_PURPLE + "/opset remove <username> " + ChatColor.AQUA + "- Remove a permanent op "); 
+			}
+			s.sendMessage(ChatColor.DARK_AQUA + "More help commands are on page 2 (" + ChatColor.DARK_PURPLE + "/opset help 2" + ChatColor.DARK_AQUA + ") "); 
 		}
-		s.sendMessage(ChatColor.DARK_PURPLE + "/opset version " + ChatColor.AQUA + "- Show the plugin version "); 
-		if (s.hasPermission("oppermissions.read.list") || showAll) {
-			s.sendMessage(ChatColor.DARK_PURPLE + "/opset list " + ChatColor.AQUA + "- List the permanent ops "); 
+		else {
+			s.sendMessage(ChatColor.DARK_AQUA + "The commands for the " + ChatColor.AQUA + plugin.getName() + ChatColor.DARK_AQUA + " plugin are: "); 
+			if (s.hasPermission("oppermissions.config.save") || showAll) {
+				s.sendMessage(ChatColor.DARK_PURPLE + "/opset config save " + ChatColor.AQUA + "- Save the config file "); 
+			}
+			if (s.hasPermission("oppermissions.config.reload") || showAll) { 
+				s.sendMessage(ChatColor.DARK_PURPLE + "/opset config reload " + ChatColor.AQUA + "- Reload the config file "); 
+			}
+			if (s.hasPermission("oppermissions.config.set.opscanop") || s.hasPermission("oppermissions.config.set.allowrequests") || s.hasPermission("oppermissions.config.set.useuuids") || s.hasPermission("oppermissions.config.set.updateonplayerjoins") || s.hasPermission("oppermissions.config.set.onlyautoupdateonline") || showAll) {
+				s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set <field> <value> " + ChatColor.AQUA + "- Set the value of specified config file field "); 
+			}
+			if (s.hasPermission("oppermissions.config.updateplayeruuids") || showAll) {
+				s.sendMessage(ChatColor.DARK_PURPLE + "/opset config updateplayeruuids " + ChatColor.AQUA + "- Update player names and UUIDs "); 
+			}
+			if (s.hasPermission("oppermissions.oplist.online") || s.hasPermission("oppermissions.oplist.offline") || showAll) {
+				s.sendMessage(ChatColor.DARK_PURPLE + "/oplist " + ChatColor.AQUA + "- List all the ops (depending on permissions) "); 
+			}
+			if (s.hasPermission("oppermissions.oplist.online") && s.hasPermission("oppermissions.oplist.offline") || showAll) {
+				s.sendMessage(ChatColor.DARK_PURPLE + "/oplist both " + ChatColor.AQUA + "- List all the ops (both online and offline) "); 
+			}
+			if (s.hasPermission("oppermissions.oplist.online") || showAll) {
+				s.sendMessage(ChatColor.DARK_PURPLE + "/oplist online " + ChatColor.AQUA + "- List all the online ops "); 
+			}
+			if (s.hasPermission("oppermissions.oplist.offline") || showAll) {
+				s.sendMessage(ChatColor.DARK_PURPLE + "/oplist offline " + ChatColor.AQUA + "- List all the offline ops "); 
+			}
+			if (plugin.getConfig().getString("allowrequests") != "no" && (s.hasPermission("oppermissions.oprequest.send") || showAll)) {
+				s.sendMessage(ChatColor.DARK_PURPLE + "/oprequest " + ChatColor.AQUA + "- Send a message request to the ops "); 
+			}
 		}
-		if (s.hasPermission("oppermissions.read.check") || showAll) {
-			s.sendMessage(ChatColor.DARK_PURPLE + "/opset check <username> " + ChatColor.AQUA + "- Check a permanent op status "); 
-		}
-		if (s.hasPermission("oppermissions.add") || showAll) {
-			s.sendMessage(ChatColor.DARK_PURPLE + "/opset add <username> " + ChatColor.AQUA + "- Add a permanent op "); 
-		}
-		if (s.hasPermission("oppermissions.remove") || showAll) {
-			s.sendMessage(ChatColor.DARK_PURPLE + "/opset remove <username> " + ChatColor.AQUA + "- Remove a permanent op "); 
-		}
-		if (s.hasPermission("oppermissions.config.save") || showAll) {
-			s.sendMessage(ChatColor.DARK_PURPLE + "/opset config save " + ChatColor.AQUA + "- Save the config file "); 
-		}
-		if (s.hasPermission("oppermissions.config.reload") || showAll) { 
-			s.sendMessage(ChatColor.DARK_PURPLE + "/opset config reload " + ChatColor.AQUA + "- Reload the config file "); 
-		}
-		if (s.hasPermission("oppermissions.config.set.opscanop") || s.hasPermission("oppermissions.config.set.allowrequests") || s.hasPermission("oppermissions.config.set.useuuids") || s.hasPermission("oppermissions.config.set.updateonplayerjoins") || s.hasPermission("oppermissions.config.set.onlyautoupdateonline") || showAll) {
-			s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set <field> <value> " + ChatColor.AQUA + "- Set the value of specified config file field "); 
-		}
-		if (s.hasPermission("oppermissions.oplist.online") || s.hasPermission("oppermissions.oplist.offline") || showAll) {
-			s.sendMessage(ChatColor.DARK_PURPLE + "/oplist " + ChatColor.AQUA + "- List all the ops (depending on permissions) "); 
-		}
-		if (s.hasPermission("oppermissions.oplist.online") && s.hasPermission("oppermissions.oplist.offline") || showAll) {
-			s.sendMessage(ChatColor.DARK_PURPLE + "/oplist both " + ChatColor.AQUA + "- List all the ops (both online and offline) "); 
-		}
-		if (s.hasPermission("oppermissions.oplist.online") || showAll) {
-			s.sendMessage(ChatColor.DARK_PURPLE + "/oplist online " + ChatColor.AQUA + "- List all the online ops "); 
-		}
-		if (s.hasPermission("oppermissions.oplist.offline") || showAll) {
-			s.sendMessage(ChatColor.DARK_PURPLE + "/oplist offline " + ChatColor.AQUA + "- List all the offline ops "); 
-		}
-		if (plugin.getConfig().getString("allowrequests") != "no" && (s.hasPermission("oppermissions.oprequest.send") || showAll)) {
-			s.sendMessage(ChatColor.DARK_PURPLE + "/oprequest " + ChatColor.AQUA + "- Send a message request to the ops "); 
-		}
+	}
+	
+	private void helpConfigFields(CommandSender s) {
+		s.sendMessage(ChatColor.DARK_AQUA + "The commands for setting the config fields of the " + ChatColor.AQUA + plugin.getName() + ChatColor.DARK_AQUA + " plugin are: "); 
+		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set opscanop default|op|permission|no " + ChatColor.AQUA + "- Set the opscanop field ");
+		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set allowrequests op|permission|no " + ChatColor.AQUA + "- Set the allowrequests field ");
+		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set useuuids true|false " + ChatColor.AQUA + "- Set the useuuids field ");
+		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set updateonplayerjoins true|false " + ChatColor.AQUA + "- Set the updateonplayerjoins field ");
+		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set onlyautoupdateonline true|false " + ChatColor.AQUA + "- Set the onlyautoupdateonline field ");
 	}
 	
 	private void configUpdateMessage() {
 		Bukkit.broadcast(ChatColor.GREEN + plugin.formattedPluginName + " The config has been updated ", "oppermissions.seepluginmessages"); 
+	}
+	
+	@SuppressWarnings("deprecation")
+	private void updatePlayerUUIDStatus(boolean UUIDStatus) {
+		if (UUIDStatus == true) {
+			plugin.getConfig().set("useuuids", true); 
+			List<String> opNames = plugin.getConfig().getStringList("ops"); 
+			List<String> opUUIDs = new ArrayList<>(); 
+			for (String i : opNames) {
+				if (opUUIDs.contains(Bukkit.getOfflinePlayer(i).getUniqueId().toString()) == false) {
+					if (!(plugin.getConfig().getBoolean("onlyautoupdateonline") == true && Bukkit.getOfflinePlayer(i).isOnline() == false)) {
+						opUUIDs.add(Bukkit.getOfflinePlayer(i).getUniqueId().toString()); 
+					}
+					else {
+						opUUIDs.add(i); 
+					}
+				}
+			}
+			plugin.getConfig().set("ops", opUUIDs); 
+			configUpdateMessage(); 
+		}
+		else {
+			plugin.getConfig().set("useuuids", false); 
+			List<String> opUUIDs = plugin.getConfig().getStringList("ops"); 
+			List<String> opNames = new ArrayList<>(); 
+			for (String i : opUUIDs) {
+				try {
+					if (opNames.contains(Bukkit.getOfflinePlayer(UUID.fromString(i)).getName()) == false) {
+						if (!(plugin.getConfig().getBoolean("onlyautoupdateonline") == true && Bukkit.getOfflinePlayer(UUID.fromString(i)).isOnline() == false)) {
+							opNames.add(Bukkit.getOfflinePlayer(UUID.fromString(i)).getName()); 
+						}
+						else {
+							opNames.add(i); 
+						}
+					}
+				}
+				catch (IllegalArgumentException e) {
+					if (opNames.contains(i) == false) {
+						opNames.add(i); 
+					}
+				}
+			}
+			plugin.getConfig().set("ops", opNames); 
+			configUpdateMessage(); 
+		}
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -117,36 +184,11 @@ public class OpPermissionsCommands implements CommandExecutor {
 							if (plugin.getConfig().getString("useuuids").equalsIgnoreCase(args[3])) {
 								s.sendMessage(ChatColor.RED + "This config value is already " + args[3]); 
 							}
-							else if ((plugin.getConfig().getBoolean("allowunsafechanges") == false) && (plugin.getConfig().getBoolean("onlyautoupdateonline") == true)) {
-								s.sendMessage(ChatColor.RED + "This operation may result is players being removed from the permenant ops list and has been disallowed in the config");
-							}
 							else if (args[3].equalsIgnoreCase("true")) {
-								plugin.getConfig().set(args[2], true); 
-								List<String> opNames = plugin.getConfig().getStringList("ops"); 
-								List<String> opUUIDs = new ArrayList<>(); 
-								for (String i : opNames) {
-									if (opUUIDs.contains(Bukkit.getOfflinePlayer(i).getUniqueId().toString()) == false) {
-										if (!(plugin.getConfig().getBoolean("onlyautoupdateonline") == true && Bukkit.getOfflinePlayer(i).isOnline() == false)) {
-											opUUIDs.add(Bukkit.getOfflinePlayer(i).getUniqueId().toString()); 
-										}
-									}
-								}
-								plugin.getConfig().set("ops", opUUIDs); 
-								configUpdateMessage(); 
+								updatePlayerUUIDStatus(true); 
 							}
 							else if (args[3].equalsIgnoreCase("false")) {
-								plugin.getConfig().set(args[2], false); 
-								List<String> opUUIDs = plugin.getConfig().getStringList("ops"); 
-								List<String> opNames = new ArrayList<>(); 
-								for (String i : opUUIDs) {
-									if (opNames.contains(Bukkit.getOfflinePlayer(UUID.fromString(i)).getName()) == false) {
-										if (!(plugin.getConfig().getBoolean("onlyautoupdateonline") == true && Bukkit.getOfflinePlayer(UUID.fromString(i)).isOnline() == false)) {
-											opNames.add(Bukkit.getOfflinePlayer(UUID.fromString(i)).getName()); 
-										}
-									}
-								}
-								plugin.getConfig().set("ops", opNames); 
-								configUpdateMessage(); 
+								updatePlayerUUIDStatus(false); 
 							}
 							else {
 								s.sendMessage(ChatColor.RED + "The value of the 'useuuids' field must be either 'true' or 'false'"); 
@@ -156,7 +198,7 @@ public class OpPermissionsCommands implements CommandExecutor {
 							plugin.noPermission(s); 
 						}
 					}
-					else if (args[2].equalsIgnoreCase("updateonplayerjoins") || args[2].equalsIgnoreCase("onlyautoupdateonline") || args[2].equalsIgnoreCase("allowunsafechanges")) {
+					else if (args[2].equalsIgnoreCase("updateonplayerjoins") || args[2].equalsIgnoreCase("onlyautoupdateonline")) {
 						if (s.hasPermission("oppermissions.config.set." + args[2]) || (s instanceof ConsoleCommandSender)) {
 							if (args[3].equalsIgnoreCase("true")) {
 								plugin.getConfig().set(args[2], true); 
@@ -176,6 +218,24 @@ public class OpPermissionsCommands implements CommandExecutor {
 					}
 					else {
 						return false; 
+					}
+				}
+				else {
+					return false; 
+				}
+			}
+			else if (args.length == 3) {
+				if (args[0].equalsIgnoreCase("help") && args[1].equalsIgnoreCase("all")) {
+					if (s.hasPermission("oppermissions.showallhelp") || (s instanceof ConsoleCommandSender)) {
+						if (args[2].equalsIgnoreCase("1")) {
+							helpCommand(s, true, 1); 
+						}
+						else if (args[2].equalsIgnoreCase("2")) {
+							helpCommand(s, true, 2); 
+						}
+						else {
+							s.sendMessage(ChatColor.RED + "There are only two pages of help commands "); 
+						}
 					}
 				}
 				else {
@@ -276,20 +336,40 @@ public class OpPermissionsCommands implements CommandExecutor {
 							plugin.noPermission(s); 
 						}
 					}
+					else if (args[1].equalsIgnoreCase("updateplayersuuids")) {
+						
+						updatePlayerUUIDStatus(plugin.getConfig().getBoolean("useuuids")); 
+					}
 					else {
 						return false; 
 					}
 				}
-				else if (args[0].equalsIgnoreCase("help") && args[1].equalsIgnoreCase("all")) {
-					if (s.hasPermission("oppermissions.showallhelp") || (s instanceof ConsoleCommandSender)) {
-						helpCommand(s, true); 
+				else if (args[0].equalsIgnoreCase("help")) {
+					 if (args[1].equalsIgnoreCase("all")) {
+						if (s.hasPermission("oppermissions.showallhelp") || (s instanceof ConsoleCommandSender)) {
+							helpCommand(s, true, 1); 
+						}
+						else {
+							plugin.noPermission(s); 
+						}
+					}
+					else if (args[1].equalsIgnoreCase("config")) {
+						if ((s instanceof ConsoleCommandSender) || (s.hasPermission("oppermissions.config.seedetailedsethelp")) || (s.hasPermission("oppermissions.showallhelp"))) {
+							helpConfigFields(s); 
+						}
+						else {
+							plugin.noPermission(s); 
+						}
+					}
+					else if (args[1].equalsIgnoreCase("2")) {
+						helpCommand(s, false, 2); 
+					}
+					else if (args[1].equalsIgnoreCase("1")) {
+						helpCommand(s); 
 					}
 					else {
-						plugin.noPermission(s); 
+						return false; 
 					}
-				}
-				else {
-					return false; 
 				}
 			}
 			else if (args.length == 1) {

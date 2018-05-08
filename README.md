@@ -8,6 +8,8 @@ This plugin and its source code are released under the MIT license.
 
 The terms 'username' and 'playername' are used interchangeably in this plugin and its descriptions. 
 
+This plugin can use either playernames or player UUIDs. Although this plugin can convert between the two, errors are likely to occur if the conversion operation is performed on an offline player. As such, the format to use should be chosen at the start and kept constant. If a conversion is necessary, setting the 'onlyautoupdateonline' config field to true will prevent the plugin updating offline players, avoiding errors. Setting the 'updateonplayerjoins' config field to true will make the plugin convert the players when the come online. 
+
 ## Commands: 
 The general command syntaxes are: 
  - */opset &lt;add|remove|list|version|help [all]|check|config &lt;action&gt; [field]&gt; [playername|data]*. 
@@ -19,17 +21,18 @@ Below, the individual commands are listed:
  - /oppermissions - Show the help screen 
  - /opset help - Show the help screen 
  - /opset help all - Show help for all commands, even ones the player does not have permission to use 
+ - /opset help config - Show help for setting individual config file fields 
  - /opset version - Show the plugin version 
  - /opset add &lt;playername&gt; - Adds a player to the list 
  - /opset remove &lt;playername&gt; - Removes a player from the list 
  - /opset config reload - Reload the config file 
  - /opset config save - Save the config file 
  - /opset config set opscanop &lt;default|op|permission|no&gt; - Set whether ops can use the */op* command 
- - /opset config set allowrequests &lt;op|permission|no&gt; - Set whether players can use the */oprequest* command 
+ - /opset config set allowrequests &lt;op|permission|no&gt; - Enables or disables the */oprequest* command and sets which players see the request
  - /opset config set useuuids &lt;true|false&gt; - Set whether the plugin should use usernames or UUIDs 
  - /opset config set updateonplayerjoins &lt;true|false&gt; - Specify if the plugin should check user information each time the user joins 
  - /opset config set onlyautoupdateonline &lt;true|false&gt; - Specify whether the plugin should only automatcally update information for online players or all players (choosing 'false' for all players may perform operations on incorrect or non-existent players) 
- - /opset config set allowunsafechanges &lt;true|false&gt; - Specify whether the plugin can update the permenant ops list in a way that may remove players from it or not 
+ - /opset config updateplayeruuids - Make the plugin update UUIDs or usernames in the config file to the correct format (depending on the 'onlyautoupdateonline' field) 
  - /opset list - List the list 
  - /opset check &lt;playername&gt; - Check if someone is on the list 
  - /oplist - List all the ops on the server, depending on the given permissions 
@@ -54,6 +57,8 @@ Below, the individual commands are listed:
  - oppermissions.config.set.useuuids : The */opset config set useuuids &lt;value&gt;* command | Defaut: false 
  - oppermissions.config.set.updateonplayerjoins : The */opset config set updateonplayerjoins &lt;value&gt;* command | Default: false 
  - oppermissions.config.set.onlyautoupdateonline : The */opset config set onlyautoupdateonline &lt;value&gt;* command | Default: false
+ - oppermissions.config.seedetailedsethelp : The */opset help config* command | Default: false 
+ - oppermissions.config.updateplayeruuids : The */opset config updateplayeruuids* command | Default: false 
  - oppermissions.op : Enable the use of the */op* command, depending on the config file | Default: false 
  - oppermissions.oplist.* : Enable the use of all the */oplist* commands | Default: op 
  - oppermissions.oplist.online : Enable the use of the the */oplist online* command | Default: op 

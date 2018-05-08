@@ -1,13 +1,13 @@
 name: OpPermissions 
 main: me.OpPermissions.OpPermissionsMainClass 
-version: Alpha_0.1.2.2  
+version: Alpha_0.1.2.3  
 description: A plugin helping with op permissions  
 author: aappleton3 
 database: false 
 commands: 
   opset:
     description: Add or remove someone to the list of permenant ops 
-    usage: /opset <add|remove|list|version|help [all]|check|config <action> [field]> [playername|data] 
+    usage: /opset <add|remove|list|version|help [all|config] [1|2]|check|config <action> [field]> [playername|data] 
     permission-message: You do not have the required permissions to perform this command 
   oppermissions:
     description: The command to show help for this plugin 
@@ -60,6 +60,7 @@ permissions:
       oppermissions.config.save: true
       oppermissions.config.reload: true
       oppermissions.config.set.*: true
+      oppermissions.config.updateplayeruuids: true
   oppermissions.config.save:
     description: Save the configuration 
     default: false
@@ -79,20 +80,38 @@ permissions:
   oppermissions.config.set.opscanop:
     description: Set the value of the opscanop field of the config file 
     default: false
+    children:
+      oppermissions.config.seedetailedsethelp: true
   oppermissions.config.set.allowrequests:
     description: Set the value of the allowrequests field on the config file 
     default: false
+    children:
+      oppermissions.config.seedetailedsethelp: true
   oppermissions.config.set.useuuids:
     description: Set whether the plugin should store usernames or UUIDs 
     default: false
+    children:
+      oppermissions.config.seedetailedsethelp: true
   oppermissions.config.set.updateonplayerjoins:
     description: Set whether the plugin should check the information of players when they join 
     default: false
+    children:
+      oppermissions.config.seedetailedsethelp: true
   oppermissions.config.set.onlyautoupdateonline:
     description: Set whether the plugin should only allow updates to online players or not 
     default: false
-  oppermissions.config.set.allowunsafechanges:
-    description: Set whether the plugin can update the ops list in a manner that may remove players from it or not 
+    children:
+      oppermissions.config.seedetailedsethelp: true
+  oppermissions.showallhelp:
+    description: Can see help for commands the player does not have permission to use 
+    default: op
+    children:
+      oppermissions.config.seedetailedsethelp: true
+  oppermissions.config.seedetailedsethelp:
+    description: Enable the player to see help for setting each config field 
+    default: false
+  oppermissions.config.updateplayeruuids:
+    description: Enable the player to update names and UUIDs stored in the config 
     default: false
   oppermissions.op:
     description: Can op a player, depending on the config file 
@@ -108,9 +127,6 @@ permissions:
     default: op
   oppermissions.oplist.offline:
     description: Can get a list of all offline ops 
-    default: op
-  oppermissions.showallhelp:
-    description: Can see help for commands the player does not have permission to use 
     default: op
   oppermissions.oprequest.*:
     description: Can send and receive op request messages 

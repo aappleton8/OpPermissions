@@ -41,7 +41,7 @@ public class MyPlayerListener implements Listener {
 			else {
 				if (ops.contains(player.getName())) {
 					ops.remove(player.getName()); 
-					if (ops.contains(player.getUniqueId().toString())) {
+					if (ops.contains(player.getUniqueId().toString()) == false) {
 						ops.add(player.getUniqueId().toString()); 
 					}
 					plugin.getConfig().set("ops", ops); 
