@@ -4,11 +4,15 @@ A simple Minecraft Spigot 1.8/1.12 plugin for managing which ops can use the deo
 
 This plugin maintains a list of 'permanent ops' and prevents people on this list from being deopped until someone with the correct permissions removes them from the list. It can also be configured so that players need to have a permission before they can op another player. 
 
-This plugin and its source code are released under the MIT license. 
-
 The terms 'username' and 'playername' are used interchangeably in this plugin and its descriptions. 
 
 This plugin can use either playernames or player UUIDs. Although this plugin can convert between the two, errors are likely to occur if the conversion operation is performed on an offline player. As such, the format to use should be chosen at the start and kept constant. If a conversion is necessary, setting the 'onlyautoupdateonline' config field to true will prevent the plugin updating offline players, avoiding errors. Setting the 'updateonplayerjoins' config field to true will make the plugin convert the players when the come online. 
+
+## License: 
+This plugin and its source code are released under the MIT license. 
+
+## Build: 
+This plugin is built using Eclipse Java Oxygen. To build the plugin, it should be opened in the aforementioned program. The .classpath file should then be recreated, and the craftbukkit-1.12.2.jar file needs to be added as an external build dependency. 
 
 ## Commands: 
 The general command syntaxes are: 
@@ -70,7 +74,7 @@ Below, the individual commands are listed:
  - oppermissions.seepluginmessages : Enable the player to see plugin messages (such as config save messages) | Default: op 
 
 ## Config: 
-All configurable options for this plugin are in the file 'config.yml'. 
+All configurable options for this plugin are in the 'config.yml' file. This file contains the following fields.  
  - useuuids - Sets whether the plugin should use usernames or UUIDs (true: use UUIDs; false: use usernames) 
  - updateonplayerjoins - Sets whether the plugin should check the information of a player each time it joins or not (true: check player information; false: don't check player information) 
  - onlyautoupdateonline - Sets whether the plugin should only allow opping, deopping and updating information of online players or online and offline players (there is no guarentee that the information changed for offline players will be correct) (true: online players only; false: online and offline players) 
