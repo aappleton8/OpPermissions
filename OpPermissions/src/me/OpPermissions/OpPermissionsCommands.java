@@ -31,10 +31,10 @@ public class OpPermissionsCommands implements CommandExecutor {
 		}
 		if (page == 1) {
 			s.sendMessage(ChatColor.DARK_AQUA + "The commands for the " + ChatColor.AQUA + plugin.getName() + ChatColor.DARK_AQUA + " plugin are: "); 
-			s.sendMessage(ChatColor.DARK_PURPLE + "/oppermissions " + ChatColor.AQUA + "- Show this message "); 
-			s.sendMessage(ChatColor.DARK_PURPLE + "/opset help " + ChatColor.AQUA + "- Show this message "); 
+			s.sendMessage(ChatColor.DARK_PURPLE + "/oppermissions " + ChatColor.AQUA + "- Show help messages "); 
+			s.sendMessage(ChatColor.DARK_PURPLE + "/opset help [1|2] " + ChatColor.AQUA + "- Show help messages "); 
 			if (s.hasPermission("oppermissions.showallhelp") || showAll) {
-				s.sendMessage(ChatColor.DARK_PURPLE + "/opset help all " + ChatColor.AQUA + "- Show help for all " + plugin.getName() + " commands "); 
+				s.sendMessage(ChatColor.DARK_PURPLE + "/opset help all [1|2] " + ChatColor.AQUA + "- Show help for all " + plugin.getName() + " commands "); 
 				s.sendMessage(ChatColor.DARK_PURPLE + "/opset help config " + ChatColor.AQUA + "- Show help for config fields " + plugin.getName() + " commands "); 
 			}
 			else if (s.hasPermission("oppermissions.config.seedetailedsethelp") || showAll) {

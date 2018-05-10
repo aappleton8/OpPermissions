@@ -1,6 +1,6 @@
 name: OpPermissions 
 main: me.OpPermissions.OpPermissionsMainClass 
-version: Alpha_0.1.2.3  
+version: Alpha_0.1.2.4  
 description: A plugin helping with op permissions  
 author: aappleton3 
 database: false 
