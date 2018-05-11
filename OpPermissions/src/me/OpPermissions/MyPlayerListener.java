@@ -113,14 +113,15 @@ public class MyPlayerListener implements Listener {
 							event.getPlayer().sendMessage(ChatColor.RED + "You do not have permission to op this player "); 
 						}
 					}
-					else if (opSetting.equalsIgnoreCase("no")) {
+					else if (opSetting.equalsIgnoreCase("no") || opSetting.equalsIgnoreCase("false")) {
 						// The command is only allowed from the console 
 						event.setCancelled(true); 
 						event.getPlayer().sendMessage(ChatColor.RED + "This command is only allowed from the console "); 
 					}
 					else {
-						event.getPlayer().sendMessage(ChatColor.RED + "The " + plugin.getName() + " plugin config has an invalid value "); 
+						event.getPlayer().sendMessage(ChatColor.RED + "The " + plugin.getName() + " plugin config has an invalid value in the 'opscanop' field and as such this command has been disallowed "); 
 						plugin.logger.warning(plugin.formattedPluginName + "The config has an invalid value in the opscanop field (it should be 'op', 'permission', 'default' or 'no'"); 
+						event.setCancelled(true); 
 					}
 				}
 			}

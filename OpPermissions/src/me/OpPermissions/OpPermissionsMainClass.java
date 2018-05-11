@@ -38,6 +38,6 @@ public class OpPermissionsMainClass extends JavaPlugin {
 	}
 	
 	public void noPermission(CommandSender sender) {
-		sender.sendMessage(ChatColor.RED + "You do not have permission to do this command "); 
+		sender.sendMessage(ChatColor.RED + "You do not have permission to use this command "); 
 	}
 }

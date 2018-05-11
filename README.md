@@ -70,7 +70,7 @@ Below, the individual commands are listed:
  - oppermissions.showallhelp : Enable the use of the */opset help all* command | Default: op 
  - oppermissions.oprequest.* : Enable the player to send a receive op requests, depending on the config file | Default: op 
  - oppermissions.oprequest.send : Enable the use of the */oprequest &lt;message&gt;* command, depending on the config file | Default: op 
- - oppermissions.oprequest.see : Enable the player to see op requests, depending on the config file | Default: op 
+ - oppermissions.oprequest.receive : Enable the player to see op requests, depending on the config file | Default: op 
  - oppermissions.seepluginmessages : Enable the player to see plugin messages (such as config save messages) | Default: op 
 
 ## Config: 
@@ -78,8 +78,8 @@ All configurable options for this plugin are in the 'config.yml' file. This file
  - useuuids - Sets whether the plugin should use usernames or UUIDs (true: use UUIDs; false: use usernames) 
  - updateonplayerjoins - Sets whether the plugin should check the information of a player each time it joins or not (true: check player information; false: don't check player information) 
  - onlyautoupdateonline - Sets whether the plugin should only allow opping, deopping and updating information of online players or online and offline players (there is no guarentee that the information changed for offline players will be correct) (true: online players only; false: online and offline players) 
- - allowrequests - Sets whether players can use the */oprequest* command or not (op: the requests are sent to ops; permission: the requests are sent to players with the permission *oppermissions.oprequest.see*; no: requests cannot be made)  
- - opscanop - Sets whether ops can use the */op* command or not (default: the default happens; op: the player must be an op; permission: the player must have the *oppermissions.op* permission; no: the command can only be issued from the console)
+ - allowrequests - Sets whether players can use the */oprequest* command or not (op: the requests are sent to ops; permission: the requests are sent to players with the permission *oppermissions.oprequest.see*; no|false: requests cannot be made)  
+ - opscanop - Sets whether ops can use the */op* command or not (default: the default happens; op: the player must be an op; permission: the player must have the *oppermissions.op* permission; no|false: the command can only be issued from the console)
  - ops - The list of permanent ops 
 
 The default config file (config.yml) is given below: 
