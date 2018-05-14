@@ -16,7 +16,7 @@ This plugin is built using Eclipse Java Oxygen. To build the plugin, it should b
 
 ## Commands: 
 The general command syntaxes are: 
- - */opset &lt;add|remove|list|version|help [all]|check|config &lt;action&gt; [field]&gt; [playername|data]*. 
+ - */opset &lt;add|remove|list|version|help [1|2|all [1|2]|config]|check|config &lt;action&gt; [field]&gt; [playername|data]*. 
  - */oplist [online|offline|both]*. 
  - */oppermissions*. 
  - */oprequest &lt;message&gt;*. 
