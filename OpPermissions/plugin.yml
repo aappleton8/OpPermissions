@@ -1,6 +1,6 @@
 name: OpPermissions 
 main: me.OpPermissions.OpPermissionsMainClass 
-version: Alpha_0.1.2.5  
+version: Alpha_1.0.0.0 
 description: A plugin helping with op permissions  
 author: aappleton3 
 database: false 
@@ -31,6 +31,7 @@ permissions:
       oppermissions.remove: true
       oppermissions.config.*: true
       oppermissions.op: true
+      oppermissions.deop: true
       oppermissions.oplist.*: true
       oppermissions.showallhelp: true
       oppermissions.oprequest.*: true
@@ -110,11 +111,14 @@ permissions:
   oppermissions.config.seedetailedsethelp:
     description: Enable the player to see help for setting each config field 
     default: false
-  oppermissions.config.updateplayeruuids:
+  oppermissions.config.verifylist:
     description: Enable the player to update names and UUIDs stored in the config 
     default: false
   oppermissions.op:
     description: Can op a player, depending on the config file 
+    default: false
+  oppermissions.deop:
+    description: Can deop a player, depending on the config file 
     default: false
   oppermissions.oplist.*:
     description: Get a list of all online and offline server ops 

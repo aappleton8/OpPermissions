@@ -53,7 +53,58 @@ public class MyPlayerListener implements Listener {
 	@SuppressWarnings("deprecation")
 	@EventHandler (ignoreCancelled = true, priority = EventPriority.HIGHEST) 
 	public void onPlayerCommand(PlayerCommandPreprocessEvent event) {
-		if (event.getMessage().startsWith("/deop")) {
+		boolean canDeop = true; 
+		if (event.getMessage().startsWith("/op") || event.getMessage().startsWith("/deop")) {
+			String[] rawArgs = event.getMessage().replace("/", "").split(" "); 
+			if ((rawArgs.length == 2) && (rawArgs[0].equalsIgnoreCase("op") || rawArgs[0].equalsIgnoreCase("deop"))) {
+				if (plugin.getConfig().getBoolean("onlyautoupdateonline") == true && Bukkit.getOfflinePlayer(rawArgs[1]).isOnline() == false) {
+					event.getPlayer().sendMessage(ChatColor.RED + "This player is not online "); 
+					event.setCancelled(true); 
+					canDeop = false; 
+				}
+				else {
+					String opSetting = plugin.getConfig().getString("opscan" + rawArgs[0]); 
+					if (opSetting.equalsIgnoreCase("default")) {
+						// No action required
+					}
+					else if (opSetting.equalsIgnoreCase("op")) {
+						// Only allow the action if the player is an op 
+						if (event.getPlayer().isOp() == true) {
+							// No action required 
+						}
+						else {
+							event.setCancelled(true); 
+							event.getPlayer().sendMessage(ChatColor.RED + "You must be an op to "  + rawArgs[0] + " this player "); 
+							canDeop = false; 
+						}
+					}
+					else if (opSetting.equalsIgnoreCase("permission")) {
+						// Only allow the action if the player has the permission 
+						if (event.getPlayer().hasPermission("oppermissions." + rawArgs[0])) {
+							// No further action is required 
+						}
+						else {
+							event.setCancelled(true); 
+							event.getPlayer().sendMessage(ChatColor.RED + "You do not have permission to " + rawArgs[0] + " this player "); 
+							canDeop = false; 
+						}
+					}
+					else if (opSetting.equalsIgnoreCase("no") || opSetting.equalsIgnoreCase("false")) {
+						// The command is only allowed from the console 
+						event.setCancelled(true); 
+						event.getPlayer().sendMessage(ChatColor.RED + "This command is only allowed from the console "); 
+						canDeop = false; 
+					}
+					else {
+						event.getPlayer().sendMessage(ChatColor.RED + "The " + plugin.getName() + " plugin config has an invalid value in the 'opscan" + rawArgs[0] + "' field and as such this command has been disallowed "); 
+						plugin.logger.warning(plugin.formattedPluginName + "The config has an invalid value in the opscan" + rawArgs[0] + " field (it should be 'op', 'permission', 'default', 'false' or 'no'"); 
+						event.setCancelled(true); 
+						canDeop = false; 
+					}
+				}
+			}
+		}
+		if ((event.getMessage().startsWith("/deop")) && (canDeop == true)) {
 			String[] rawArgs = event.getMessage().replace("/", "").split(" "); 
 			if (rawArgs.length == 2 && rawArgs[0].equalsIgnoreCase("deop")) { 
 				List<String> permenantOps = plugin.getConfig().getStringList("ops"); 
@@ -77,51 +128,6 @@ public class MyPlayerListener implements Listener {
 							plugin.getConfig().set("ops", ops); 
 							plugin.saveConfig(); 
 						}
-					}
-				}
-			}
-		}
-		else if (event.getMessage().startsWith("/op")) {
-			String[] rawArgs = event.getMessage().replace("/", "").split(" "); 
-			if (rawArgs.length == 2 && rawArgs[0].equalsIgnoreCase("op")) {
-				if (plugin.getConfig().getBoolean("onlyautoupdateonline") == true && Bukkit.getOfflinePlayer(rawArgs[1]).isOnline() == false) {
-					event.getPlayer().sendMessage(ChatColor.RED + "This player is not online "); 
-					event.setCancelled(true); 
-				}
-				else {
-					String opSetting = plugin.getConfig().getString("opscanop"); 
-					if (opSetting.equalsIgnoreCase("default")) {
-						// No action required
-					}
-					else if (opSetting.equalsIgnoreCase("op")) {
-						// Only allow the action if the player is an op 
-						if (event.getPlayer().isOp() == true) {
-							// No action required 
-						}
-						else {
-							event.setCancelled(true); 
-							event.getPlayer().sendMessage(ChatColor.RED + "You must be an op to op this player "); 
-						}
-					}
-					else if (opSetting.equalsIgnoreCase("permission")) {
-						// Only allow the action if the player has the permission 
-						if (event.getPlayer().hasPermission("oppermissions.op")) {
-							// No further action is required 
-						}
-						else {
-							event.setCancelled(true); 
-							event.getPlayer().sendMessage(ChatColor.RED + "You do not have permission to op this player "); 
-						}
-					}
-					else if (opSetting.equalsIgnoreCase("no") || opSetting.equalsIgnoreCase("false")) {
-						// The command is only allowed from the console 
-						event.setCancelled(true); 
-						event.getPlayer().sendMessage(ChatColor.RED + "This command is only allowed from the console "); 
-					}
-					else {
-						event.getPlayer().sendMessage(ChatColor.RED + "The " + plugin.getName() + " plugin config has an invalid value in the 'opscanop' field and as such this command has been disallowed "); 
-						plugin.logger.warning(plugin.formattedPluginName + "The config has an invalid value in the opscanop field (it should be 'op', 'permission', 'default' or 'no'"); 
-						event.setCancelled(true); 
 					}
 				}
 			}

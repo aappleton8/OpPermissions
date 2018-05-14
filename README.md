@@ -23,15 +23,16 @@ The general command syntaxes are:
  
 Below, the individual commands are listed: 
  - /oppermissions - Show the help screen 
- - /opset help - Show the help screen 
- - /opset help all - Show help for all commands, even ones the player does not have permission to use 
+ - /opset help [1|2] - Show the help screen 
+ - /opset help all [1|2] - Show help for all commands, even ones the player does not have permission to use 
  - /opset help config - Show help for setting individual config file fields 
  - /opset version - Show the plugin version 
  - /opset add &lt;playername&gt; - Adds a player to the list 
  - /opset remove &lt;playername&gt; - Removes a player from the list 
  - /opset config reload - Reload the config file 
  - /opset config save - Save the config file 
- - /opset config set opscanop &lt;default|op|permission|no&gt; - Set whether ops can use the */op* command 
+ - /opset config set opscanop &lt;default|op|permission|no|false&gt; - Set if ops can use the */op* command 
+ - /opset config set opscandeop &lt;default|op|permission|no|false&gt; - Set if ops can use the */deop* command 
  - /opset config set allowrequests &lt;op|permission|no&gt; - Enables or disables the */oprequest* command and sets which players see the request
  - /opset config set useuuids &lt;true|false&gt; - Set whether the plugin should use usernames or UUIDs 
  - /opset config set updateonplayerjoins &lt;true|false&gt; - Specify if the plugin should check user information each time the user joins 
@@ -62,8 +63,9 @@ Below, the individual commands are listed:
  - oppermissions.config.set.updateonplayerjoins : The */opset config set updateonplayerjoins &lt;value&gt;* command | Default: false 
  - oppermissions.config.set.onlyautoupdateonline : The */opset config set onlyautoupdateonline &lt;value&gt;* command | Default: false
  - oppermissions.config.seedetailedsethelp : The */opset help config* command | Default: false 
- - oppermissions.config.updateplayeruuids : The */opset config updateplayeruuids* command | Default: false 
+ - oppermissions.config.verifylist : The */opset config updateplayeruuids* command | Default: false 
  - oppermissions.op : Enable the use of the */op* command, depending on the config file | Default: false 
+ - oppermissions.deop : Enable the use of the */deop* command, depending on the config file | Default: false 
  - oppermissions.oplist.* : Enable the use of all the */oplist* commands | Default: op 
  - oppermissions.oplist.online : Enable the use of the the */oplist online* command | Default: op 
  - oppermissions.oplist.offline : Enable the use of the */oplist offline* command | Default: op 
@@ -78,8 +80,9 @@ All configurable options for this plugin are in the 'config.yml' file. This file
  - useuuids - Sets whether the plugin should use usernames or UUIDs (true: use UUIDs; false: use usernames) 
  - updateonplayerjoins - Sets whether the plugin should check the information of a player each time it joins or not (true: check player information; false: don't check player information) 
  - onlyautoupdateonline - Sets whether the plugin should only allow opping, deopping and updating information of online players or online and offline players (there is no guarentee that the information changed for offline players will be correct) (true: online players only; false: online and offline players) 
- - allowrequests - Sets whether players can use the */oprequest* command or not (op: the requests are sent to ops; permission: the requests are sent to players with the permission *oppermissions.oprequest.see*; no|false: requests cannot be made)  
+ - allowrequests - Sets whether players can use the */oprequest* command or not (op: the requests are sent to ops; permission: the requests are sent to players with the permission *oppermissions.oprequest.see*; both: the requests are sent to ops and people with the permission *oppermissions.oprequest.see*; all: the requests are sent to everyone; no|false: requests cannot be made)  
  - opscanop - Sets whether ops can use the */op* command or not (default: the default happens; op: the player must be an op; permission: the player must have the *oppermissions.op* permission; no|false: the command can only be issued from the console)
+ - opscandeop - Sets whether ops can use the */deop* command or not (default: the default happens; op: the player must be an op; permission: the player must have the *oppermissions.op* permission; no|false: the command can only be issued from the console)
  - ops - The list of permanent ops 
 
 The default config file (config.yml) is given below: 

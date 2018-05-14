@@ -53,7 +53,12 @@ public class OpPermissionsCommands implements CommandExecutor {
 			if (s.hasPermission("oppermissions.remove") || showAll) {
 				s.sendMessage(ChatColor.DARK_PURPLE + "/opset remove <username> " + ChatColor.AQUA + "- Remove a permanent op "); 
 			}
-			s.sendMessage(ChatColor.DARK_AQUA + "More help commands are on page 2 (" + ChatColor.DARK_PURPLE + "/opset help 2" + ChatColor.DARK_AQUA + ") "); 
+			if (showAll) {
+				s.sendMessage(ChatColor.DARK_AQUA + "More help commands are on page 2 (" + ChatColor.DARK_PURPLE + "/opset help all 2" + ChatColor.DARK_AQUA + ") "); 
+			}
+			else {
+				s.sendMessage(ChatColor.DARK_AQUA + "More help commands are on page 2 (" + ChatColor.DARK_PURPLE + "/opset help 2" + ChatColor.DARK_AQUA + ") "); 
+			}
 		}
 		else {
 			s.sendMessage(ChatColor.DARK_AQUA + "The commands for the " + ChatColor.AQUA + plugin.getName() + ChatColor.DARK_AQUA + " plugin are: "); 
@@ -63,11 +68,11 @@ public class OpPermissionsCommands implements CommandExecutor {
 			if (s.hasPermission("oppermissions.config.reload") || showAll) { 
 				s.sendMessage(ChatColor.DARK_PURPLE + "/opset config reload " + ChatColor.AQUA + "- Reload the config file "); 
 			}
-			if (s.hasPermission("oppermissions.config.set.opscanop") || s.hasPermission("oppermissions.config.set.allowrequests") || s.hasPermission("oppermissions.config.set.useuuids") || s.hasPermission("oppermissions.config.set.updateonplayerjoins") || s.hasPermission("oppermissions.config.set.onlyautoupdateonline") || showAll) {
+			if (s.hasPermission("oppermissions.config.seedetailedsethelp") || showAll) {
 				s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set <field> <value> " + ChatColor.AQUA + "- Set the value of specified config file field "); 
 			}
-			if (s.hasPermission("oppermissions.config.updateplayeruuids") || showAll) {
-				s.sendMessage(ChatColor.DARK_PURPLE + "/opset config updateplayeruuids " + ChatColor.AQUA + "- Update player names and UUIDs "); 
+			if (s.hasPermission("oppermissions.config.verifylist") || showAll) {
+				s.sendMessage(ChatColor.DARK_PURPLE + "/opset config verifylist " + ChatColor.AQUA + "- Update player names and UUIDs "); 
 			}
 			if (s.hasPermission("oppermissions.oplist.online") || s.hasPermission("oppermissions.oplist.offline") || showAll) {
 				s.sendMessage(ChatColor.DARK_PURPLE + "/oplist " + ChatColor.AQUA + "- List all the ops (depending on permissions) "); 
@@ -89,8 +94,9 @@ public class OpPermissionsCommands implements CommandExecutor {
 	
 	private void helpConfigFields(CommandSender s) {
 		s.sendMessage(ChatColor.DARK_AQUA + "The commands for setting the config fields of the " + ChatColor.AQUA + plugin.getName() + ChatColor.DARK_AQUA + " plugin are: "); 
-		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set opscanop default|op|permission|no " + ChatColor.AQUA + "- Set the opscanop field ");
-		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set allowrequests op|permission|no " + ChatColor.AQUA + "- Set the allowrequests field ");
+		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set opscanop default|op|permission|no|false " + ChatColor.AQUA + "- Set the opscanop field ");
+		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set opscandeop default|op|permission|no|false " + ChatColor.AQUA + "- Set the opscandeop field ");
+		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set allowrequests op|permission|both|all|no|false " + ChatColor.AQUA + "- Set the allowrequests field ");
 		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set useuuids true|false " + ChatColor.AQUA + "- Set the useuuids field ");
 		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set updateonplayerjoins true|false " + ChatColor.AQUA + "- Set the updateonplayerjoins field ");
 		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set onlyautoupdateonline true|false " + ChatColor.AQUA + "- Set the onlyautoupdateonline field ");
@@ -151,14 +157,14 @@ public class OpPermissionsCommands implements CommandExecutor {
 		if (l.equalsIgnoreCase("opset")) {
 			if (args.length == 4) {
 				if (args[0].equalsIgnoreCase("config") && args[1].equalsIgnoreCase("set")) {
-					if (args[2].equalsIgnoreCase("opscanop")) {
-						if (s.hasPermission("oppermissions.config.set.opscanop") || (s instanceof ConsoleCommandSender)) {
+					if (args[2].equalsIgnoreCase("opscanop") || args[2].equalsIgnoreCase("opscandeop")) {
+						if (s.hasPermission("oppermissions.config.set." + args[2]) || (s instanceof ConsoleCommandSender)) {
 							if (args[3].equalsIgnoreCase("op") || args[3].equalsIgnoreCase("permission") || args[3].equalsIgnoreCase("no") || args[3].equalsIgnoreCase("default") || args[3].equalsIgnoreCase("false")) {
-								plugin.getConfig().set("opscanop", args[3]); 
+								plugin.getConfig().set(args[2], args[3]); 
 								configUpdateMessage(); 
 							}
 							else {
-								s.sendMessage(ChatColor.RED + "The value of the 'opscanop' field must be either 'op', 'permission', 'default' or 'no'"); 
+								s.sendMessage(ChatColor.RED + "The value of the 'opscanop' field must be either 'op', 'permission', 'default', 'false' or 'no'"); 
 							}
 						}
 						else {
@@ -167,12 +173,12 @@ public class OpPermissionsCommands implements CommandExecutor {
 					}
 					else if (args[2].equalsIgnoreCase("allowrequests")) {
 						if (s.hasPermission("oppermissions.config.set.allowrequests") || (s instanceof ConsoleCommandSender)) {
-							if (args[3].equalsIgnoreCase("op") || args[3].equalsIgnoreCase("permission") || args[3].equalsIgnoreCase("no") || args[3].equalsIgnoreCase("false")) {
+							if (args[3].equalsIgnoreCase("op") || args[3].equalsIgnoreCase("permission") || args[3].equalsIgnoreCase("no") || args[3].equalsIgnoreCase("false") || args[3].equalsIgnoreCase("all") || args[3].equalsIgnoreCase("both")) {
 								plugin.getConfig().set("allowrequests", args[3]); 
 								configUpdateMessage(); 
 							}
 							else {
-								s.sendMessage(ChatColor.RED + "The value of the 'allowrequests' field must be either 'op', 'permission' or 'no'"); 
+								s.sendMessage(ChatColor.RED + "The value of the 'allowrequests' field must be either 'op', 'permission', 'false', 'all', 'both' or 'no'"); 
 							}
 						}
 						else {
@@ -234,7 +240,8 @@ public class OpPermissionsCommands implements CommandExecutor {
 							helpCommand(s, true, 2); 
 						}
 						else {
-							s.sendMessage(ChatColor.RED + "There are only two pages of help commands "); 
+							s.sendMessage(ChatColor.RED + "There are only two pages of help commands (1 and 2) "); 
+							return false; 
 						}
 					}
 				}
@@ -354,14 +361,14 @@ public class OpPermissionsCommands implements CommandExecutor {
 						if (s.hasPermission("oppermissions.config.reload") || (s instanceof ConsoleCommandSender)) {
 							plugin.reloadConfig(); 
 							Bukkit.broadcast(ChatColor.GREEN + plugin.getName() + " configuration reloaded ", "oppermissions.seepluginmessages"); 
-							s.sendMessage(ChatColor.DARK_RED + "You may want to issue the /opset config updateplayeruuids for all config updates to take effect "); 
+							s.sendMessage(ChatColor.DARK_RED + "You may want to issue the command */opset config verifylist* for all config updates to take effect "); 
 						}
 						else {
 							plugin.noPermission(s); 
 						}
 					}
-					else if (args[1].equalsIgnoreCase("updateplayersuuids")) {
-						if (s.hasPermission("oppermissions.config.updateplayeruuids")) {
+					else if (args[1].equalsIgnoreCase("verifylist")) {
+						if (s.hasPermission("oppermissions.config.verifylist")) {
 							updatePlayerUUIDStatus(plugin.getConfig().getBoolean("useuuids")); 
 						}
 						else {
@@ -396,8 +403,12 @@ public class OpPermissionsCommands implements CommandExecutor {
 						helpCommand(s); 
 					}
 					else {
+						s.sendMessage(ChatColor.RED + args[1] + " is not a valid help page "); 
 						return false; 
 					}
+				}
+				else {
+					return false; 
 				}
 			}
 			else if (args.length == 1) {
@@ -517,24 +528,30 @@ public class OpPermissionsCommands implements CommandExecutor {
 			}
 			else {
 				if (s.hasPermission("oppermissions.oprequest.send") || (s instanceof ConsoleCommandSender)) {
-					if (!(plugin.getConfig().getString("allowrequests").equalsIgnoreCase("no") || plugin.getConfig().getString("allowrequests").equalsIgnoreCase("false"))) {
-						String message = String.join(" ", args); 
-						message = ChatColor.DARK_GREEN + s.getName() + " asks: " + message; 
-						if (plugin.getConfig().getString("allowrequests").equalsIgnoreCase("permission")) {
-							Bukkit.broadcast(message, "oppermissions.oprequest.receive"); 
-							s.sendMessage(message); 
-						}
-						else if (plugin.getConfig().getString("allowrequests").equalsIgnoreCase("op")) {
-							Bukkit.broadcast(message, Server.BROADCAST_CHANNEL_ADMINISTRATIVE); 
-							s.sendMessage(message); 
-						}
-						else {
-							s.sendMessage(ChatColor.RED + "The " + plugin.getName() + " plugin config has an invalid value "); 
-							plugin.logger.warning(plugin.formattedPluginName + "The config has an invalid value in the allowrequests field (it should be 'op', 'permission' or 'no'"); 
-						}
+					if (plugin.getConfig().getString("allowrequests").equalsIgnoreCase("no") || plugin.getConfig().getString("allowrequests").equalsIgnoreCase("false")) {
+						s.sendMessage(ChatColor.RED + "This feature has been disabled "); 
+					}
+					else if (!(plugin.getConfig().getString("allowrequests").equalsIgnoreCase("all") || plugin.getConfig().getString("allowrequests").equalsIgnoreCase("both") || plugin.getConfig().getString("allowrequests").equalsIgnoreCase("op") || plugin.getConfig().getString("allowrequests").equalsIgnoreCase("permission"))) {
+						s.sendMessage(ChatColor.RED + "This feature has been disabled "); 
+						Bukkit.broadcast(ChatColor.RED + "The " + plugin.getName() + " plugin config has an invalid value ", "oppermissions.seepluginmessages"); 
+						Bukkit.broadcast(ChatColor.RED + "The " + plugin.getName() + " plugin config has an invalid value ", "oppermissions.oprequest.receive"); 
+						plugin.logger.warning(plugin.formattedPluginName + "The config has an invalid value in the allowrequests field (it should be 'op', 'permission' or 'no'"); 
 					}
 					else {
-						s.sendMessage(ChatColor.RED + "This feature has been disabled "); 
+						String message = String.join(" ", args); 
+						message = ChatColor.DARK_GREEN + s.getName() + " asks: " + message; 
+						s.sendMessage(message); 
+						if (plugin.getConfig().getString("allowrequests").equalsIgnoreCase("all")) {
+							Bukkit.broadcastMessage(message); 
+						}
+						else {
+							if (plugin.getConfig().getString("allowrequests").equalsIgnoreCase("permission") || plugin.getConfig().getString("allowrequests").equalsIgnoreCase("both")) {
+								Bukkit.broadcast(message, "oppermissions.oprequest.receive"); 
+							}
+							if (plugin.getConfig().getString("allowrequests").equalsIgnoreCase("op") || plugin.getConfig().getString("allowrequests").equalsIgnoreCase("both")) {
+								Bukkit.broadcast(message, Server.BROADCAST_CHANNEL_ADMINISTRATIVE); 
+							}	
+						}
 					}
 				}
 				else {

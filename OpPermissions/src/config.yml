@@ -3,5 +3,6 @@ updateonplayerjoins: true
 onlyautoupdateonline: false
 allowrequests: no
 opscanop: default
+opscandeop: default
 ops: 
   - aappleton3 
