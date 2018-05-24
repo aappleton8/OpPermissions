@@ -1,12 +1,15 @@
 # OpPermissions
 ## Description: 
-A simple Minecraft Spigot 1.8/1.12 plugin for managing which ops can use the deop command to deop other ops. 
+A simple Minecraft Spigot plugin for managing which ops can use the op and deop command to op players and deop other ops. 
 
-This plugin maintains a list of 'permanent ops' and prevents people on this list from being deopped until someone with the correct permissions removes them from the list. It can also be configured so that players need to have a permission before they can op another player. 
+This plugin maintains a list of 'permanent ops' and prevents people on this list from being deopped until someone with the correct permissions removes them from the list. It can also be configured so that players need to have a permission before they can use the 'op' command or the 'deop' command. 
 
 The terms 'username' and 'playername' are used interchangeably in this plugin and its descriptions. 
 
-This plugin can use either playernames or player UUIDs. Although this plugin can convert between the two, errors are likely to occur if the conversion operation is performed on an offline player. As such, the format to use should be chosen at the start and kept constant. If a conversion is necessary, setting the 'onlyautoupdateonline' config field to true will prevent the plugin updating offline players, avoiding errors. Setting the 'updateonplayerjoins' config field to true will make the plugin convert the players when the come online. 
+This plugin can use either playernames or player UUIDs. Although this plugin can convert between the two, errors are likely to occur (most commonly users' usernames becoming 'null') if the conversion operation is performed on an offline player. As such, the format to use should be chosen at the start and kept constant. If a conversion is necessary, setting the 'onlyautoupdateonline' config field to true will prevent the plugin updating offline players, avoiding errors. Setting the 'updateonplayerjoins' config field to true will make the plugin convert the players when they come online, however, the user may still appear as 'null' until then. 
+
+## Version:
+The current plugin version is 1.0.0.0. It has been tested on Spigot servers running Minecraft versions 1.7.10, 1.8.9 and 1.12.2. Any bug for any version between 1.7.x and 1.12.x will be fixed. This plugin is likely to work with many other Minecraft Spigot and Bukkit versions but this is untested and bugs found with these versions will not necessarily be fixed. 
 
 ## License: 
 This plugin and its source code are released under the MIT license. 
@@ -37,7 +40,7 @@ Below, the individual commands are listed:
  - /opset config set useuuids &lt;true|false&gt; - Set whether the plugin should use usernames or UUIDs 
  - /opset config set updateonplayerjoins &lt;true|false&gt; - Specify if the plugin should check user information each time the user joins 
  - /opset config set onlyautoupdateonline &lt;true|false&gt; - Specify whether the plugin should only automatcally update information for online players or all players (choosing 'false' for all players may perform operations on incorrect or non-existent players) 
- - /opset config updateplayeruuids - Make the plugin update UUIDs or usernames in the config file to the correct format (depending on the 'onlyautoupdateonline' field) 
+ - /opset config verifylist - Update the ops list to convert between UUIDs and playernames, depending on the 'useuuids' config field and the 'onlyautoupdateonline' config field (this conversion will also happen when the 'useuuids' field is set) 
  - /opset list - List the list 
  - /opset check &lt;playername&gt; - Check if someone is on the list 
  - /oplist - List all the ops on the server, depending on the given permissions 
@@ -92,6 +95,7 @@ updateonplayerjoins: true
 onlyautoupdateonline: false
 allowrequests: no
 opscanop: default
+opscandeop: default
 ops: 
   - aappleton3 
   - Codefined

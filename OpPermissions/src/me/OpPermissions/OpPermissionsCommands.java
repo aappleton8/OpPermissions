@@ -368,7 +368,7 @@ public class OpPermissionsCommands implements CommandExecutor {
 						}
 					}
 					else if (args[1].equalsIgnoreCase("verifylist")) {
-						if (s.hasPermission("oppermissions.config.verifylist")) {
+						if (s.hasPermission("oppermissions.config.verifylist") || (s instanceof ConsoleCommandSender)) {
 							updatePlayerUUIDStatus(plugin.getConfig().getBoolean("useuuids")); 
 						}
 						else {
@@ -414,22 +414,17 @@ public class OpPermissionsCommands implements CommandExecutor {
 			else if (args.length == 1) {
 				if (args[0].equalsIgnoreCase("list")) {
 					if (s.hasPermission("oppermissions.list") || (s instanceof ConsoleCommandSender)) {
-						if (plugin.getConfig().getBoolean("useuuids") == false) {
-							s.sendMessage(plugin.getConfig().getString("ops")); 
-						}
-						else {
-							List<String> opUUIDs = plugin.getConfig().getStringList("ops"); 
-							List<String> opNames = new ArrayList<>(); 
-							for (String i : opUUIDs) {
-								try {
-									opNames.add(Bukkit.getOfflinePlayer(UUID.fromString(i)).getName()); 
-								}
-								catch (IllegalArgumentException e) {
-									opNames.add(i); 
-								}
+						List<String> opUUIDs = plugin.getConfig().getStringList("ops"); 
+						List<String> opNames = new ArrayList<>(); 
+						for (String i : opUUIDs) {
+							try {
+								opNames.add(Bukkit.getOfflinePlayer(UUID.fromString(i)).getName()); 
 							}
-							s.sendMessage(opNames.toString()); 
+							catch (IllegalArgumentException e) {
+								opNames.add(i); 
+							}
 						}
+						s.sendMessage(opNames.toString()); 
 					}
 					else {
 						plugin.noPermission(s); 
