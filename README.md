@@ -1,6 +1,6 @@
 # OpPermissions
 ## Description: 
-A simple Minecraft Spigot plugin for managing which ops can use the op and deop command to op players and deop other ops. 
+This is a simple Minecraft Spigot plugin for managing which ops can use the op and deop commands to op players and deop other ops. 
 
 This plugin maintains a list of 'permanent ops' and prevents people on this list from being deopped until someone with the correct permissions removes them from the list. It can also be configured so that players need to have a permission before they can use the 'op' command or the 'deop' command. 
 
