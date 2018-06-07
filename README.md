@@ -8,8 +8,8 @@ The terms 'username' and 'playername' are used interchangeably in this plugin an
 
 This plugin can use either playernames or player UUIDs. Although this plugin can convert between the two, errors are likely to occur (most commonly users' usernames becoming 'null') if the conversion operation is performed on an offline player. As such, the format to use should be chosen at the start and kept constant. If a conversion is necessary, setting the 'onlyautoupdateonline' config field to true will prevent the plugin updating offline players, avoiding errors. Setting the 'updateonplayerjoins' config field to true will make the plugin convert the players when they come online, however, the user may still appear as 'null' until then. 
 
-## Version:
-The current plugin version is 1.0.0.0. It has been tested on Spigot servers running Minecraft versions 1.7.10, 1.8.9 and 1.12.2. Any bug for any version between 1.7.x and 1.12.x will be fixed. This plugin is likely to work with many other Minecraft Spigot and Bukkit versions but this is untested and bugs found with these versions will not necessarily be fixed. 
+## Versions:
+The current plugin release version is 1.0.0.0. The compiled .jar file is available in the 'releases' section. The 'Jar' folder contains the mosty recently compiled plugin version, which will be either a release or a pre-release. The pre-releases may be unstable. The current release of this plugin has been tested on Spigot servers running Minecraft versions 1.7.10, 1.8.9 and 1.12.2. It is designed for Minecraft versions between 1.7.x and 1.12.x, and as such, any bug for any version between 1.7.x and 1.12.x will be fixed. This plugin is likely to work with many other Minecraft Spigot and Bukkit versions but this is untested and bugs found with these versions will not necessarily be fixed. 
 
 ## License: 
 This plugin and its source code are released under the MIT license. 
