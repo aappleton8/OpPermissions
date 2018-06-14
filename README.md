@@ -12,7 +12,7 @@ This plugin can use either playernames or player UUIDs. Although this plugin can
 The current plugin release version is 1.0.0.0. The compiled .jar file is available in the 'releases' section. The 'Jar' folder contains the mosty recently compiled plugin version, which will be either a release or a pre-release. The pre-releases may be unstable. The current release of this plugin has been tested on Spigot servers running Minecraft versions 1.7.10, 1.8.9 and 1.12.2. It is designed for Minecraft versions between 1.7.x and 1.12.x, and as such, any bug for any version between 1.7.x and 1.12.x will be fixed. This plugin is likely to work with many other Minecraft Spigot and Bukkit versions but this is untested and bugs found with these versions will not necessarily be fixed. 
 
 ## License: 
-This plugin and its source code are released under the MIT license. 
+This plugin and its source code are released under the MIT license (see the LICENSE file for full details). This plugin is copyright (c) aappleton3/aappleton8, 2018.  
 
 ## Build: 
 This plugin is built using Eclipse Java Oxygen. To build the plugin, it should be opened in the aforementioned program. The .classpath file should then be recreated, and the craftbukkit-1.12.2.jar file needs to be added as an external build dependency. 
