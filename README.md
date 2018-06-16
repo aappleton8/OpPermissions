@@ -9,7 +9,7 @@ The terms 'username' and 'playername' are used interchangeably in this plugin an
 This plugin can use either playernames or player UUIDs. Although this plugin can convert between the two, errors are likely to occur (most commonly users' usernames becoming 'null') if the conversion operation is performed on an offline player. As such, the format to use should be chosen at the start and kept constant. If a conversion is necessary, setting the 'onlyautoupdateonline' config field to true will prevent the plugin updating offline players, avoiding errors. Setting the 'updateonplayerjoins' config field to true will make the plugin convert the players when they come online, however, the user may still appear as 'null' until then. 
 
 ## Versions:
-The current plugin release version is 1.0.0.0. The compiled .jar file is available in the 'releases' section. The 'Jar' folder contains the mosty recently compiled plugin version, which will be either a release or a pre-release. The pre-releases may be unstable. The current release of this plugin has been tested on Spigot servers running Minecraft versions 1.7.10, 1.8.9 and 1.12.2. It is designed for Minecraft versions between 1.7.x and 1.12.x, and as such, any bug for any version between 1.7.x and 1.12.x will be fixed. This plugin is likely to work with many other Minecraft Spigot and Bukkit versions but this is untested and bugs found with these versions will not necessarily be fixed. 
+The current plugin release version is 1.0.0.1. The compiled .jar file is available in the 'releases' section. The 'Jar' folder contains the most recently compiled plugin version, which will be either a release or a pre-release. The pre-releases may be unstable. The current release of this plugin has been tested on Spigot servers running Minecraft versions 1.7.10, 1.8.9 and 1.12.2. It is designed for Minecraft versions between 1.7.x and 1.12.x, and as such, any bug for any version between 1.7.x and 1.12.x will be fixed. This plugin is likely to work with many other Minecraft Spigot and Bukkit versions but this is untested and bugs found with these versions will not necessarily be fixed. 
 
 ## License: 
 This plugin and its source code are released under the MIT license (see the LICENSE file for full details). This plugin is copyright (c) aappleton3/aappleton8, 2018.  
@@ -40,6 +40,7 @@ Below, the individual commands are listed:
  - /opset config set useuuids &lt;true|false&gt; - Set whether the plugin should use usernames or UUIDs 
  - /opset config set updateonplayerjoins &lt;true|false&gt; - Specify if the plugin should check user information each time the user joins 
  - /opset config set onlyautoupdateonline &lt;true|false&gt; - Specify whether the plugin should only automatcally update information for online players or all players (choosing 'false' for all players may perform operations on incorrect or non-existent players) 
+ - /opset config set announceops &lt;all|permanent|normal|no|false&gt; - Specify of the plugin should announce when ops join 
  - /opset config verifylist - Update the ops list to convert between UUIDs and playernames, depending on the 'useuuids' config field and the 'onlyautoupdateonline' config field (this conversion will also happen when the 'useuuids' field is set) 
  - /opset list - List the list 
  - /opset check &lt;playername&gt; - Check if someone is on the list 
@@ -62,9 +63,10 @@ Below, the individual commands are listed:
  - oppermissions.config.set.* : All */opset config set* commands | Default: false 
  - oppermissions.config.set.opscanop : The */opset config set opscanop &lt;value&gt;* command | Default: false 
  - oppermissions.config.set.allowrequests : The */opset config set allowrequests &lt;value&gt;* command | Default: false 
- - oppermissions.config.set.useuuids : The */opset config set useuuids &lt;value&gt;* command | Defaut: false 
+ - oppermissions.config.set.useuuids : The */opset config set useuuids &lt;value&gt;* command | Default: false 
  - oppermissions.config.set.updateonplayerjoins : The */opset config set updateonplayerjoins &lt;value&gt;* command | Default: false 
  - oppermissions.config.set.onlyautoupdateonline : The */opset config set onlyautoupdateonline &lt;value&gt;* command | Default: false
+ - oppermissions.config.set.announceops : The */opset config set announceops &lt;all|permanent|normal|no|false&gt;* command | Default: false
  - oppermissions.config.seedetailedsethelp : The */opset help config* command | Default: false 
  - oppermissions.config.verifylist : The */opset config updateplayeruuids* command | Default: false 
  - oppermissions.op : Enable the use of the */op* command, depending on the config file | Default: false 
@@ -86,6 +88,7 @@ All configurable options for this plugin are in the 'config.yml' file. This file
  - allowrequests - Sets whether players can use the */oprequest* command or not (op: the requests are sent to ops; permission: the requests are sent to players with the permission *oppermissions.oprequest.see*; both: the requests are sent to ops and people with the permission *oppermissions.oprequest.see*; all: the requests are sent to everyone; no|false: requests cannot be made)  
  - opscanop - Sets whether ops can use the */op* command or not (default: the default happens; op: the player must be an op; permission: the player must have the *oppermissions.op* permission; no|false: the command can only be issued from the console)
  - opscandeop - Sets whether ops can use the */deop* command or not (default: the default happens; op: the player must be an op; permission: the player must have the *oppermissions.op* permission; no|false: the command can only be issued from the console)
+ - announceops - Sets if the plugin should send a message to all plauetrs each time an op joins the server (all: the message is sent if any op joins; permanent: the message is sent if an op on the permanent ops list joins; normal: the message is sent if an op not on the permanent ops list joins; no|false: no message is sent) 
  - ops - The list of permanent ops 
 
 The default config file (config.yml) is given below: 
@@ -96,6 +99,7 @@ onlyautoupdateonline: false
 allowrequests: no
 opscanop: default
 opscandeop: default
+announceops: no
 ops: 
   - aappleton3 
   - Codefined

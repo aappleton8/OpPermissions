@@ -100,6 +100,7 @@ public class OpPermissionsCommands implements CommandExecutor {
 		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set useuuids true|false " + ChatColor.AQUA + "- Set the useuuids field ");
 		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set updateonplayerjoins true|false " + ChatColor.AQUA + "- Set the updateonplayerjoins field ");
 		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set onlyautoupdateonline true|false " + ChatColor.AQUA + "- Set the onlyautoupdateonline field ");
+		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set announceops all|permanent|normal|no|false " + ChatColor.AQUA + "- Set the announceops field "); 
 	}
 	
 	private void configUpdateMessage() {
@@ -158,9 +159,9 @@ public class OpPermissionsCommands implements CommandExecutor {
 			if (args.length == 4) {
 				if (args[0].equalsIgnoreCase("config") && args[1].equalsIgnoreCase("set")) {
 					if (args[2].equalsIgnoreCase("opscanop") || args[2].equalsIgnoreCase("opscandeop")) {
-						if (s.hasPermission("oppermissions.config.set." + args[2]) || (s instanceof ConsoleCommandSender)) {
+						if (s.hasPermission("oppermissions.config.set." + args[2].toLowerCase()) || (s instanceof ConsoleCommandSender)) {
 							if (args[3].equalsIgnoreCase("op") || args[3].equalsIgnoreCase("permission") || args[3].equalsIgnoreCase("no") || args[3].equalsIgnoreCase("default") || args[3].equalsIgnoreCase("false")) {
-								plugin.getConfig().set(args[2], args[3]); 
+								plugin.getConfig().set(args[2].toLowerCase(), args[3].toLowerCase()); 
 								configUpdateMessage(); 
 							}
 							else {
@@ -174,7 +175,7 @@ public class OpPermissionsCommands implements CommandExecutor {
 					else if (args[2].equalsIgnoreCase("allowrequests")) {
 						if (s.hasPermission("oppermissions.config.set.allowrequests") || (s instanceof ConsoleCommandSender)) {
 							if (args[3].equalsIgnoreCase("op") || args[3].equalsIgnoreCase("permission") || args[3].equalsIgnoreCase("no") || args[3].equalsIgnoreCase("false") || args[3].equalsIgnoreCase("all") || args[3].equalsIgnoreCase("both")) {
-								plugin.getConfig().set("allowrequests", args[3]); 
+								plugin.getConfig().set("allowrequests", args[3].toLowerCase()); 
 								configUpdateMessage(); 
 							}
 							else {
@@ -192,9 +193,11 @@ public class OpPermissionsCommands implements CommandExecutor {
 							}
 							else if (args[3].equalsIgnoreCase("true")) {
 								updatePlayerUUIDStatus(true); 
+								configUpdateMessage(); 
 							}
 							else if (args[3].equalsIgnoreCase("false")) {
 								updatePlayerUUIDStatus(false); 
+								configUpdateMessage(); 
 							}
 							else {
 								s.sendMessage(ChatColor.RED + "The value of the 'useuuids' field must be either 'true' or 'false'"); 
@@ -205,7 +208,7 @@ public class OpPermissionsCommands implements CommandExecutor {
 						}
 					}
 					else if (args[2].equalsIgnoreCase("updateonplayerjoins") || args[2].equalsIgnoreCase("onlyautoupdateonline")) {
-						if (s.hasPermission("oppermissions.config.set." + args[2]) || (s instanceof ConsoleCommandSender)) {
+						if (s.hasPermission("oppermissions.config.set." + args[2].toLowerCase()) || (s instanceof ConsoleCommandSender)) {
 							if (args[3].equalsIgnoreCase("true")) {
 								plugin.getConfig().set(args[2], true); 
 								configUpdateMessage(); 
@@ -216,6 +219,20 @@ public class OpPermissionsCommands implements CommandExecutor {
 							}
 							else {
 								s.sendMessage(ChatColor.RED + "The value of the " + args[2] + " field must be either 'true' or 'false'"); 
+							}
+						}
+						else {
+							plugin.noPermission(s); 
+						}
+					}
+					else if (args[2].equalsIgnoreCase("announceops")) {
+						if (s.hasPermission("oppermissions.config.set.announceops")) {
+							if (args[3].equalsIgnoreCase("all") || args[3].equalsIgnoreCase("permanent") || args[3].equalsIgnoreCase("normal") || args[3].equalsIgnoreCase("no") || args[3].equalsIgnoreCase("false")) {
+								plugin.getConfig().set("announceops", args[3].toLowerCase()); 
+								configUpdateMessage(); 
+							}
+							else {
+								s.sendMessage(ChatColor.RED + "The value of the " + args[2] + " field must be 'all', 'permanent', 'normal', 'no' or 'falsel'"); 
 							}
 						}
 						else {

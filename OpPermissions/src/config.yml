@@ -4,5 +4,6 @@ onlyautoupdateonline: false
 allowrequests: no
 opscanop: default
 opscandeop: default
+announceops: no
 ops: 
   - aappleton3 

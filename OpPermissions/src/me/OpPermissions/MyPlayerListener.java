@@ -21,13 +21,19 @@ public class MyPlayerListener implements Listener {
 		logger = log; 
 	}
 	
+	private void announceOp(String name) {
+		Bukkit.broadcastMessage(ChatColor.DARK_AQUA + plugin.formattedPluginName + "An op (" + name + ") has joined. "); 
+	}
+	
 	@EventHandler (ignoreCancelled = true, priority = EventPriority.MONITOR) 
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		if (plugin.getConfig().getBoolean("updateonplayerjoins") == true) {
 			List<String> ops = plugin.getConfig().getStringList("ops"); 
 			Player player = event.getPlayer(); 
 			if (ops.contains(player.getName()) || ops.contains(player.getUniqueId().toString())) {
-				Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "op " + player.getName()); 
+				if (player.isOp() == false) {
+					Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "op " + player.getName()); 
+				}
 			}
 			if (plugin.getConfig().getBoolean("useuuids") == false) {
 				if (ops.contains(player.getUniqueId().toString())) {
@@ -45,6 +51,23 @@ public class MyPlayerListener implements Listener {
 						ops.add(player.getUniqueId().toString()); 
 					}
 					plugin.getConfig().set("ops", ops); 
+				}
+			}
+		}
+		if (event.getPlayer().isOp() == true) {
+			String announceOps = plugin.getConfig().getString("announceops"); 
+			if (!(announceOps.equalsIgnoreCase("false") || announceOps.equalsIgnoreCase("no"))) {
+				List<String> ops = plugin.getConfig().getStringList("ops"); 
+				Player player = event.getPlayer(); 
+				if (ops.contains(player.getName()) || ops.contains(player.getUniqueId().toString())) {
+					if (announceOps.equalsIgnoreCase("all") || announceOps.equalsIgnoreCase("permanent")) {
+						announceOp(player.getDisplayName()); 
+					}
+				}
+				else {
+					if (announceOps.equalsIgnoreCase("all") || announceOps.equalsIgnoreCase("normal")) {
+						announceOp(player.getDisplayName()); 
+					}
 				}
 			}
 		}
