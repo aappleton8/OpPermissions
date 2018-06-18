@@ -22,7 +22,7 @@ public class MyPlayerListener implements Listener {
 	}
 	
 	private void announceOp(String name) {
-		Bukkit.broadcastMessage(ChatColor.DARK_AQUA + plugin.formattedPluginName + "An op (" + name + ") has joined. "); 
+		Bukkit.broadcastMessage(ChatColor.DARK_AQUA + plugin.formattedPluginName + "An op (" + name + ChatColor.DARK_AQUA + ") has joined. "); 
 	}
 	
 	@EventHandler (ignoreCancelled = true, priority = EventPriority.MONITOR) 
