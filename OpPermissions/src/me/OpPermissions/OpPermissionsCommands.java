@@ -242,6 +242,7 @@ public class OpPermissionsCommands implements CommandExecutor {
 					else {
 						return false; 
 					}
+					plugin.saveConfig(); 
 				}
 				else {
 					return false; 
@@ -301,6 +302,7 @@ public class OpPermissionsCommands implements CommandExecutor {
 								s.sendMessage(ChatColor.GREEN + args[1] + " added to the permenant ops list "); 
 								Bukkit.broadcast(ChatColor.GREEN + plugin.formattedPluginName + args[1] + " was added to the permenant ops list", "oppermissions.seepluginmessages"); 
 							}
+							plugin.saveConfig(); 
 						}
 					}
 					else {
@@ -336,6 +338,7 @@ public class OpPermissionsCommands implements CommandExecutor {
 								s.sendMessage(ChatColor.GREEN + args[1] + " removed from the permenant ops list "); 
 								Bukkit.broadcast(ChatColor.GREEN + plugin.formattedPluginName + args[1] + " was removed from the permenant ops list", "oppermissions.seepluginmessages"); 
 							}
+							plugin.saveConfig(); 
 						}
 					}
 					else {
@@ -387,6 +390,7 @@ public class OpPermissionsCommands implements CommandExecutor {
 					else if (args[1].equalsIgnoreCase("verifylist")) {
 						if (s.hasPermission("oppermissions.config.verifylist") || (s instanceof ConsoleCommandSender)) {
 							updatePlayerUUIDStatus(plugin.getConfig().getBoolean("useuuids")); 
+							plugin.saveConfig(); 
 						}
 						else {
 							plugin.noPermission(s); 
@@ -574,7 +578,6 @@ public class OpPermissionsCommands implements CommandExecutor {
 		else {
 			return false; 
 		}
-		plugin.saveConfig(); 
 		return true;
 	}
 }
