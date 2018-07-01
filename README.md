@@ -34,13 +34,13 @@ Below, the individual commands are listed:
  - /opset remove &lt;playername&gt; - Removes a player from the list 
  - /opset config reload - Reload the config file 
  - /opset config save - Save the config file 
- - /opset config set opscanop &lt;default|op|permission|no|false&gt; - Set if ops can use the */op* command 
- - /opset config set opscandeop &lt;default|op|permission|no|false&gt; - Set if ops can use the */deop* command 
- - /opset config set allowrequests &lt;op|permission|no&gt; - Enables or disables the */oprequest* command and sets which players see the request
- - /opset config set useuuids &lt;true|false&gt; - Set whether the plugin should use usernames or UUIDs 
- - /opset config set updateonplayerjoins &lt;true|false&gt; - Specify if the plugin should check user information each time the user joins 
- - /opset config set onlyautoupdateonline &lt;true|false&gt; - Specify whether the plugin should only automatcally update information for online players or all players (choosing 'false' for all players may perform operations on incorrect or non-existent players) 
- - /opset config set announceops &lt;all|permanent|normal|no|false&gt; - Specify of the plugin should announce when ops join 
+ - /opset config set opscanop default|op|permission|no|false - Set if ops can use the */op* command 
+ - /opset config set opscandeop default|op|permission|no|false - Set if ops can use the */deop* command 
+ - /opset config set allowrequests op|permission|no - Enables or disables the */oprequest* command and sets which players see the request
+ - /opset config set useuuids true|false - Set whether the plugin should use usernames or UUIDs 
+ - /opset config set updateonplayerjoins true|false - Specify if the plugin should check user information each time the user joins 
+ - /opset config set onlyautoupdateonline true|false - Specify whether the plugin should only automatcally update information for online players or all players (choosing 'false' for all players may perform operations on incorrect or non-existent players) 
+ - /opset config set announceops all|permanent|normal|no|false - Specify of the plugin should announce when ops join 
  - /opset config verifylist - Update the ops list to convert between UUIDs and playernames, depending on the 'useuuids' config field and the 'onlyautoupdateonline' config field (this conversion will also happen when the 'useuuids' field is set) 
  - /opset list - List the list 
  - /opset check &lt;playername&gt; - Check if someone is on the list 
