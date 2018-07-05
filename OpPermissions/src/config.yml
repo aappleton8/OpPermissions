@@ -1,9 +1,8 @@
-useuuids: false
+useuuids: true
 updateonplayerjoins: true
-onlyautoupdateonline: false
-allowrequests: no
+onlyautoupdateonline: true
+allowrequests: both
 opscanop: default
 opscandeop: default
 announceops: no
-ops: 
-  - aappleton3 
+ops: []

@@ -18,8 +18,8 @@ public class OpPermissionsMainClass extends JavaPlugin {
 	
 	@Override
 	public void onDisable() {
-		logger.info(formattedPluginName + descriptionFile.getName() + " " + descriptionFile.getVersion() + " has been disabled "); 
 		saveConfig(); 
+		logger.info(formattedPluginName + descriptionFile.getName() + " " + descriptionFile.getVersion() + " has been disabled "); 
 	}
 	
 	@Override
@@ -28,13 +28,13 @@ public class OpPermissionsMainClass extends JavaPlugin {
 		pm.registerEvents(pl, this); 
 		descriptionFile = getDescription(); 
 		formattedPluginName = "[" + descriptionFile.getName() + "] "; 
-		logger.info(formattedPluginName + descriptionFile.getName() + " " + descriptionFile.getVersion() + " has been enabled "); 
 		saveDefaultConfig(); 
 		OpPermissionsCommands opc = new OpPermissionsCommands(this); 
 		getCommand("opset").setExecutor(opc); 
 		getCommand("oppermissions").setExecutor(opc); 
 		getCommand("oplist").setExecutor(opc); 
 		getCommand("oprequest").setExecutor(opc); 
+		logger.info(formattedPluginName + descriptionFile.getName() + " " + descriptionFile.getVersion() + " has been enabled "); 
 	}
 	
 	public void noPermission(CommandSender sender) {

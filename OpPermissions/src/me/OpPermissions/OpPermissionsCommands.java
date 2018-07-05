@@ -86,7 +86,7 @@ public class OpPermissionsCommands implements CommandExecutor {
 			if (s.hasPermission("oppermissions.oplist.offline") || showAll) {
 				s.sendMessage(ChatColor.DARK_PURPLE + "/oplist offline " + ChatColor.AQUA + "- List all the offline ops "); 
 			}
-			if (plugin.getConfig().getString("allowrequests") != "no" && (s.hasPermission("oppermissions.oprequest.send") || showAll)) {
+			if ((plugin.getConfig().getString("allowrequests") != "no") && (plugin.getConfig().getString("allowrequests") != "false") && (s.hasPermission("oppermissions.oprequest.send") || showAll)) {
 				s.sendMessage(ChatColor.DARK_PURPLE + "/oprequest " + ChatColor.AQUA + "- Send a message request to the ops "); 
 			}
 		}
@@ -551,7 +551,7 @@ public class OpPermissionsCommands implements CommandExecutor {
 						s.sendMessage(ChatColor.RED + "This feature has been disabled "); 
 						Bukkit.broadcast(ChatColor.RED + "The " + plugin.getName() + " plugin config has an invalid value ", "oppermissions.seepluginmessages"); 
 						Bukkit.broadcast(ChatColor.RED + "The " + plugin.getName() + " plugin config has an invalid value ", "oppermissions.oprequest.receive"); 
-						plugin.logger.warning(plugin.formattedPluginName + "The config has an invalid value in the allowrequests field (it should be 'op', 'permission' or 'no'"); 
+						plugin.logger.warning(plugin.formattedPluginName + "The config has an invalid value in the allowrequests field (it should be 'op', 'permission', 'all', 'both', 'false' or 'no'"); 
 					}
 					else {
 						String message = String.join(" ", args); 
