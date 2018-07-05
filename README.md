@@ -9,13 +9,13 @@ The terms 'username' and 'playername' are used interchangeably in this plugin an
 This plugin can use either playernames or player UUIDs. Although this plugin can convert between the two, errors are likely to occur (most commonly users' usernames becoming 'null') if the conversion operation is performed on an offline player. As such, the format to use should be chosen at the start and kept constant. If a conversion is necessary, setting the 'onlyautoupdateonline' config field to true will prevent the plugin updating offline players, avoiding errors. Setting the 'updateonplayerjoins' config field to true will make the plugin convert the players when they come online, however, the user may still appear as 'null' until then. 
 
 ## Versions:
-The current plugin release version is 1.0.1.2. The compiled .jar file is available in the 'releases' section. The 'Jar' folder contains the most recently compiled plugin version, which will be either a release or a pre-release. The pre-releases may be unstable. The current release of this plugin has been tested on Spigot servers running Minecraft versions 1.7.10, 1.8.9 and 1.12.2. It is designed for Minecraft versions between 1.7.x and 1.12.x, and as such, any bug for any version between 1.7.x and 1.12.x will be fixed. This plugin is likely to work with many other Minecraft Spigot and Bukkit versions but this is untested and bugs found with these versions will not necessarily be fixed. 
+The current plugin release version is 1.0.1.3. The compiled .jar file is available in the 'releases' section. The 'Jar' folder contains the most recently compiled plugin version that runs; this may be the same as the most recent release or it may be a development build. The development builds may be unstable. The current release of this plugin has been tested on Spigot servers running Minecraft versions 1.7.10, 1.8.9 and 1.12.2. It is designed for Minecraft versions between 1.7.x and 1.12.x, and as such, any bug for any version between 1.7.x and 1.12.x will be fixed. This plugin is likely to work with many other Minecraft Spigot and Bukkit versions but this is untested and bugs found with these versions will not necessarily be fixed. 
 
 ## License: 
 This plugin and its source code are released under the MIT license (see the [LICENSE file](https://github.com/aappleton8/OpPermissions/blob/master/LICENSE) for full details). This plugin is copyright (c) aappleton3/aappleton8, 2018.  
 
 ## Build: 
-This plugin is built using Eclipse Java Oxygen. To build the plugin, it should be opened in the aforementioned program. The .classpath file should then be recreated, and the craftbukkit-1.12.2.jar file needs to be added as an external build dependency. 
+This plugin is built using Eclipse. To build the plugin, the .classpath file firstly needs to be recreated using Eclipse, and the craftbukkit-1.12.2.jar file needs to be added as an external build dependency. 
 
 ## Commands: 
 The general command syntaxes are: 
@@ -93,10 +93,10 @@ All configurable options for this plugin are in the 'config.yml' file. This file
 
 The default config file (config.yml) is given below: 
 ```YAML
-useuuids: false
+useuuids: true
 updateonplayerjoins: true
-onlyautoupdateonline: false
-allowrequests: no
+onlyautoupdateonline: true
+allowrequests: both
 opscanop: default
 opscandeop: default
 announceops: no
