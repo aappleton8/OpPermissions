@@ -14,6 +14,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
 
 public class OpPermissionsCommands implements CommandExecutor {
 	public static OpPermissionsMainClass plugin; 
@@ -445,7 +446,12 @@ public class OpPermissionsCommands implements CommandExecutor {
 								opNames.add(i); 
 							}
 						}
-						s.sendMessage(opNames.toString()); 
+						if (opNames.isEmpty()) {
+							s.sendMessage(ChatColor.DARK_RED + "There are no permanent ops "); 
+						}
+						else {
+							s.sendMessage(ChatColor.DARK_GREEN + opNames.toString()); 
+						}
 					}
 					else {
 						plugin.noPermission(s); 
@@ -543,11 +549,12 @@ public class OpPermissionsCommands implements CommandExecutor {
 				return false; 
 			}
 			else {
+				String canSeeMessage = plugin.getConfig().getString("allowrequests"); 
 				if (s.hasPermission("oppermissions.oprequest.send") || (s instanceof ConsoleCommandSender)) {
 					if (plugin.getConfig().getString("allowrequests").equalsIgnoreCase("no") || plugin.getConfig().getString("allowrequests").equalsIgnoreCase("false")) {
 						s.sendMessage(ChatColor.RED + "This feature has been disabled "); 
 					}
-					else if (!(plugin.getConfig().getString("allowrequests").equalsIgnoreCase("all") || plugin.getConfig().getString("allowrequests").equalsIgnoreCase("both") || plugin.getConfig().getString("allowrequests").equalsIgnoreCase("op") || plugin.getConfig().getString("allowrequests").equalsIgnoreCase("permission"))) {
+					else if (!(canSeeMessage.equalsIgnoreCase("all") || canSeeMessage.equalsIgnoreCase("both") || canSeeMessage.equalsIgnoreCase("op") || canSeeMessage.equalsIgnoreCase("permission"))) {
 						s.sendMessage(ChatColor.RED + "This feature has been disabled "); 
 						Bukkit.broadcast(ChatColor.RED + "The " + plugin.getName() + " plugin config has an invalid value ", "oppermissions.seepluginmessages"); 
 						Bukkit.broadcast(ChatColor.RED + "The " + plugin.getName() + " plugin config has an invalid value ", "oppermissions.oprequest.receive"); 
@@ -556,17 +563,23 @@ public class OpPermissionsCommands implements CommandExecutor {
 					else {
 						String message = String.join(" ", args); 
 						message = ChatColor.DARK_GREEN + s.getName() + " asks: " + message; 
-						s.sendMessage(message); 
-						if (plugin.getConfig().getString("allowrequests").equalsIgnoreCase("all")) {
+						if (canSeeMessage.equalsIgnoreCase("all")) {
 							Bukkit.broadcastMessage(message); 
 						}
 						else {
-							if (plugin.getConfig().getString("allowrequests").equalsIgnoreCase("permission") || plugin.getConfig().getString("allowrequests").equalsIgnoreCase("both")) {
+							if (s instanceof Player) {
+								s.sendMessage(message); 
+							}
+							if (canSeeMessage.equalsIgnoreCase("permission")) {
 								Bukkit.broadcast(message, "oppermissions.oprequest.receive"); 
 							}
-							if (plugin.getConfig().getString("allowrequests").equalsIgnoreCase("op") || plugin.getConfig().getString("allowrequests").equalsIgnoreCase("both")) {
+							else if (canSeeMessage.equalsIgnoreCase("op")) {
 								Bukkit.broadcast(message, Server.BROADCAST_CHANNEL_ADMINISTRATIVE); 
-							}	
+							}
+							else if (canSeeMessage.equalsIgnoreCase("both")) {
+								Bukkit.broadcast(message, "oppermissions.oprequest.receive"); 
+								Bukkit.broadcast(message, Server.BROADCAST_CHANNEL_ADMINISTRATIVE); 
+							}
 						}
 					}
 				}
