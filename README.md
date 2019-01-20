@@ -88,7 +88,7 @@ All configurable options for this plugin are in the 'config.yml' file. This file
  - allowrequests - Sets whether players can use the */oprequest* command or not (op: the requests are sent to ops; permission: the requests are sent to players with the permission *oppermissions.oprequest.see*; both: the requests are sent to ops and people with the permission *oppermissions.oprequest.see*; all: the requests are sent to everyone; no|false: requests cannot be made)  
  - opscanop - Sets whether ops can use the */op* command or not (default: the default happens; op: the player must be an op; permission: the player must have the *oppermissions.op* permission; no|false: the command can only be issued from the console)
  - opscandeop - Sets whether ops can use the */deop* command or not (default: the default happens; op: the player must be an op; permission: the player must have the *oppermissions.op* permission; no|false: the command can only be issued from the console)
- - announceops - Sets if the plugin should send a message to all plauetrs each time an op joins the server (all: the message is sent if any op joins; permanent: the message is sent if an op on the permanent ops list joins; normal: the message is sent if an op not on the permanent ops list joins; no|false: no message is sent) 
+ - announceops - Sets if the plugin should send a message to all players each time an op joins the server (all: the message is sent if any op joins; permanent: the message is sent if an op on the permanent ops list joins; normal: the message is sent if an op not on the permanent ops list joins; no|false: no message is sent) 
  - ops - The list of permanent ops 
 
 The default config file (config.yml) is given below: 
