@@ -33,9 +33,9 @@ public class OpPermissionsCommands implements CommandExecutor {
 		if (page == 1) {
 			s.sendMessage(ChatColor.DARK_AQUA + "The commands for the " + ChatColor.AQUA + plugin.getName() + ChatColor.DARK_AQUA + " plugin are: "); 
 			s.sendMessage(ChatColor.DARK_PURPLE + "/oppermissions " + ChatColor.AQUA + "- Show help messages "); 
-			s.sendMessage(ChatColor.DARK_PURPLE + "/opset help [1|2] " + ChatColor.AQUA + "- Show help messages "); 
+			s.sendMessage(ChatColor.DARK_PURPLE + "/opset help [1|2|3] " + ChatColor.AQUA + "- Show help messages "); 
 			if (s.hasPermission("oppermissions.showallhelp") || showAll) {
-				s.sendMessage(ChatColor.DARK_PURPLE + "/opset help all [1|2] " + ChatColor.AQUA + "- Show help for all " + plugin.getName() + " commands "); 
+				s.sendMessage(ChatColor.DARK_PURPLE + "/opset help all [1|2|3] " + ChatColor.AQUA + "- Show help for all " + plugin.getName() + " commands "); 
 				s.sendMessage(ChatColor.DARK_PURPLE + "/opset help config " + ChatColor.AQUA + "- Show help for config fields " + plugin.getName() + " commands "); 
 			}
 			else if (s.hasPermission("oppermissions.config.seedetailedsethelp") || showAll) {
@@ -61,7 +61,7 @@ public class OpPermissionsCommands implements CommandExecutor {
 				s.sendMessage(ChatColor.DARK_AQUA + "More help commands are on page 2 (" + ChatColor.DARK_PURPLE + "/opset help 2" + ChatColor.DARK_AQUA + ") "); 
 			}
 		}
-		else {
+		else if (page == 2) {
 			s.sendMessage(ChatColor.DARK_AQUA + "The commands for the " + ChatColor.AQUA + plugin.getName() + ChatColor.DARK_AQUA + " plugin are: "); 
 			if (s.hasPermission("oppermissions.config.save") || showAll) {
 				s.sendMessage(ChatColor.DARK_PURPLE + "/opset config save " + ChatColor.AQUA + "- Save the config file "); 
@@ -91,6 +91,21 @@ public class OpPermissionsCommands implements CommandExecutor {
 				s.sendMessage(ChatColor.DARK_PURPLE + "/oprequest " + ChatColor.AQUA + "- Send a message request to the ops "); 
 			}
 		}
+		else {
+			s.sendMessage(ChatColor.DARK_AQUA + "The commands for the " + ChatColor.AQUA + plugin.getName() + ChatColor.DARK_AQUA + " plugin are: "); 
+			if (s.hasPermission("oppermissions.command.add") || showAll) {
+				s.sendMessage(ChatColor.DARK_PURPLE + "/opcommands add <command> " + ChatColor.AQUA + "- Block a new command ");
+			}
+			if (s.hasPermission("oppermissions.command.remove") || showAll) {
+				s.sendMessage(ChatColor.DARK_PURPLE + "/opcommands remove <command> " + ChatColor.AQUA + "- Unblock a command ");
+			}
+			if (s.hasPermission("oppermissions.command.check") || showAll) {
+				s.sendMessage(ChatColor.DARK_PURPLE + "/opcommands check <command> " + ChatColor.AQUA + "- Check to see if a command is blocked ");
+			}
+			if (s.hasPermission("oppermissions.command.list") || showAll) {
+				s.sendMessage(ChatColor.DARK_PURPLE + "/opcommands list " + ChatColor.AQUA + "- List the blocked commands ");
+			}
+		}
 	}
 	
 	private void helpConfigFields(CommandSender s) {
@@ -102,6 +117,7 @@ public class OpPermissionsCommands implements CommandExecutor {
 		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set updateonplayerjoins true|false " + ChatColor.AQUA + "- Set the updateonplayerjoins field ");
 		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set onlyautoupdateonline true|false " + ChatColor.AQUA + "- Set the onlyautoupdateonline field ");
 		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set announceops all|permanent|normal|no|false " + ChatColor.AQUA + "- Set the announceops field "); 
+		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set permanentopsusecommands true|false " + ChatColor.AQUA + "- Set the permanentopsusecommands field");
 	}
 	
 	private void configUpdateMessage() {
@@ -208,7 +224,7 @@ public class OpPermissionsCommands implements CommandExecutor {
 							plugin.noPermission(s); 
 						}
 					}
-					else if (args[2].equalsIgnoreCase("updateonplayerjoins") || args[2].equalsIgnoreCase("onlyautoupdateonline")) {
+					else if (args[2].equalsIgnoreCase("updateonplayerjoins") || args[2].equalsIgnoreCase("onlyautoupdateonline") || args[2].equalsIgnoreCase("permanentopsusecommands")) {
 						if (s.hasPermission("oppermissions.config.set." + args[2].toLowerCase()) || (s instanceof ConsoleCommandSender)) {
 							if (args[3].equalsIgnoreCase("true")) {
 								plugin.getConfig().set(args[2], true); 
@@ -562,29 +578,95 @@ public class OpPermissionsCommands implements CommandExecutor {
 					}
 					else {
 						String message = String.join(" ", args); 
-						message = ChatColor.DARK_GREEN + s.getName() + " asks: " + message; 
+						message = ChatColor.DARK_GREEN + s.getName() + " asks: " + ChatColor.GREEN + message; 
 						if (canSeeMessage.equalsIgnoreCase("all")) {
 							Bukkit.broadcastMessage(message); 
 						}
 						else {
-							if (s instanceof Player) {
-								s.sendMessage(message); 
-							}
 							if (canSeeMessage.equalsIgnoreCase("permission")) {
 								Bukkit.broadcast(message, "oppermissions.oprequest.receive"); 
+								if ((s instanceof Player) && (s.hasPermission("oppermissions.oprequest.receive") == false)) {
+									s.sendMessage(message); 
+								}
 							}
 							else if (canSeeMessage.equalsIgnoreCase("op")) {
 								Bukkit.broadcast(message, Server.BROADCAST_CHANNEL_ADMINISTRATIVE); 
+								if ((s instanceof Player) && (s.isOp() == false)) {
+									s.sendMessage(message); 
+								}
 							}
 							else if (canSeeMessage.equalsIgnoreCase("both")) {
 								Bukkit.broadcast(message, "oppermissions.oprequest.receive"); 
 								Bukkit.broadcast(message, Server.BROADCAST_CHANNEL_ADMINISTRATIVE); 
+								if ((s instanceof Player) && (s.hasPermission("oppermissions.oprequest.receive") == false) && (s.isOp() == false)) {
+									s.sendMessage(message); 
+								}
 							}
 						}
 					}
 				}
 				else {
 					plugin.noPermission(s); 
+				}
+			}
+		}
+		else if (l.equalsIgnoreCase("opcommand")) {
+			if (args.length == 0) {
+				return false; 
+			}
+			else if (args.length == 1) {
+				if (args[0].equalsIgnoreCase("list")) {
+					List<String> blockedCommands = plugin.getConfig().getStringList("commands"); 
+					if (blockedCommands.isEmpty()) {
+						s.sendMessage(ChatColor.RED + "There are no blocked commands");
+					}
+					else {
+						s.sendMessage(blockedCommands.toString());
+					}
+				}
+				else {
+					return false;
+				}
+			}
+			else {
+				if (args[0].equalsIgnoreCase("add")) {
+					List<String> blockedCommands = plugin.getConfig().getStringList("commands"); 
+					String command = String.join(" ", args).split(" ", 2)[1]; 
+					if (blockedCommands.contains(command)) {
+						s.sendMessage(ChatColor.RED + "'" + ChatColor.GRAY + command + ChatColor.RED + "' is already a blocked command "); 
+					}
+					else {
+						blockedCommands.add(command); 
+						plugin.getConfig().set("commands", blockedCommands); 
+						plugin.saveConfig();
+						s.sendMessage(ChatColor.GREEN + "'" + ChatColor.GRAY + command + ChatColor.GREEN + "' is now blocked "); 
+					}
+				}
+				else if (args[0].equalsIgnoreCase("remove")) {
+					List<String> blockedCommands = plugin.getConfig().getStringList("commands"); 
+					String command = String.join(" ", args).split(" ", 2)[1]; 
+					if (blockedCommands.contains(command)) {
+						blockedCommands.remove(command); 
+						plugin.getConfig().set("commands", blockedCommands); 
+						plugin.saveConfig();
+						s.sendMessage(ChatColor.GREEN + "'" + ChatColor.GRAY + command + ChatColor.GREEN + "' is no longer blocked "); 
+					}
+					else {
+						s.sendMessage(ChatColor.RED + "'" + ChatColor.GRAY + command + ChatColor.RED + "' is not a blocked command so could not be unblocked "); 
+					}
+				}
+				else if (args[0].equalsIgnoreCase("check")) {
+					List<String> blockedCommands = plugin.getConfig().getStringList("commands"); 
+					String command = String.join(" ", args).split(" ", 2)[1]; 
+					if (blockedCommands.contains(command)) {
+						s.sendMessage(ChatColor.GREEN + "'" + ChatColor.GRAY + command + ChatColor.GREEN + "' is a blocked command "); 
+					}
+					else {
+						s.sendMessage(ChatColor.GREEN + "'" + ChatColor.GRAY + command + ChatColor.GREEN + "' is not a blocked command ");
+					}
+				}
+				else {
+					return false; 
 				}
 			}
 		}

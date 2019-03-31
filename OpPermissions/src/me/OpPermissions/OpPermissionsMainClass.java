@@ -34,6 +34,7 @@ public class OpPermissionsMainClass extends JavaPlugin {
 		getCommand("oppermissions").setExecutor(opc); 
 		getCommand("oplist").setExecutor(opc); 
 		getCommand("oprequest").setExecutor(opc); 
+		getCommand("opcommand").setExecutor(opc);
 		logger.info(formattedPluginName + descriptionFile.getName() + " " + descriptionFile.getVersion() + " has been enabled "); 
 	}
 	

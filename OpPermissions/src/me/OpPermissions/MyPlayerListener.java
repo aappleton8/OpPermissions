@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -127,10 +128,38 @@ public class MyPlayerListener implements Listener {
 				}
 			}
 		}
+		else {
+			List<String> blockedCommands = plugin.getConfig().getStringList("commands"); 
+			if (blockedCommands.contains(event.getMessage().replace("/", "").toLowerCase())) {
+				if (event.getPlayer().hasPermission("oppermissions.command.command")) {
+					// No action required 
+				}
+				else if (plugin.getConfig().getBoolean("permanentopsusecommands")) {
+					String playerId = null; 
+					if (plugin.getConfig().getBoolean("useuuids") == false) {
+						playerId = event.getPlayer().getName(); 
+					}
+					else {
+						playerId = event.getPlayer().getUniqueId().toString(); 
+					}
+					if (plugin.getConfig().getStringList("ops").contains(playerId)) {
+						// No action required
+					}
+					else {
+						event.setCancelled(true);
+						plugin.noPermission((CommandSender) event.getPlayer());
+					}
+				}
+				else {
+					event.setCancelled(true);
+					plugin.noPermission((CommandSender) event.getPlayer());
+				}
+			}
+		}
 		if ((event.getMessage().startsWith("/deop")) && (canDeop == true)) {
 			String[] rawArgs = event.getMessage().replace("/", "").split(" "); 
 			if (rawArgs.length == 2 && rawArgs[0].equalsIgnoreCase("deop")) { 
-				List<String> permenantOps = plugin.getConfig().getStringList("ops"); 
+				List<String> permanentOps = plugin.getConfig().getStringList("ops"); 
 				String playerId = rawArgs[1]; 
 				if (plugin.getConfig().getBoolean("onlyautoupdateonline") == true && Bukkit.getOfflinePlayer(playerId).isOnline() == false) {
 					event.getPlayer().sendMessage(ChatColor.RED + "This player is not online "); 
@@ -140,12 +169,12 @@ public class MyPlayerListener implements Listener {
 					if (plugin.getConfig().getBoolean("useuuids") == true) {
 						playerId = Bukkit.getOfflinePlayer(playerId).getUniqueId().toString(); 
 					}
-					for (String i : permenantOps) {
-						if ((i.equalsIgnoreCase(playerId)) && (!(event.getPlayer().hasPermission("oppermissions.remove")))) {
+					if (permanentOps.contains(playerId)) {
+						if (!(event.getPlayer().hasPermission("oppermissions.remove"))) {
 							event.setCancelled(true); 
 							event.getPlayer().sendMessage(ChatColor.RED + "You do not have permission to deop this player "); 
 						}
-						else if ((i.equalsIgnoreCase(playerId)) && (event.getPlayer().hasPermission("oppermissions.remove"))) {
+						else if (event.getPlayer().hasPermission("oppermissions.remove")) {
 							List<String> ops = plugin.getConfig().getStringList("ops"); 
 							ops.remove(playerId); 
 							plugin.getConfig().set("ops", ops); 
@@ -168,18 +197,16 @@ public class MyPlayerListener implements Listener {
 					event.setCancelled(true); 
 				}
 				else {
-					List<String> permenantOps = plugin.getConfig().getStringList("ops"); 
+					List<String> permanentOps = plugin.getConfig().getStringList("ops"); 
 					String playerId = rawArgs[1]; 
 					if (plugin.getConfig().getBoolean("useuuids") == true) {
 						playerId = Bukkit.getOfflinePlayer(playerId).getUniqueId().toString(); 
 					}
-					for (String i : permenantOps) {
-						if (i.equalsIgnoreCase(playerId)) {
-							List<String> ops = plugin.getConfig().getStringList("ops"); 
-							ops.remove(playerId); 
-							plugin.getConfig().set("ops", ops); 
-							plugin.saveConfig(); 
-						}
+					if (permanentOps.contains(playerId)) {
+						List<String> ops = plugin.getConfig().getStringList("ops"); 
+						ops.remove(playerId); 
+						plugin.getConfig().set("ops", ops); 
+						plugin.saveConfig(); 
 					}
 				}
 			}

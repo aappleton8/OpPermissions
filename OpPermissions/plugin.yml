@@ -1,13 +1,13 @@
 name: OpPermissions 
 main: me.OpPermissions.OpPermissionsMainClass 
-version: 1.0.1.4 
+version: 1.0.2.0
 description: A plugin helping with op permissions  
 author: aappleton3 
 database: false 
 commands: 
   opset:
     description: Add or remove someone to the list of permenant ops 
-    usage: /opset <add|remove|list|version|help [all|config] [1|2]|check|config <action> [field]> [playername|data] 
+    usage: /opset add|remove|list|version|{help [all|config] [1|2|3]}|check|{config <action> [field]} [playername|data] 
     permission-message: You do not have the required permissions to perform this command 
   oppermissions:
     description: The command to show help for this plugin 
@@ -20,6 +20,10 @@ commands:
   oprequest:
     description: The command to send a request to the ops 
     usage: /oprequest <message>
+    permission-message: You do not have the required permissions to perform this command 
+  opcommand:
+    description: The command to add and remove blocked commands 
+    usage: /opcommand {add|remove|check <command>}|list 
     permission-message: You do not have the required permissions to perform this command 
 permissions: 
   oppermissions.*:
@@ -36,6 +40,7 @@ permissions:
       oppermissions.showallhelp: true
       oppermissions.oprequest.*: true
       oppermissions.seepluginmessages: true
+      oppermissions.commands.*: true
   oppermissions.read.*:
     description: List and check the permenant ops 
     default: op
@@ -79,6 +84,7 @@ permissions:
       oppermissions.config.set.onlyautoupdateonline: true
       oppermissions.config.set.allowunsafechanges: true
       oppermissions.config.set.announceops: true
+      oppermissions.config.set.permanentopsusecommands: true
   oppermissions.config.set.opscanop:
     description: Set the value of the opscanop field of the config file 
     default: false
@@ -106,6 +112,11 @@ permissions:
       oppermissions.config.seedetailedsethelp: true
   oppermissions.config.set.announceops:
     description: Send a message to all players when an op joins 
+    default: false
+    children:
+      oppermissions.config.seedetailedsethelp: true
+  oppermissions.config.set.permanentopsusecommands:
+    description: Let permanent ops use all blocked commands 
     default: false
     children:
       oppermissions.config.seedetailedsethelp: true
@@ -153,3 +164,27 @@ permissions:
   oppermissions.seepluginmessages:
     description: Can see plugin messages (such as config saved messages) 
     default: op
+  oppermissions.commands.*:
+    description: The root command to add and remove blocked commands
+    default: false
+    children:
+      oppermissions.commands.add: true
+      oppermissions.command.remove: true
+      oppermissions.command.list: true
+      oppermissions.command.check: true
+      oppermissions.command.command: true
+  oppermissions.command.add:
+    description: Add a enw blocked command 
+    default: false
+  oppermissions.command.remove:
+    description: remove a blocked command 
+    default: false
+  oppermissions.command.list:
+    description: List the blocked commands 
+    default: false
+  oppermissions.command.check:
+    description: Check if a command is blocked 
+    default: false
+  oppermissions.command.command:
+    description: Perform the blocked commands 
+    default: false
