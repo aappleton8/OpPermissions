@@ -1,6 +1,6 @@
 name: OpPermissions 
 main: me.OpPermissions.OpPermissionsMainClass 
-version: 1.0.2.0
+version: 1.0.2.1
 description: A plugin helping with op permissions  
 author: aappleton3 
 database: false 
@@ -41,6 +41,7 @@ permissions:
       oppermissions.oprequest.*: true
       oppermissions.seepluginmessages: true
       oppermissions.commands.*: true
+      oppermissions.showopattempts: true
   oppermissions.read.*:
     description: List and check the permenant ops 
     default: op
@@ -78,6 +79,7 @@ permissions:
     default: false 
     children:
       oppermissions.config.set.opscanop: true
+      oppermissions.config.set.opscandeop: true
       oppermissions.config.set.allowrequests: true
       oppermissions.config.set.useuuids: true
       oppermissions.config.set.updateonplayerjoins: true
@@ -85,8 +87,15 @@ permissions:
       oppermissions.config.set.allowunsafechanges: true
       oppermissions.config.set.announceops: true
       oppermissions.config.set.permanentopsusecommands: true
+      oppermissions.config.set.showopattempts: true
+      oppermissions.config.set.showcommanduse: true
   oppermissions.config.set.opscanop:
     description: Set the value of the opscanop field of the config file 
+    default: false
+    children:
+      oppermissions.config.seedetailedsethelp: true
+  oppermissions.config.set.opscandeop:
+    description: Set the value of the opscandeop field of the config file 
     default: false
     children:
       oppermissions.config.seedetailedsethelp: true
@@ -117,6 +126,16 @@ permissions:
       oppermissions.config.seedetailedsethelp: true
   oppermissions.config.set.permanentopsusecommands:
     description: Let permanent ops use all blocked commands 
+    default: false
+    children:
+      oppermissions.config.seedetailedsethelp: true
+  oppermissions.config.set.showopattempts:
+    description: Notify the player every time someone uses the /op or /deop commands 
+    default: false
+    children:
+      oppermissions.config.seedetailedsethelp: true
+  oppermissions.config.set.showcommanduse:
+    description: Notify the player evey time someone uses one of the commands on the blocked command list 
     default: false
     children:
       oppermissions.config.seedetailedsethelp: true
@@ -173,6 +192,7 @@ permissions:
       oppermissions.command.list: true
       oppermissions.command.check: true
       oppermissions.command.command: true
+      oppermissions.command.show: true
   oppermissions.command.add:
     description: Add a enw blocked command 
     default: false
@@ -187,4 +207,10 @@ permissions:
     default: false
   oppermissions.command.command:
     description: Perform the blocked commands 
+    default: false
+  oppermissions.command.show:
+    description: Be notified every time someone tries to use (even if unsuccessfully) one of the commands on the blocked command list 
+    default: false
+  oppermissions.showopattempts:
+    description: Be notified every time someone tries to use (even if unsuccessfully) the /op or /deop command 
     default: false

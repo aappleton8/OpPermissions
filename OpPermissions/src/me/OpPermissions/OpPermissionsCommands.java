@@ -117,7 +117,9 @@ public class OpPermissionsCommands implements CommandExecutor {
 		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set updateonplayerjoins true|false " + ChatColor.AQUA + "- Set the updateonplayerjoins field ");
 		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set onlyautoupdateonline true|false " + ChatColor.AQUA + "- Set the onlyautoupdateonline field ");
 		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set announceops all|permanent|normal|no|false " + ChatColor.AQUA + "- Set the announceops field "); 
-		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set permanentopsusecommands true|false " + ChatColor.AQUA + "- Set the permanentopsusecommands field");
+		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set permanentopsusecommands true|false " + ChatColor.AQUA + "- Set the permanentopsusecommands field ");
+		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set showopattempts true|false " + ChatColor.AQUA + "- Set the showopattempts field "); 
+		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set showcommanduse true|false " + ChatColor.AQUA + "- Set the showcommanduse field "); 
 	}
 	
 	private void configUpdateMessage() {
@@ -182,7 +184,7 @@ public class OpPermissionsCommands implements CommandExecutor {
 								configUpdateMessage(); 
 							}
 							else {
-								s.sendMessage(ChatColor.RED + "The value of the 'opscanop' field must be either 'op', 'permission', 'default', 'false' or 'no'"); 
+								s.sendMessage(ChatColor.RED + "The value of the 'opscanop' and 'opscandeop' fields must be either 'op', 'permission', 'default', 'false' or 'no'"); 
 							}
 						}
 						else {
@@ -224,7 +226,7 @@ public class OpPermissionsCommands implements CommandExecutor {
 							plugin.noPermission(s); 
 						}
 					}
-					else if (args[2].equalsIgnoreCase("updateonplayerjoins") || args[2].equalsIgnoreCase("onlyautoupdateonline") || args[2].equalsIgnoreCase("permanentopsusecommands")) {
+					else if (args[2].equalsIgnoreCase("updateonplayerjoins") || args[2].equalsIgnoreCase("onlyautoupdateonline") || args[2].equalsIgnoreCase("permanentopsusecommands") || args[2].equalsIgnoreCase("showopattempts") || args[2].equalsIgnoreCase("showcommanduse")) {
 						if (s.hasPermission("oppermissions.config.set." + args[2].toLowerCase()) || (s instanceof ConsoleCommandSender)) {
 							if (args[3].equalsIgnoreCase("true")) {
 								plugin.getConfig().set(args[2], true); 
@@ -315,7 +317,7 @@ public class OpPermissionsCommands implements CommandExecutor {
 							else {
 								ops.add(playerId); 
 								plugin.getConfig().set("ops", ops); 
-								Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "op " + args[1]); 
+								p.setOp(true); 
 								s.sendMessage(ChatColor.GREEN + args[1] + " added to the permenant ops list "); 
 								Bukkit.broadcast(ChatColor.GREEN + plugin.formattedPluginName + args[1] + " was added to the permenant ops list", "oppermissions.seepluginmessages"); 
 							}

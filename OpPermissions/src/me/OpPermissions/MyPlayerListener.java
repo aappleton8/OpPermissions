@@ -74,6 +74,26 @@ public class MyPlayerListener implements Listener {
 		}
 	}
 	
+	@EventHandler (ignoreCancelled = false, priority = EventPriority.MONITOR)
+	public void onAllPlayerCommands(PlayerCommandPreprocessEvent event) {
+		if (plugin.getConfig().getBoolean("showopattempts")) {
+			if (event.getMessage().startsWith("/op") || event.getMessage().startsWith("/deop")) {
+				String[] rawArgs = event.getMessage().replace("/", "").split(" "); 
+				if ((rawArgs.length == 2) && (rawArgs[0].equalsIgnoreCase("op") || rawArgs[0].equalsIgnoreCase("deop"))) {
+					Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.BLUE + plugin.formattedPluginName + event.getPlayer().getName() + " tried to use '" + event.getMessage() + "' with a success status of: " + String.valueOf(!event.isCancelled()));
+					Bukkit.broadcast(ChatColor.BLUE + plugin.formattedPluginName + event.getPlayer().getName() + " tried to use '" + event.getMessage() + "' with a success status of: " + String.valueOf(!event.isCancelled()), "oppermissions.showopattempts"); 
+				}
+			}
+		}
+		if (plugin.getConfig().getBoolean("showcommanduse")) {
+			List<String> blockedCommands = plugin.getConfig().getStringList("commands"); 
+			if (blockedCommands.contains(event.getMessage().replace("/", "").toLowerCase())) {
+				Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.BLUE + plugin.formattedPluginName + event.getPlayer().getName() + " tried to use '" + event.getMessage() + "' with a success status of: " + String.valueOf(!event.isCancelled()));
+				Bukkit.broadcast(ChatColor.BLUE + plugin.formattedPluginName + event.getPlayer().getName() + " tried to use '" + event.getMessage() + "' with a success status of: " + String.valueOf(!event.isCancelled()), "oppermissions.command.show"); 
+			}
+		}
+	}
+	
 	@SuppressWarnings("deprecation")
 	@EventHandler (ignoreCancelled = true, priority = EventPriority.HIGHEST) 
 	public void onPlayerCommand(PlayerCommandPreprocessEvent event) {

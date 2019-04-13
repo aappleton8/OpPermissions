@@ -9,7 +9,7 @@ The terms 'username' and 'playername' are used interchangeably in this plugin an
 This plugin can use either playernames or player UUIDs. Although this plugin can convert between the two, errors are likely to occur (most commonly users' usernames becoming 'null') if the conversion operation is performed on an offline player. As such, the format to use should be chosen at the start and kept constant. If a conversion is necessary, setting the 'onlyautoupdateonline' config field to true will prevent the plugin updating offline players, avoiding errors. Setting the 'updateonplayerjoins' config field to true will make the plugin convert the players when they come online, however, the user may still appear as 'null' until then. It is recommended always to use player UUIDs. 
 
 ## Versions:
-The current plugin release version is 1.0.2.0. The compiled .jar file is available in the 'releases' section. The 'Jar' folder contains the most recently compiled plugin version that runs; this may be the same as the most recent release or it may be a development build. The development builds may be unstable. The current release of this plugin has been tested on Spigot servers running Minecraft versions 1.7.10, 1.8.9, 1.12.2 and 1.13.1. It is designed for Minecraft versions between 1.7.x and 1.13.x, and as such, any bug for any version between 1.7.x and 1.13.x will be fixed. This plugin is likely to work with many other Minecraft Spigot and Bukkit versions but this is untested and bugs found with these versions will not necessarily be fixed. 
+The current plugin release version is 1.0.2.0. The compiled .jar file is available in the 'releases' section. The 'Jar' folder contains the most recently compiled plugin version that runs (currently version 1.0.2.1); this may be the same as the most recent release or it may be a development build. The development builds may be unstable. The current release of this plugin has been tested on Spigot servers running Minecraft versions 1.7.10, 1.8.9, 1.12.2 and 1.13.1. It is designed for Minecraft versions between 1.7.x and 1.13.x, and as such, any bug for any version between 1.7.x and 1.13.x will be fixed. This plugin is likely to work with many other Minecraft Spigot and Bukkit versions but this is untested and bugs found with these versions will not necessarily be fixed. 
 
 ## License: 
 This plugin and its source code are released under the MIT license (see the [LICENSE file](https://github.com/aappleton8/OpPermissions/blob/master/LICENSE) for full details). This plugin is copyright (c) aappleton3/aappleton8, 2018.  
@@ -18,6 +18,8 @@ This plugin and its source code are released under the MIT license (see the [LIC
 This plugin is built using Eclipse. To build the plugin, the .classpath file firstly needs to be recreated using Eclipse, and the craftbukkit-1.12.2.jar file (or another version of craftbukkit) needs to be added as an external build dependency. 
 
 ## Commands: 
+Most of the commands of this plugin do not work at all in command blocks and cannot be used by people without the correct permission, even if that player is an op. 
+
 The general command syntaxes are: 
  - */opset &lt;arguments&gt;*. 
  - */oplist [online|offline|both]*. 
@@ -40,9 +42,11 @@ Below, the individual commands are listed:
  - /opset config set allowrequests op|permission|no - Enables or disables the */oprequest* command and sets which players see the request
  - /opset config set useuuids true|false - Set whether the plugin should use usernames or UUIDs 
  - /opset config set updateonplayerjoins true|false - Specify if the plugin should check user information each time the user joins 
- - /opset config set onlyautoupdateonline true|false - Specify whether the plugin should only automatcally update information for online players or all players (choosing 'false' may perform operations on incorrect or non-existent players) 
+ - /opset config set onlyautoupdateonline true|false - Specify whether the plugin should only automatically update information for online players or all players (choosing 'false' may perform operations on incorrect or non-existent players) 
  - /opset config set announceops all|permanent|normal|no|false - Specify of the plugin should announce when ops join 
- - /opset config set permanentopsusecommands true|false - Specify whther permanent ops can use all the blocked commands without the extra permission or not 
+ - /opset config set permanentopsusecommands true|false - Specify whether permanent ops can use all the blocked commands without the extra permission or not 
+ - /opset config set showopattempts true|false - Specify whether players with the *oppermissions.showopattempts* permission get notified every time someone tries to use the */op* or */deop* command, even if not successfully 
+ - /opset config set showcommanduse true|false - Specify whether players with the *oppermissions.command.show* permission get notified every time someone tries to use one of the commands on the list of blocked commands, even if not successfully 
  - /opset config verifylist - Update the ops list to convert between UUIDs and playernames, depending on the 'useuuids' config field and the 'onlyautoupdateonline' config field (this conversion will also happen when the 'useuuids' field is set) 
  - /opset list - List the list 
  - /opset check &lt;playername&gt; - Check if someone is on the list 
@@ -67,13 +71,16 @@ Below, the individual commands are listed:
  - oppermissions.config.reload : The */opset config reload* command | Default: false 
  - oppermissions.config.save : The */opset config save* command | Default: false 
  - oppermissions.config.set.* : All */opset config set* commands | Default: false 
- - oppermissions.config.set.opscanop : The */opset config set opscanop &lt;value&gt;* command | Default: false 
- - oppermissions.config.set.allowrequests : The */opset config set allowrequests &lt;value&gt;* command | Default: false 
- - oppermissions.config.set.useuuids : The */opset config set useuuids &lt;value&gt;* command | Default: false 
- - oppermissions.config.set.updateonplayerjoins : The */opset config set updateonplayerjoins &lt;value&gt;* command | Default: false 
- - oppermissions.config.set.onlyautoupdateonline : The */opset config set onlyautoupdateonline &lt;value&gt;* command | Default: false
- - oppermissions.config.set.announceops : The */opset config set announceops &lt;all|permanent|normal|no|false&gt;* command | Default: false
- - oppermissions.config.set.permanentopsusecommands : The */opset config set permanentopsusecommands &lt;true|false&gt;* command | default: false 
+ - oppermissions.config.set.opscanop : The */opset config set opscanop default|op|permission|no|false* command | Default: false 
+ - oppermissions.config.set.opscandeop : The */opset config set opscandeop default|op|permission|no|false* command | Default: false 
+ - oppermissions.config.set.allowrequests : The */opset config set allowrequests op|permission|no* command | Default: false 
+ - oppermissions.config.set.useuuids : The */opset config set useuuids true|false* command | Default: false 
+ - oppermissions.config.set.updateonplayerjoins : The */opset config set updateonplayerjoins true|false* command | Default: false 
+ - oppermissions.config.set.onlyautoupdateonline : The */opset config set onlyautoupdateonline true|false* command | Default: false
+ - oppermissions.config.set.announceops : The */opset config set announceops all|permanent|normal|no|false* command | Default: false
+ - oppermissions.config.set.permanentopsusecommands : The */opset config set permanentopsusecommands true|false* command | Default: false 
+ - oppermissions.config.set.showopattempts : The */opset config set showopattempts true|false* command | Default: false
+ - oppermissions.config.set.showcommanduse : The */opset config set showcommanduse true|false* command | Default: false
  - oppermissions.config.seedetailedsethelp : The */opset help config* command | Default: false 
  - oppermissions.config.verifylist : The */opset config updateplayeruuids* command | Default: false 
  - oppermissions.op : Enable the use of the */op* command, depending on the config file | Default: false 
@@ -91,6 +98,8 @@ Below, the individual commands are listed:
  - oppermissions.command.check : Enable the player to check if a command is blocked | Default: false 
  - oppermissions.command.list : Enable the player to list all the blocked commands | Default: false 
  - oppermissions.command.command : Enable the player to use the blocked commands | Default: false 
+ - oppermissions.command.show : Let the player be notified every time someone tries to use one of the commands on the blocked command list, even if it is unsuccessful | Default: false 
+ - oppermissions.showopattempts : Let the player be notified every time someone tries to use the */op* or */deop* command, even if it is unsuccessful | Default: false 
 
 ## Config: 
 All configurable options for this plugin are in the 'config.yml' file. This file contains the following fields.  
@@ -101,7 +110,9 @@ All configurable options for this plugin are in the 'config.yml' file. This file
  - opscanop - Sets whether ops can use the */op* command or not (default: the default happens; op: the player must be an op; permission: the player must have the *oppermissions.op* permission; no|false: the command can only be issued from the console)
  - opscandeop - Sets whether ops can use the */deop* command or not (default: the default happens; op: the player must be an op; permission: the player must have the *oppermissions.op* permission; no|false: the command can only be issued from the console)
  - announceops - Sets if the plugin should send a message to all players each time an op joins the server (all: the message is sent if any op joins; permanent: the message is sent if an op on the permanent ops list joins; normal: the message is sent if an op not on the permanent ops list joins; no|false: no message is sent) 
+ - showopattempts - Whether players with the permission *oppermissions.showopattempts* are notified every time someone tried to use the */op* or */deop* command, even if it is unsuccessful (true: players with the permission are notified; false: no-one is notified)
  - permanentopsusecommands - Sets whether permanent ops can use the blocked commands even if they don't have the *oppermissions.command.command* permission or not (true: permanent ops can use the commands; false: permanent ops are treated the same as everyone else)
+ - showcommanduse - Whether players with the permission *oppermissions.command.show* are notified every time someone tries to use one of the commands on the blocked command list, even if it is unsuccessful (true: players with the permission are notified; false: no-one is notified) 
  - ops - The list of permanent ops 
  - commands - The list of blocked commands 
 
@@ -114,7 +125,9 @@ allowrequests: both
 opscanop: default
 opscandeop: default
 announceops: no
+showopattempts: true
 permanentopsusecommands: true
+showcommanduse: true
 ops: 
   - aappleton3 
   - Codefined

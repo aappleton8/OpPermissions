@@ -5,6 +5,9 @@ allowrequests: both
 opscanop: default
 opscandeop: default
 announceops: no
+showopattempts: true
 permanentopsusecommands: true
+showcommanduse: true
 ops: []
 commands: []
+
