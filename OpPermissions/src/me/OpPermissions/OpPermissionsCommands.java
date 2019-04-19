@@ -276,6 +276,9 @@ public class OpPermissionsCommands implements CommandExecutor {
 						else if (args[2].equalsIgnoreCase("2")) {
 							helpCommand(s, true, 2); 
 						}
+						else if (args[2].equalsIgnoreCase("3")) {
+							helpCommand(s, true, 3); 
+						}
 						else {
 							s.sendMessage(ChatColor.RED + "There are only two pages of help commands (1 and 2) "); 
 							return false; 
@@ -435,6 +438,9 @@ public class OpPermissionsCommands implements CommandExecutor {
 						else {
 							plugin.noPermission(s); 
 						}
+					}
+					else if (args[1].equalsIgnoreCase("3")) {
+						helpCommand(s, false, 3); 
 					}
 					else if (args[1].equalsIgnoreCase("2")) {
 						helpCommand(s, false, 2); 
