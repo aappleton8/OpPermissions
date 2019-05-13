@@ -1,12 +1,12 @@
 name: OpPermissions 
 main: me.OpPermissions.OpPermissionsMainClass 
-version: 1.0.2.2
+version: 1.0.3.1
 description: A plugin helping with op permissions  
 author: aappleton3 
 database: false 
 commands: 
   opset:
-    description: Add or remove someone to the list of permenant ops 
+    description: Add or remove someone to the list of permanent ops 
     usage: /opset add|remove|list|version|{help [all|config] [1|2|3]}|check|{config <action> [field]} [playername|data] 
     permission-message: You do not have the required permissions to perform this command 
   oppermissions:
@@ -25,9 +25,13 @@ commands:
     description: The command to add and remove blocked commands 
     usage: /opcommand {add|remove|check <command>}|list 
     permission-message: You do not have the required permissions to perform this command 
+  opbancommands:
+    description: The command to add and remove blocked ban commands for ops 
+    usage: /opbancommands {add|remove|check <command>}|list
+    permission-message: You do not have the required permissions to perform this command 
 permissions: 
   oppermissions.*:
-    description: Add or remove players to the permenant ops list 
+    description: Add or remove players to the permanent ops list 
     default: false
     children:
       oppermissions.read.*: true
@@ -42,23 +46,25 @@ permissions:
       oppermissions.seepluginmessages: true
       oppermissions.commands.*: true
       oppermissions.showopattempts: true
+      oppermissions.ban.*: true
+      oppermissions.opbancommands.*: true
   oppermissions.read.*:
-    description: List and check the permenant ops 
+    description: List and check the permanent ops 
     default: op
     children:
       oppermissions.read.list: true
       oppermissions.read.check: true
   oppermissions.read.list:
-    description: List the permenant ops 
+    description: List the permanent ops 
     default: op
   oppermissions.read.check:
-    description: Check if a player is a permenant op 
+    description: Check if a player is a permanent op 
     default: op
   oppermissions.add:
-    description: Add a permenant op to the list 
+    description: Add a permanent op to the list 
     default: false
   oppermissions.remove:
-    description: Remove a permenant op from the list
+    description: Remove a permanent op from the list
     default: false 
   oppermissions.config.*: 
     description: Change the config file 
@@ -89,6 +95,9 @@ permissions:
       oppermissions.config.set.permanentopsusecommands: true
       oppermissions.config.set.showopattempts: true
       oppermissions.config.set.showcommanduse: true
+      oppermissions.config.set.bannableops: true
+      oppermissions.config.set.bannablepermanentops: true
+      oppermissions.config.set.deoponban: true
   oppermissions.config.set.opscanop:
     description: Set the value of the opscanop field of the config file 
     default: false
@@ -136,6 +145,26 @@ permissions:
       oppermissions.config.seedetailedsethelp: true
   oppermissions.config.set.showcommanduse:
     description: Notify the player evey time someone uses one of the commands on the blocked command list 
+    default: false
+    children:
+      oppermissions.config.seedetailedsethelp: true
+  oppermissions.config.set.bannableops:
+    description: Let the player ban ops 
+    default: false
+    children:
+      oppermissions.config.seedetailedsethelp: true
+  oppermissions.config.set.bannablepermanentops:
+    description: Let the player ban permanent ops 
+    default: false
+    children:
+      oppermissions.config.seedetailedsethelp: true
+  oppermissions.config.set.deoponban:
+    description: Make the plugin deop ops who get banned 
+    default: false
+    children:
+      oppermissions.config.seedetailedsethelp: true
+  oppermissions.config.set.showbanattempts:
+    description: Let the player see op ban attempts, even if they are unsuccessful
     default: false
     children:
       oppermissions.config.seedetailedsethelp: true
@@ -188,29 +217,66 @@ permissions:
     default: false
     children:
       oppermissions.commands.add: true
-      oppermissions.command.remove: true
-      oppermissions.command.list: true
-      oppermissions.command.check: true
-      oppermissions.command.command: true
-      oppermissions.command.show: true
-  oppermissions.command.add:
-    description: Add a enw blocked command 
+      oppermissions.commands.remove: true
+      oppermissions.commands.list: true
+      oppermissions.commands.check: true
+      oppermissions.commands.command: true
+      oppermissions.commands.show: true
+  oppermissions.commands.add:
+    description: Add a new blocked command 
     default: false
-  oppermissions.command.remove:
+  oppermissions.commands.remove:
     description: remove a blocked command 
     default: false
-  oppermissions.command.list:
+  oppermissions.commands.list:
     description: List the blocked commands 
     default: false
-  oppermissions.command.check:
+  oppermissions.commands.check:
     description: Check if a command is blocked 
     default: false
-  oppermissions.command.command:
+  oppermissions.commands.command:
     description: Perform the blocked commands 
     default: false
-  oppermissions.command.show:
+  oppermissions.commands.show:
     description: Be notified every time someone tries to use (even if unsuccessfully) one of the commands on the blocked command list 
     default: false
   oppermissions.showopattempts:
     description: Be notified every time someone tries to use (even if unsuccessfully) the /op or /deop command 
+    default: false
+  oppermissions.ban.*:
+    description: Ban all ops and permanent ops, depending non the config file 
+    default: false
+    children:
+      oppermissions.ban.permanentops: true
+      oppermissions.ban.show: true
+  oppermissions.ban.permanentops: 
+    description: Ban permanent ops depending on the config file 
+    default: false
+    children:
+      oppermissions.ban.ops: true
+  oppermissions.ban.ops:
+    description: Ban ops depending on the config file 
+    default: false
+  oppermissions.ban.show:
+    description: Be notified every time someone tries to use (even if unsuccessfully) one of the ban commands on an op 
+    default: false
+  oppermissions.opbancommands.*:
+    description: The root command to add and remove blocked commands
+    default: false
+    children:
+      oppermissions.opbancommands.add: true
+      oppermissions.opbancommands.remove: true
+      oppermissions.opbancommands.list: true
+      oppermissions.opbancommands.check: true
+  oppermissions.opbancommands.add:
+    description: Add a new watched ban command 
+    default: false
+  oppermissions.opbancommands.remove:
+    description: Remove a watched ban command 
+    default: false
+  oppermissions.opbancommands.list:
+    description: List the watched ban commands 
+    default: false
+  oppermissions.opbancommands.check:
+    description: Check if a command is watched ban command 
     default: false

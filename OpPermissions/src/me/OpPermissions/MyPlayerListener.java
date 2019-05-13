@@ -74,6 +74,7 @@ public class MyPlayerListener implements Listener {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	@EventHandler (ignoreCancelled = false, priority = EventPriority.MONITOR)
 	public void onAllPlayerCommands(PlayerCommandPreprocessEvent event) {
 		if (plugin.getConfig().getBoolean("showopattempts")) {
@@ -92,12 +93,27 @@ public class MyPlayerListener implements Listener {
 				Bukkit.broadcast(ChatColor.BLUE + plugin.formattedPluginName + event.getPlayer().getName() + " tried to use '" + event.getMessage() + "' with a success status of: " + String.valueOf(!event.isCancelled()), "oppermissions.command.show"); 
 			}
 		}
+		if (plugin.getConfig().getBoolean("showbanattempts")) {
+			List<String> banCommands = plugin.getConfig().getStringList("opbancommands"); 
+			String[] command = event.getMessage().replace("/", "").toLowerCase().split(" "); 
+			if (command.length > 1) {
+				if (banCommands.contains(command[0])) {
+					if (Bukkit.getOfflinePlayer(command[1]) != null) {
+						if (Bukkit.getOfflinePlayer(command[1]).isOp()) {
+							Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.BLUE + plugin.formattedPluginName + event.getPlayer().getName() + " tried to use '" + event.getMessage() + "' with a success status of: " + String.valueOf(!event.isCancelled()));
+							Bukkit.broadcast(ChatColor.BLUE + plugin.formattedPluginName + event.getPlayer().getName() + " tried to use '" + event.getMessage() + "' with a success status of: " + String.valueOf(!event.isCancelled()), "oppermissions.ban.show"); 
+						}
+					}
+				}
+			}
+		}
 	}
 	
 	@SuppressWarnings("deprecation")
 	@EventHandler (ignoreCancelled = true, priority = EventPriority.HIGHEST) 
 	public void onPlayerCommand(PlayerCommandPreprocessEvent event) {
 		boolean canDeop = true; 
+		boolean checkBanCommand = false; 
 		if (event.getMessage().startsWith("/op") || event.getMessage().startsWith("/deop")) {
 			String[] rawArgs = event.getMessage().replace("/", "").split(" "); 
 			if ((rawArgs.length == 2) && (rawArgs[0].equalsIgnoreCase("op") || rawArgs[0].equalsIgnoreCase("deop"))) {
@@ -150,6 +166,7 @@ public class MyPlayerListener implements Listener {
 		}
 		else {
 			List<String> blockedCommands = plugin.getConfig().getStringList("commands"); 
+			List<String> banCommands = plugin.getConfig().getStringList("opbancommands"); 
 			if (blockedCommands.contains(event.getMessage().replace("/", "").toLowerCase())) {
 				if (event.getPlayer().hasPermission("oppermissions.command.command")) {
 					// No action required 
@@ -175,6 +192,10 @@ public class MyPlayerListener implements Listener {
 					plugin.noPermission((CommandSender) event.getPlayer());
 				}
 			}
+			String[] commandWord = event.getMessage().split(" "); 
+			if (banCommands.contains(commandWord[0].replace("/", "").toLowerCase()) && (event.isCancelled() == false) && (commandWord.length > 1)) {
+				checkBanCommand = true; 
+			}
 		}
 		if ((event.getMessage().startsWith("/deop")) && (canDeop == true)) {
 			String[] rawArgs = event.getMessage().replace("/", "").split(" "); 
@@ -197,6 +218,109 @@ public class MyPlayerListener implements Listener {
 						else if (event.getPlayer().hasPermission("oppermissions.remove")) {
 							List<String> ops = plugin.getConfig().getStringList("ops"); 
 							ops.remove(playerId); 
+							plugin.getConfig().set("ops", ops); 
+							plugin.saveConfig(); 
+						}
+					}
+				}
+			}
+		}
+		if (checkBanCommand == true) {
+			String playerNameToBan = event.getMessage().split(" ")[1]; 
+			Boolean playerToBanOnList = false; 
+			Boolean playerOnList = false; 
+			if (Bukkit.getOfflinePlayer(playerNameToBan).isOp()) {
+				if (plugin.getConfig().getBoolean("useuuids") == false) {
+					if (plugin.getConfig().getStringList("ops").contains(playerNameToBan)) {
+						playerToBanOnList = true; 
+					}
+					if (plugin.getConfig().getStringList("ops").contains(event.getPlayer().getName())) {
+						playerOnList = true; 
+					}
+				}
+				else {
+					String playerToBan = Bukkit.getPlayer(playerNameToBan).getUniqueId().toString(); 
+					if (plugin.getConfig().getStringList("ops").contains(playerToBan)) {
+						playerToBanOnList = true; 
+					}
+					if (plugin.getConfig().getStringList("ops").contains(event.getPlayer().getUniqueId().toString())) {
+						playerOnList = true; 
+					}
+				}
+				String bannableOps = plugin.getConfig().getString("bannableops"); 
+				String bannablePermanentOps = plugin.getConfig().getString("bannablepermanentops"); 
+				// Handle ops 
+				if (bannableOps.equalsIgnoreCase("default")) {
+					// No acton required 
+				}
+				else if (bannableOps.equalsIgnoreCase("no") || bannableOps.equalsIgnoreCase("false")) {
+					event.setCancelled(true); 
+					event.getPlayer().sendMessage(ChatColor.RED + "Only the console can punish ops "); 
+				}
+				else if (bannableOps.equalsIgnoreCase("op")) {
+					if (event.getPlayer().isOp() == false) {
+						event.setCancelled(true); 
+						event.getPlayer().sendMessage(ChatColor.RED  + "You must be an op to punish an op "); 
+					}
+				}
+				else if (bannableOps.equalsIgnoreCase("permanent")) {
+					if (playerOnList == false) {
+						event.setCancelled(true);
+						event.getPlayer().sendMessage(ChatColor.RED + "You must be a permanent op to ban an op "); 
+					}
+				}
+				else if (bannableOps.equalsIgnoreCase("permission")) {
+					if (event.getPlayer().hasPermission("oppermissions.ban.ops") == false) {
+						event.setCancelled(true);
+						event.getPlayer().sendMessage(ChatColor.RED + "You need the permission 'oppermissions.ban.ops' to ban an op "); 
+					}
+				}
+				else {
+					event.getPlayer().sendMessage(ChatColor.RED + "The " + plugin.getName() + " plugin config has an invalid value in the 'bannableops' field and as such this command has been disallowed "); 
+					plugin.logger.warning(plugin.formattedPluginName + "The config has an invalid value in the 'bannableops' field (it should be 'op', 'permission', 'permanent', 'default', 'false' or 'no'"); 
+					event.setCancelled(true); 
+				}
+				// Handle permanent ops 
+				if ((event.isCancelled() == false) && (playerToBanOnList == true)) {
+					if (bannablePermanentOps.equalsIgnoreCase("default")) {
+						// No action required 
+					}
+					else if (bannablePermanentOps.equalsIgnoreCase("no") || bannablePermanentOps.equalsIgnoreCase("false")) {
+						event.setCancelled(true); 
+						event.getPlayer().sendMessage(ChatColor.RED + "Only the console can punish permanent ops "); 
+					}
+					else if (bannablePermanentOps.equalsIgnoreCase("op")) {
+						if (event.getPlayer().isOp() == false) {
+							event.setCancelled(true); 
+							event.getPlayer().sendMessage(ChatColor.RED + "You must be an op to punish a permanent op "); 
+						}
+					}
+					else if (bannablePermanentOps.equalsIgnoreCase("permanent")) {
+						if (playerOnList == false) {
+							event.setCancelled(true); 
+							event.getPlayer().sendMessage(ChatColor.RED + "You must be a permanent op to punish a permanent op "); 
+						}
+					}
+					else if (bannablePermanentOps.equalsIgnoreCase("permission")) {
+						if (event.getPlayer().hasPermission("oppermissions.ban.permanentops") == false) {
+							event.setCancelled(true); 
+							event.getPlayer().sendMessage(ChatColor.RED + "You need the permission 'oppermissions.ban.permanentops' to ban a permanent op "); 
+						}
+					}
+					else {
+						event.getPlayer().sendMessage(ChatColor.RED + "The " + plugin.getName() + " plugin config has an invalid value in the 'bannablepermanentops' field and as such this command has been disallowed "); 
+						plugin.logger.warning(plugin.formattedPluginName + "The config has an invalid value in the 'bannablepermanentops' field (it should be 'op', 'permission', 'permanent', 'default', 'false' or 'no'"); 
+						event.setCancelled(true); 
+					}
+				}
+				if (event.isCancelled() == false) {
+					if (plugin.getConfig().getBoolean("deoponban")) {
+						if (plugin.getConfig().getBoolean("useuuids") == true) {
+							playerNameToBan = Bukkit.getOfflinePlayer(playerNameToBan).getUniqueId().toString(); 
+						}
+						if (playerToBanOnList) {
+							List<String> ops = plugin.getConfig().getStringList("ops"); 
+							ops.remove(playerNameToBan); 
 							plugin.getConfig().set("ops", ops); 
 							plugin.saveConfig(); 
 						}

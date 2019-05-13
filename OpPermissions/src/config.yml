@@ -8,6 +8,17 @@ announceops: no
 showopattempts: true
 permanentopsusecommands: true
 showcommanduse: true
+bannableops: default
+bannablepermanentops: default
+deoponban: false
+showbanattempts: true
 ops: []
 commands: []
+opbancommands:
+  - ban
+  - tempban
+  - kick
+  - blacklist
+  - ip-ban
+  - ban-ip
 
