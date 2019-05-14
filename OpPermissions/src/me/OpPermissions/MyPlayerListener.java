@@ -323,6 +323,10 @@ public class MyPlayerListener implements Listener {
 							ops.remove(playerNameToBan); 
 							plugin.getConfig().set("ops", ops); 
 							plugin.saveConfig(); 
+							Bukkit.getOfflinePlayer(playerNameToBan).setOp(false); 
+							Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.BLUE + plugin.formattedPluginName + playerNameToBan + " was deopped due to being banned ");
+							Bukkit.broadcast(ChatColor.BLUE + plugin.formattedPluginName + playerNameToBan + " was deopped due to being banned ", "oppermissions.ban.show"); 
+							Bukkit.broadcast(ChatColor.BLUE + plugin.formattedPluginName + playerNameToBan + " was deopped due to being banned ", "oppermissions.seepluginmessages"); 
 						}
 					}
 				}

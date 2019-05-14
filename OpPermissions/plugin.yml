@@ -98,6 +98,7 @@ permissions:
       oppermissions.config.set.bannableops: true
       oppermissions.config.set.bannablepermanentops: true
       oppermissions.config.set.deoponban: true
+      oppermissions.config.set.showbanattempts: true
   oppermissions.config.set.opscanop:
     description: Set the value of the opscanop field of the config file 
     default: false

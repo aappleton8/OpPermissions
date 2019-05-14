@@ -36,7 +36,7 @@ public class OpPermissionsCommands implements CommandExecutor {
 			s.sendMessage(ChatColor.DARK_PURPLE + "/opset help [1|2|3] " + ChatColor.AQUA + "- Show help messages "); 
 			if (s.hasPermission("oppermissions.showallhelp") || showAll) {
 				s.sendMessage(ChatColor.DARK_PURPLE + "/opset help all [1|2|3] " + ChatColor.AQUA + "- Show help for all " + plugin.getName() + " commands "); 
-				s.sendMessage(ChatColor.DARK_PURPLE + "/opset help config " + ChatColor.AQUA + "- Show help for config fields " + plugin.getName() + " commands "); 
+				s.sendMessage(ChatColor.DARK_PURPLE + "/opset help config [1|2]" + ChatColor.AQUA + "- Show help for config fields " + plugin.getName() + " commands "); 
 			}
 			else if (s.hasPermission("oppermissions.config.seedetailedsethelp") || showAll) {
 				s.sendMessage(ChatColor.DARK_PURPLE + "/opset help config " + ChatColor.AQUA + "- Show help for config fields " + plugin.getName() + " commands ");
@@ -121,21 +121,30 @@ public class OpPermissionsCommands implements CommandExecutor {
 	}
 	
 	private void helpConfigFields(CommandSender s) {
-		s.sendMessage(ChatColor.DARK_AQUA + "The commands for setting the config fields of the " + ChatColor.AQUA + plugin.getName() + ChatColor.DARK_AQUA + " plugin are: "); 
-		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set opscanop default|op|permission|no|false " + ChatColor.AQUA + "- Set the opscanop field ");
-		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set opscandeop default|op|permission|no|false " + ChatColor.AQUA + "- Set the opscandeop field ");
-		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set allowrequests op|permission|both|all|no|false " + ChatColor.AQUA + "- Set the allowrequests field ");
-		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set useuuids true|false " + ChatColor.AQUA + "- Set the useuuids field ");
-		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set updateonplayerjoins true|false " + ChatColor.AQUA + "- Set the updateonplayerjoins field ");
-		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set onlyautoupdateonline true|false " + ChatColor.AQUA + "- Set the onlyautoupdateonline field ");
-		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set announceops all|permanent|normal|no|false " + ChatColor.AQUA + "- Set the announceops field "); 
-		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set permanentopsusecommands true|false " + ChatColor.AQUA + "- Set the permanentopsusecommands field ");
-		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set showopattempts true|false " + ChatColor.AQUA + "- Set the showopattempts field "); 
-		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set showcommanduse true|false " + ChatColor.AQUA + "- Set the showcommanduse field "); 
-		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set bannableops op|permanent|permission|default|no|false " + ChatColor.AQUA + "- Set the bannableops field ");
-		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set bannablepermanentops op|permanent|permission|default|no|false " + ChatColor.AQUA + "- Set the bannablepermanentops field ");
-		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set deoponban true|false " + ChatColor.AQUA + "- Set the deoponban field ");
-		s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set showbanattempts true|false " + ChatColor.AQUA + "- Set the showbanattempts field ");
+		helpConfigFields(s, 1); 
+	}
+	
+	private void helpConfigFields(CommandSender s, int page) {
+		if (page == 1) {
+			s.sendMessage(ChatColor.DARK_AQUA + "The commands for setting the config fields of the " + ChatColor.AQUA + plugin.getName() + ChatColor.DARK_AQUA + " plugin are: "); 
+			s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set opscanop default|op|permission|no|false " + ChatColor.AQUA + "- Set the opscanop field ");
+			s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set opscandeop default|op|permission|no|false " + ChatColor.AQUA + "- Set the opscandeop field ");
+			s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set allowrequests op|permission|both|all|no|false " + ChatColor.AQUA + "- Set the allowrequests field ");
+			s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set useuuids true|false " + ChatColor.AQUA + "- Set the useuuids field ");
+			s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set updateonplayerjoins true|false " + ChatColor.AQUA + "- Set the updateonplayerjoins field ");
+			s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set onlyautoupdateonline true|false " + ChatColor.AQUA + "- Set the onlyautoupdateonline field ");
+			s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set announceops all|permanent|normal|no|false " + ChatColor.AQUA + "- Set the announceops field "); 
+		}
+		else {
+			s.sendMessage(ChatColor.DARK_AQUA + "The commands for setting the config fields of the " + ChatColor.AQUA + plugin.getName() + ChatColor.DARK_AQUA + " plugin are: "); 
+			s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set permanentopsusecommands true|false " + ChatColor.AQUA + "- Set the permanentopsusecommands field ");
+			s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set showopattempts true|false " + ChatColor.AQUA + "- Set the showopattempts field "); 
+			s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set showcommanduse true|false " + ChatColor.AQUA + "- Set the showcommanduse field "); 
+			s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set bannableops op|permanent|permission|default|no|false " + ChatColor.AQUA + "- Set the bannableops field ");
+			s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set bannablepermanentops op|permanent|permission|default|no|false " + ChatColor.AQUA + "- Set the bannablepermanentops field ");
+			s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set deoponban true|false " + ChatColor.AQUA + "- Set the deoponban field ");
+			s.sendMessage(ChatColor.DARK_PURPLE + "/opset config set showbanattempts true|false " + ChatColor.AQUA + "- Set the showbanattempts field ");
+		}
 	}
 	
 	private void configUpdateMessage() {
@@ -242,7 +251,7 @@ public class OpPermissionsCommands implements CommandExecutor {
 							plugin.noPermission(s); 
 						}
 					}
-					else if (args[2].equalsIgnoreCase("updateonplayerjoins") || args[2].equalsIgnoreCase("onlyautoupdateonline") || args[2].equalsIgnoreCase("permanentopsusecommands") || args[2].equalsIgnoreCase("showopattempts") || args[2].equalsIgnoreCase("showcommanduse") || args[2].equalsIgnoreCase("deoponban")) {
+					else if (args[2].equalsIgnoreCase("updateonplayerjoins") || args[2].equalsIgnoreCase("onlyautoupdateonline") || args[2].equalsIgnoreCase("permanentopsusecommands") || args[2].equalsIgnoreCase("showopattempts") || args[2].equalsIgnoreCase("showcommanduse") || args[2].equalsIgnoreCase("deoponban") || args[2].equalsIgnoreCase("showbanattempts")) {
 						if (s.hasPermission("oppermissions.config.set." + args[2].toLowerCase()) || (s instanceof ConsoleCommandSender)) {
 							if (args[3].equalsIgnoreCase("true")) {
 								plugin.getConfig().set(args[2], true); 
@@ -310,7 +319,21 @@ public class OpPermissionsCommands implements CommandExecutor {
 							helpCommand(s, true, 3); 
 						}
 						else {
-							s.sendMessage(ChatColor.RED + "There are only two pages of help commands (1 and 2) "); 
+							s.sendMessage(ChatColor.RED + "There are only three pages of help commands (1, 2 and 3) "); 
+							return false; 
+						}
+					}
+				}
+				else if (args[0].equalsIgnoreCase("help") && args[1].equalsIgnoreCase("config")) {
+					if ((s instanceof ConsoleCommandSender) || (s.hasPermission("oppermissions.config.seedetailedsethelp")) || (s.hasPermission("oppermissions.showallhelp"))) {
+						if (args[2].equalsIgnoreCase("1")) {
+							helpConfigFields(s); 
+						}
+						else if (args[2].equalsIgnoreCase("2")) {
+							helpConfigFields(s, 2); 
+						}
+						else {
+							s.sendMessage(ChatColor.RED + "There are only two pages of config help commands (1 and 2) "); 
 							return false; 
 						}
 					}
@@ -463,7 +486,7 @@ public class OpPermissionsCommands implements CommandExecutor {
 					}
 					else if (args[1].equalsIgnoreCase("config")) {
 						if ((s instanceof ConsoleCommandSender) || (s.hasPermission("oppermissions.config.seedetailedsethelp")) || (s.hasPermission("oppermissions.showallhelp"))) {
-							helpConfigFields(s); 
+							helpConfigFields(s, 1); 
 						}
 						else {
 							plugin.noPermission(s); 
