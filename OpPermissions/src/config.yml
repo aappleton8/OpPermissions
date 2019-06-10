@@ -15,10 +15,12 @@ showbanattempts: true
 ops: []
 commands: []
 opbancommands:
-  - ban
-  - tempban
-  - kick
-  - blacklist
-  - ip-ban
-  - ban-ip
+- ban ([a-zA-Z0-9_]+)
+- tempban ([a-zA-Z0-9_]+) .+
+- kick ([a-zA-Z0-9_]+)
+- blacklist ([a-zA-Z0-9_]+)
+- ip\-ban ([a-zA-Z0-9_]+)
+- ipban ([a-zA-Z0-9_]+)
+- ban\-ip ([a-zA-Z0-9_]+)
+- banip ([a-zA-Z0-9_]+)
 

@@ -2,6 +2,7 @@ package me.OpPermissions;
 
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -81,27 +82,33 @@ public class MyPlayerListener implements Listener {
 			if (event.getMessage().startsWith("/op") || event.getMessage().startsWith("/deop")) {
 				String[] rawArgs = event.getMessage().replace("/", "").split(" "); 
 				if ((rawArgs.length == 2) && (rawArgs[0].equalsIgnoreCase("op") || rawArgs[0].equalsIgnoreCase("deop"))) {
-					Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.BLUE + plugin.formattedPluginName + event.getPlayer().getName() + " tried to use '" + event.getMessage() + "' with a success status of: " + String.valueOf(!event.isCancelled()));
-					Bukkit.broadcast(ChatColor.BLUE + plugin.formattedPluginName + event.getPlayer().getName() + " tried to use '" + event.getMessage() + "' with a success status of: " + String.valueOf(!event.isCancelled()), "oppermissions.showopattempts"); 
+					Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.BLUE + plugin.formattedPluginName + event.getPlayer().getName() + " tried to use '" + event.getMessage() + "' ");
+					Bukkit.broadcast(ChatColor.BLUE + plugin.formattedPluginName + event.getPlayer().getName() + " tried to use '" + event.getMessage() + "' ", "oppermissions.showopattempts"); 
 				}
 			}
 		}
 		if (plugin.getConfig().getBoolean("showcommanduse")) {
-			List<String> blockedCommands = plugin.getConfig().getStringList("commands"); 
-			if (blockedCommands.contains(event.getMessage().replace("/", "").toLowerCase())) {
-				Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.BLUE + plugin.formattedPluginName + event.getPlayer().getName() + " tried to use '" + event.getMessage() + "' with a success status of: " + String.valueOf(!event.isCancelled()));
-				Bukkit.broadcast(ChatColor.BLUE + plugin.formattedPluginName + event.getPlayer().getName() + " tried to use '" + event.getMessage() + "' with a success status of: " + String.valueOf(!event.isCancelled()), "oppermissions.command.show"); 
+			boolean matches = plugin.regex.get("commands").matcher(event.getMessage().replace("/", "").toLowerCase()).matches(); 
+			if (matches) {
+				Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.BLUE + plugin.formattedPluginName + event.getPlayer().getName() + " tried to use '" + event.getMessage() + "' ");
+				Bukkit.broadcast(ChatColor.BLUE + plugin.formattedPluginName + event.getPlayer().getName() + " tried to use '" + event.getMessage() + "' ", "oppermissions.commands.show"); 
 			}
 		}
 		if (plugin.getConfig().getBoolean("showbanattempts")) {
-			List<String> banCommands = plugin.getConfig().getStringList("opbancommands"); 
-			String[] command = event.getMessage().replace("/", "").toLowerCase().split(" "); 
-			if (command.length > 1) {
-				if (banCommands.contains(command[0])) {
-					if (Bukkit.getOfflinePlayer(command[1]) != null) {
-						if (Bukkit.getOfflinePlayer(command[1]).isOp()) {
-							Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.BLUE + plugin.formattedPluginName + event.getPlayer().getName() + " tried to use '" + event.getMessage() + "' with a success status of: " + String.valueOf(!event.isCancelled()));
-							Bukkit.broadcast(ChatColor.BLUE + plugin.formattedPluginName + event.getPlayer().getName() + " tried to use '" + event.getMessage() + "' with a success status of: " + String.valueOf(!event.isCancelled()), "oppermissions.ban.show"); 
+			Matcher matcher = plugin.regex.get("opbancommands").matcher(event.getMessage().replace("/", "").toLowerCase()); 
+			if (matcher.matches()) {
+				String player = ""; 
+				for (int i = 1; i <= matcher.groupCount(); i++) {
+					String group = matcher.group(i); 
+					if ((group != null) && (group != "")) {
+						player += group; 
+					}
+				}
+				if (player != "") {
+					if (Bukkit.getOfflinePlayer(player) != null) {
+						if (Bukkit.getOfflinePlayer(player).isOp()) {
+							Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.BLUE + plugin.formattedPluginName + event.getPlayer().getName() + " tried to use '" + event.getMessage() + "' ");
+							Bukkit.broadcast(ChatColor.BLUE + plugin.formattedPluginName + event.getPlayer().getName() + " tried to use '" + event.getMessage() + "' ", "oppermissions.ban.show"); 
 						}
 					}
 				}
@@ -165,9 +172,7 @@ public class MyPlayerListener implements Listener {
 			}
 		}
 		else {
-			List<String> blockedCommands = plugin.getConfig().getStringList("commands"); 
-			List<String> banCommands = plugin.getConfig().getStringList("opbancommands"); 
-			if (blockedCommands.contains(event.getMessage().replace("/", "").toLowerCase())) {
+			if (plugin.regex.get("commands").matcher((event.getMessage().replace("/", "").toLowerCase())).matches()) {
 				if (event.getPlayer().hasPermission("oppermissions.command.command")) {
 					// No action required 
 				}
@@ -192,8 +197,7 @@ public class MyPlayerListener implements Listener {
 					plugin.noPermission((CommandSender) event.getPlayer());
 				}
 			}
-			String[] commandWord = event.getMessage().split(" "); 
-			if (banCommands.contains(commandWord[0].replace("/", "").toLowerCase()) && (event.isCancelled() == false) && (commandWord.length > 1)) {
+			if ((plugin.regex.get("opbancommands").matcher(event.getMessage().replace("/", "").toLowerCase()).matches()) && (event.isCancelled() == false) && (event.getMessage().split(" ").length > 1)) {
 				checkBanCommand = true; 
 			}
 		}
@@ -251,7 +255,7 @@ public class MyPlayerListener implements Listener {
 				String bannablePermanentOps = plugin.getConfig().getString("bannablepermanentops"); 
 				// Handle ops 
 				if (bannableOps.equalsIgnoreCase("default")) {
-					// No acton required 
+					// No action required 
 				}
 				else if (bannableOps.equalsIgnoreCase("no") || bannableOps.equalsIgnoreCase("false")) {
 					event.setCancelled(true); 
@@ -315,12 +319,13 @@ public class MyPlayerListener implements Listener {
 				}
 				if (event.isCancelled() == false) {
 					if (plugin.getConfig().getBoolean("deoponban")) {
+						String playerIdToBan = playerNameToBan; 
 						if (plugin.getConfig().getBoolean("useuuids") == true) {
-							playerNameToBan = Bukkit.getOfflinePlayer(playerNameToBan).getUniqueId().toString(); 
+							playerIdToBan = Bukkit.getOfflinePlayer(playerNameToBan).getUniqueId().toString(); 
 						}
 						if (playerToBanOnList) {
 							List<String> ops = plugin.getConfig().getStringList("ops"); 
-							ops.remove(playerNameToBan); 
+							ops.remove(playerIdToBan); 
 							plugin.getConfig().set("ops", ops); 
 							plugin.saveConfig(); 
 							Bukkit.getOfflinePlayer(playerNameToBan).setOp(false); 

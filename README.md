@@ -2,14 +2,14 @@
 ## Description: 
 This is a simple Minecraft Spigot plugin for managing which ops can use the op and deop commands to op players and deop other ops. 
 
-This plugin maintains a list of 'permanent ops' and prevents people on this list from being deopped until someone with the correct permissions removes them from the list. This plugin can also be configured so that players need to have a permission before they can use the 'op' command or the 'deop' command at all. Rudimentary support is provided for a list of 'blocked commands' which are commands for which players (ops or otherwise) need an extra permission before they can use them. However, all aliases of the blocked commands must be listed as well as all possible combination of arguments of the blocked commands, so it is recommended to use a separate command blocking plugin if this feature is required for anything other than simple commands such as */stop*. 
+This plugin maintains a list of 'permanent ops' and prevents people on this list from being deopped until someone with the correct permissions removes them from the list. This plugin can also be configured so that players need to have a permission before they can use the 'op' command or the 'deop' command at all. Support is provided for a list of 'blocked commands' which are commands for which players (ops or otherwise) need an extra permission before they can use them. The commands are described by regular expressions, so anything that can be defined using regex can be blocked. The plugin provides a separate list of regular expressions to match 'ban' commands, so that ops cannot be banned easily. The plugin can send a message to people whenever someone tries to use a blocked command or ban an op. 
 
 The terms 'username' and 'playername' are used interchangeably in this plugin and its descriptions. 
 
 This plugin can use either playernames or player UUIDs. Although this plugin can convert between the two, errors are likely to occur (most commonly users' usernames becoming 'null') if the conversion operation is performed on an offline player. As such, the format to use should be chosen at the start and kept constant. If a conversion is necessary, setting the 'onlyautoupdateonline' config field to true will prevent the plugin updating offline players, avoiding errors. Setting the 'updateonplayerjoins' config field to true will make the plugin convert the players when they come online, however, the user may still appear as 'null' until then. It is recommended always to use player UUIDs. 
 
 ## Versions:
-The current plugin release version is 1.0.3.1. The compiled .jar file is available in the 'releases' section. The 'Jar' folder contains the most recently compiled plugin version that runs; this may be the same as the most recent release or it may be a development build. The development builds may be unstable. The current release of this plugin has been tested on Spigot servers running Minecraft versions 1.7.10, 1.8.9, 1.12.2 and 1.13.1. It is designed for Minecraft versions between 1.7.6 and 1.14.0, and as such, any bug for any version between 1.7.6 and 1.14.0 will be fixed. This plugin is likely to work with many other Minecraft Spigot and Bukkit versions but this is untested and bugs found with these versions will not necessarily be fixed. 
+The current plugin release version is 1.0.3.1 with 1.0.3.2 released as an experimental build. The compiled .jar file is available in the 'releases' section. The 'Jar' folder contains the most recently compiled plugin version that runs; this may be the same as the most recent release or it may be a development build. The development builds may be unstable. The current release of this plugin has been tested on Spigot servers running Minecraft versions 1.7.10, 1.8.9, 1.12.2 and 1.13.1. It is designed for Minecraft versions between 1.7.10 and 1.14.3, and as such, any bug for any version between 1.7.10 and 1.14.3 will be fixed. This plugin is likely to work with many other Minecraft Spigot and Bukkit versions but this is untested and bugs found with these versions will not necessarily be fixed. 
 
 ## License: 
 This plugin and its source code are released under the MIT license (see the [LICENSE file](https://github.com/aappleton8/OpPermissions/blob/master/LICENSE) for full details). This plugin is copyright (c) aappleton3/aappleton8, 2018 - 2019.  
@@ -140,7 +140,8 @@ All configurable options for this plugin are in the 'config.yml' file. This file
  - deoponban - Whether ops who are banned should be deopped or not (true: banned ops are deopped; false: banned ops are not deopped) 
  - showbanattempts - Whether to announce to people with the *oppermissions.ban.show* command when someone tries to ban an op or permanent op or not (true: announce op ban attempts; false: do not announce op ban attempts) 
  - ops - The list of permanent ops 
- - commands - The list of blocked commands 
+ - commands - The list of regex expressions describing blocked commands 
+ - opbancommands - The list of regex expressions that define ban commands that have restrictions when being used on ops and permanent ops 
 
 The default config file (config.yml) is given below: 
 ```YAML
@@ -159,20 +160,36 @@ bannablepermanentops: default
 deoponban: false
 showbanattempts: true
 ops: 
-  - aappleton3 
-  - Codefined
+- aappleton3 
+- Codefined
 commands:
-  - stop
-  - restart
-  - reload
+- stop
+- restart
+- reload
 opbancommands:
-  - ban
-  - tempban
-  - kick
-  - blacklist
-  - ip-ban
-  - ban-ip
+- ban ([a-zA-Z0-9_]+)
+- tempban ([a-zA-Z0-9_]+) .+
+- kick ([a-zA-Z0-9_]+)
+- blacklist ([a-zA-Z0-9_]+)
+- ip\-ban ([a-zA-Z0-9_]+)
+- ipban ([a-zA-Z0-9_]+)
+- ban\-ip ([a-zA-Z0-9_]+)
+- banip ([a-zA-Z0-9_]+)
 ```
 
+## Command Blocking 
+The 'commands' and the 'opbancommands' config fields contain lists. Each item of the lists is a regular expression that the plugin will use to check against commands used by players. If a player's command matches a regular expression, the command may be blocked depending on other config fields. Every item in the 'opbancommands' list must contain exactly 1 capture group, which should be where the name of the player another player is trying to ban should be. Internally, all the regular expressions in each list are joined together by the regex or ('|') symbol to form a single regular expression for the blocked commands and another single regular expression for the blocked op ban commands. 
+
+For example, the lists in the exmple config file will become the following: 
+
+For the `commands` list: 
+```regex
+stop|restart|reload
+```
+
+For the `opbancommands` list: 
+```regex
+ban ([a-zA-Z0-9_]+)|tempban ([a-zA-Z0-9_]+) .+|kick ([a-zA-Z0-9_]+)|blacklist ([a-zA-Z0-9_]+)|ip\-ban ([a-zA-Z0-9_]+)|ipban ([a-zA-Z0-9_]+)|ban\-ip ([a-zA-Z0-9_]+)|banip ([a-zA-Z0-9_]+)
+```
 
 

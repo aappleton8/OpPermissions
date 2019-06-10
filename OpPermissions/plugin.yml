@@ -1,6 +1,6 @@
 name: OpPermissions 
 main: me.OpPermissions.OpPermissionsMainClass 
-version: 1.0.3.1
+version: 1.0.3.2
 description: A plugin helping with op permissions  
 author: aappleton3 
 database: false 
@@ -245,7 +245,7 @@ permissions:
     description: Be notified every time someone tries to use (even if unsuccessfully) the /op or /deop command 
     default: false
   oppermissions.ban.*:
-    description: Ban all ops and permanent ops, depending non the config file 
+    description: Ban all ops and permanent ops, depending on the config file 
     default: false
     children:
       oppermissions.ban.permanentops: true

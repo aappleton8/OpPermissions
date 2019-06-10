@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -193,6 +194,22 @@ public class OpPermissionsCommands implements CommandExecutor {
 			}
 			plugin.getConfig().set("ops", opNames); 
 			configUpdateMessage(); 
+		}
+	}
+	
+	void updateRegex(String key, List<String> expressions) {
+		if (expressions.isEmpty() || (expressions.size() == 0)) {
+			plugin.regex.put(key, Pattern.compile("^$")); 
+		}
+		else {
+			String expression = expressions.get(0); 
+			if (expressions.size() > 1) {
+				for (String i : expressions) {
+					expression += "|"; 
+					expression += i; 
+				}
+			}
+			plugin.regex.put(key, Pattern.compile(expression)); 
 		}
 	}
 	
@@ -455,6 +472,8 @@ public class OpPermissionsCommands implements CommandExecutor {
 					else if (args[1].equalsIgnoreCase("reload")) {
 						if (s.hasPermission("oppermissions.config.reload") || (s instanceof ConsoleCommandSender)) {
 							plugin.reloadConfig(); 
+							updateRegex("commands", plugin.getConfig().getStringList("commands")); 
+							updateRegex("opbancommands", plugin.getConfig().getStringList("opbancommands")); 
 							Bukkit.broadcast(ChatColor.GREEN + plugin.getName() + " configuration reloaded ", "oppermissions.seepluginmessages"); 
 							s.sendMessage(ChatColor.DARK_RED + "You may want to issue the command */opset config verifylist* for all config updates to take effect "); 
 						}
@@ -707,6 +726,7 @@ public class OpPermissionsCommands implements CommandExecutor {
 							blockedCommands.add(command); 
 							plugin.getConfig().set(section, blockedCommands); 
 							plugin.saveConfig();
+							updateRegex(section, blockedCommands); 
 							s.sendMessage(ChatColor.GREEN + "'" + ChatColor.GRAY + command + ChatColor.GREEN + "' is now blocked "); 
 						}
 					}
@@ -722,6 +742,7 @@ public class OpPermissionsCommands implements CommandExecutor {
 							blockedCommands.remove(command); 
 							plugin.getConfig().set(section, blockedCommands); 
 							plugin.saveConfig();
+							updateRegex(section, blockedCommands); 
 							s.sendMessage(ChatColor.GREEN + "'" + ChatColor.GRAY + command + ChatColor.GREEN + "' is no longer blocked "); 
 						}
 						else {

@@ -1,6 +1,8 @@
 package me.OpPermissions;
 
+import java.util.HashMap;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -15,6 +17,8 @@ public class OpPermissionsMainClass extends JavaPlugin {
 	public final MyPlayerListener pl = new MyPlayerListener(this, logger); 
 	private PluginDescriptionFile descriptionFile; 
 	protected String formattedPluginName; 
+	
+	public HashMap<String, Pattern> regex = new HashMap<String, Pattern>(); 
 	
 	@Override
 	public void onDisable() {
@@ -36,6 +40,8 @@ public class OpPermissionsMainClass extends JavaPlugin {
 		getCommand("oprequest").setExecutor(opc); 
 		getCommand("opcommand").setExecutor(opc); 
 		getCommand("opbancommands").setExecutor(opc); 
+		opc.updateRegex("commands", getConfig().getStringList("commands"));
+		opc.updateRegex("opbancommands", getConfig().getStringList("opbancommands")); 
 		logger.info(formattedPluginName + descriptionFile.getName() + " " + descriptionFile.getVersion() + " has been enabled "); 
 	}
 	
